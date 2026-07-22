@@ -27,6 +27,24 @@
   }
 }
 
+/* Complete Global Outline & Focus Reset */
+*, *:focus, *:focus-visible, *:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button:focus, button:focus-visible,
+input:focus, input:focus-visible,
+select:focus, select:focus-visible,
+textarea:focus, textarea:focus-visible,
+[role="button"]:focus, [role="button"]:focus-visible,
+[role="dialog"]:focus, [role="dialog"]:focus-visible,
+[data-radix-focus-guard]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
