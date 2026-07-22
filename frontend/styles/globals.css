@@ -109,4 +109,38 @@
   padding: 2px !important;
 }
 
+/* Thin Sleek Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F8FAFC;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 118, 110, 0.25);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 118, 110, 0.55);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(15, 118, 110, 0.4);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #0F766E;
+}
+
+
 

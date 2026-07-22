@@ -72,9 +72,9 @@ export function BookingModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleResetAndClose}>
-      <DialogContent className="max-w-xl rounded-[20px] bg-white p-6 shadow-xl border-[#E5E7EB] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="font-heading text-2xl font-bold text-[#111827]">
+      <DialogContent className="max-w-xl rounded-[20px] bg-white p-5 shadow-xl border-[#E5E7EB] max-h-[85vh] overflow-y-auto custom-scrollbar">
+        <DialogHeader className="pb-1">
+          <DialogTitle className="font-heading text-xl sm:text-2xl font-bold text-[#111827]">
             {step === 3 ? "Appointment Confirmation" : "Book Online Appointment"}
           </DialogTitle>
           <DialogDescription className="text-xs text-[#6B7280]">
@@ -83,13 +83,13 @@ export function BookingModal({ isOpen, onClose }) {
         </DialogHeader>
 
         {step === 1 && (
-          <div className="space-y-4 pt-2">
-            <div className="space-y-1.5">
+          <div className="space-y-3 pt-1">
+            <div className="space-y-1">
               <label className="text-xs font-bold text-[#111827] flex items-center gap-1.5">
                 <MapPin className="h-4 w-4 text-[#0F766E]" /> Select Canadian Branch
               </label>
               <Select value={watchBranch} onValueChange={(val) => setValue("branch", val)}>
-                <SelectTrigger className="h-11 border-[#E5E7EB]">
+                <SelectTrigger className="h-10 border-[#E5E7EB]">
                   <SelectValue placeholder="Choose branch" />
                 </SelectTrigger>
                 <SelectContent>
@@ -102,10 +102,10 @@ export function BookingModal({ isOpen, onClose }) {
               </Select>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <label className="text-xs font-bold text-[#111827]">Dental Service Required</label>
               <Select value={watchService} onValueChange={(val) => setValue("service", val)}>
-                <SelectTrigger className="h-11 border-[#E5E7EB]">
+                <SelectTrigger className="h-10 border-[#E5E7EB]">
                   <SelectValue placeholder="Choose service" />
                 </SelectTrigger>
                 <SelectContent>
@@ -119,10 +119,10 @@ export function BookingModal({ isOpen, onClose }) {
               </Select>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <label className="text-xs font-bold text-[#111827]">Preferred Dentist</label>
               <Select defaultValue="dr-jenkins" onValueChange={(val) => setValue("doctor", val)}>
-                <SelectTrigger className="h-11 border-[#E5E7EB]">
+                <SelectTrigger className="h-10 border-[#E5E7EB]">
                   <SelectValue placeholder="Choose doctor" />
                 </SelectTrigger>
                 <SelectContent>
@@ -136,7 +136,7 @@ export function BookingModal({ isOpen, onClose }) {
             </div>
 
             <div className="pt-2 flex justify-end">
-              <Button onClick={() => setStep(2)} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs px-6 h-10">
+              <Button onClick={() => setStep(2)} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs px-6 h-9 rounded-[10px]">
                 Continue to Date & Details
               </Button>
             </div>
@@ -144,9 +144,9 @@ export function BookingModal({ isOpen, onClose }) {
         )}
 
         {step === 2 && (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 pt-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-start">
+              <div className="space-y-1.5">
                 <label className="text-xs font-bold text-[#111827] flex items-center gap-1">
                   <CalendarIcon className="h-4 w-4 text-[#0F766E]" /> Select Preferred Date
                 </label>
@@ -158,18 +158,18 @@ export function BookingModal({ isOpen, onClose }) {
                 />
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <div>
-                  <label className="text-xs font-bold text-[#111827] flex items-center gap-1 mb-1.5">
+                  <label className="text-xs font-bold text-[#111827] flex items-center gap-1 mb-1">
                     <Clock className="h-4 w-4 text-[#0F766E]" /> Select Time Slot
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-1.5">
                     {["09:00 AM", "10:30 AM", "01:15 PM", "03:45 PM"].map((slot) => (
                       <button
                         key={slot}
                         type="button"
                         onClick={() => setSelectedTimeSlot(slot)}
-                        className={`px-2.5 py-1.5 rounded-[8px] text-xs font-semibold border ${
+                        className={`px-2 py-1 rounded-[8px] text-[11px] font-semibold border ${
                           selectedTimeSlot === slot
                             ? "bg-[#0F766E] text-white border-[#0F766E]"
                             : "bg-white text-[#111827] border-[#E5E7EB] hover:bg-[#F8FAFC]"
@@ -181,38 +181,38 @@ export function BookingModal({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <label className="text-xs font-bold text-[#111827]">Full Patient Name</label>
-                  <Input {...register("patientName")} placeholder="e.g. Sarah Connor" className="h-9 border-[#E5E7EB]" />
-                  {errors.patientName && <p className="text-[11px] text-[#DC2626] font-medium">{errors.patientName.message}</p>}
+                  <Input {...register("patientName")} placeholder="e.g. Sarah Connor" className="h-8.5 text-xs border-[#E5E7EB]" />
+                  {errors.patientName && <p className="text-[10px] text-[#DC2626] font-medium">{errors.patientName.message}</p>}
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <label className="text-xs font-bold text-[#111827]">Email Address</label>
-                  <Input {...register("email")} type="email" placeholder="sarah@example.ca" className="h-9 border-[#E5E7EB]" />
-                  {errors.email && <p className="text-[11px] text-[#DC2626] font-medium">{errors.email.message}</p>}
+                  <Input {...register("email")} type="email" placeholder="sarah@example.ca" className="h-8.5 text-xs border-[#E5E7EB]" />
+                  {errors.email && <p className="text-[10px] text-[#DC2626] font-medium">{errors.email.message}</p>}
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <label className="text-xs font-bold text-[#111827]">Phone Number</label>
-                  <Input {...register("phone")} placeholder="(416) 555-0199" className="h-9 border-[#E5E7EB]" />
-                  {errors.phone && <p className="text-[11px] text-[#DC2626] font-medium">{errors.phone.message}</p>}
+                  <Input {...register("phone")} placeholder="(416) 555-0199" className="h-8.5 text-xs border-[#E5E7EB]" />
+                  {errors.phone && <p className="text-[10px] text-[#DC2626] font-medium">{errors.phone.message}</p>}
                 </div>
               </div>
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               <label className="text-xs font-bold text-[#111827] flex items-center gap-1">
                 <Shield className="h-3.5 w-3.5 text-[#0F766E]" /> Insurance Provider (For Direct Billing)
               </label>
-              <Input {...register("insurance")} placeholder="e.g. Sun Life Financial / Manulife / Canada Life" className="h-9 border-[#E5E7EB]" />
+              <Input {...register("insurance")} placeholder="e.g. Sun Life Financial / Manulife / Canada Life" className="h-8.5 text-xs border-[#E5E7EB]" />
             </div>
 
-            <div className="flex justify-between pt-2">
-              <Button type="button" variant="outline" onClick={() => setStep(1)} className="text-xs border-[#E5E7EB]">
+            <div className="flex justify-between pt-1">
+              <Button type="button" variant="outline" onClick={() => setStep(1)} className="text-xs border-[#E5E7EB] h-9">
                 Back
               </Button>
-              <Button type="submit" disabled={isSubmitting} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs px-6 h-10">
+              <Button type="submit" disabled={isSubmitting} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs px-6 h-9 rounded-[10px]">
                 Confirm & Reserve Appointment
               </Button>
             </div>
