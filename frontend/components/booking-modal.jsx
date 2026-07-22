@@ -72,7 +72,7 @@ export function BookingModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleResetAndClose}>
-      <DialogContent className="max-w-xl rounded-[20px] bg-white p-6 shadow-xl border-[#E5E7EB]">
+      <DialogContent className="max-w-xl rounded-[20px] bg-white p-6 shadow-xl border-[#E5E7EB] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-heading text-2xl font-bold text-[#111827]">
             {step === 3 ? "Appointment Confirmation" : "Book Online Appointment"}

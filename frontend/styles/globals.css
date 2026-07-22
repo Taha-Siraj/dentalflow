@@ -64,3 +64,49 @@
   box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.08), 0 8px 10px -6px rgba(15, 118, 110, 0.04);
 }
 
+/* React Day Picker Grid & Calendar Layout Fixes */
+.rdp {
+  --rdp-cell-size: 38px;
+  --rdp-accent-color: #0F766E;
+  margin: 0;
+}
+
+.rdp-month_grid, table.rdp-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  display: table !important;
+}
+
+.rdp-weekdays, tr.rdp-head_row {
+  display: table-row !important;
+}
+
+.rdp-weekday, th.rdp-head_cell {
+  display: table-cell !important;
+  width: 38px !important;
+  height: 32px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  color: #6B7280 !important;
+}
+
+.rdp-weeks, tbody.rdp-tbody {
+  display: table-row-group !important;
+}
+
+.rdp-week, tr.rdp-row {
+  display: table-row !important;
+}
+
+.rdp-day, td.rdp-cell {
+  display: table-cell !important;
+  width: 38px !important;
+  height: 38px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 2px !important;
+}
+
+
