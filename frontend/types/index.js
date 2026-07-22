@@ -1,0 +1,15 @@
+export const UserRole = {
+  GUEST: "GUEST",
+  PATIENT: "PATIENT",
+  RECEPTIONIST: "RECEPTIONIST",
+  DOCTOR: "DOCTOR",
+  ADMIN: "ADMIN",
+};
+
+export const AppointmentStatus = {
+  SCHEDULED: "SCHEDULED",
+  CONFIRMED: "CONFIRMED",
+  COMPLETED: "COMPLETED",
+  CANCELLED: "CANCELLED",
+  NO_SHOW: "NO_SHOW",
+};

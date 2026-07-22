@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-poppins: 'Poppins', system-ui, -apple-system, sans-serif;
+  }
+
+  * {
+    border-color: #E5E7EB;
+  }
+
+  body {
+    background-color: #FFFFFF;
+    color: #111827;
+    font-family: var(--font-poppins);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-poppins);
+  }
+}
