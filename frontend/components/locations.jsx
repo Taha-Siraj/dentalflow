@@ -94,11 +94,10 @@ export function Locations({ onOpenBooking }) {
             <button
               key={b.id}
               onClick={() => setActiveTab(b.id)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all border ${
-                activeTab === b.id
+              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all border ${activeTab === b.id
                   ? "bg-[#0F766E] text-white border-[#0F766E]"
                   : "bg-white text-[#111827] border-[#E5E7EB] hover:bg-[#F8FAFC]"
-              }`}
+                }`}
             >
               {b.city}, {b.province}
             </button>
