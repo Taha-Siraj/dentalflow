@@ -1,0 +1,74 @@
+{
+  "Navbar": {
+    "networkBanner": "SmileCare Dental Clinics • 10+ Multi-Branch Network Across Canada",
+    "emergencyLine": "Emergency Line: 1-800-DENTAL-CA",
+    "services": "Services",
+    "whyUs": "Why Us",
+    "dentists": "Dentists",
+    "locations": "Locations",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "portalLogin": "Portal Login",
+    "dashboard": "Dashboard",
+    "bookAppointment": "Book Appointment"
+  },
+  "Hero": {
+    "trustedBadge": "Canada’s Trusted Multi-Branch Dental Network",
+    "titlePrefix": "Exceptional Dental Care for",
+    "titleSuffix": "Canadian Families",
+    "subtitle": "Centralized patient records, top-rated board-certified specialists, and direct electronic insurance billing across Toronto, Vancouver, Calgary, Ottawa, and Mississauga.",
+    "bookOnline": "Book Online Appointment",
+    "findBranch": "Find Nearest Branch",
+    "directBilling": "Direct Insurance Billing",
+    "sameDayEmergency": "Same-Day Emergency Slots",
+    "sharedEmr": "100% Shared EMR Records",
+    "reviews": "Over 15,000+ verified Canadian patient reviews",
+    "instantChecker": "Instant Appointment Checker",
+    "liveSlots": "Live Slots",
+    "selectBranch": "Select Canadian Branch Location",
+    "selectService": "Required Dental Service",
+    "nextSlots": "Next Open Openings Today:",
+    "proceedSlot": "Proceed to Reserve Slot"
+  },
+  "Services": {
+    "badge": "Comprehensive Clinical Care",
+    "title": "Full-Spectrum Dental Services for Every Stage of Life",
+    "subtitle": "From routine preventive checkups to complex implant surgery, our board-certified Canadian dental teams use advanced diagnostic technology.",
+    "bookService": "Book Service"
+  },
+  "Dentists": {
+    "badge": "Expert Clinical Team",
+    "title": "Meet Our Board-Certified Dental Specialists",
+    "subtitle": "Our dentists are licensed by the Royal College of Dental Surgeons and provincial associations.",
+    "bookConsultation": "Book Consultation"
+  },
+  "Locations": {
+    "badge": "Multi-Branch Expansion",
+    "title": "Find a DentalFlow Clinic Near You",
+    "subtitle": "Conveniently located across major Canadian urban centers with evening and weekend hours.",
+    "bookAt": "Book at",
+    "callDirect": "Call Branch Direct"
+  },
+  "WhyUs": {
+    "badge": "Why DentalFlow",
+    "title": "Reinventing Dental Practice Standards Across Canada",
+    "subtitle": "DentalFlow combines multi-branch convenience with hospital-grade technology, transparent Canadian fee structures, and compassionate patient care."
+  },
+  "Stats": {
+    "patientsServed": "Verified Patients Served",
+    "locations": "Clinic Locations in Canada",
+    "specialists": "Licensed Dental Specialists",
+    "satisfaction": "Patient Satisfaction Rate"
+  },
+  "CTABanner": {
+    "badge": "Accepting New Patients & Emergency Appointments Today",
+    "title": "Ready for a Healthier, Brighter Smile?",
+    "subtitle": "Book your appointment online in under 60 seconds or speak directly with our patient coordination team.",
+    "bookNow": "Book Online Now",
+    "callHotline": "1-800-DENTAL-CA"
+  },
+  "Footer": {
+    "network": "SmileCare Dental Network",
+    "rights": "All rights reserved. SmileCare Dental Clinics Canada."
+  }
+}

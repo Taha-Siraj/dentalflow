@@ -5,14 +5,14 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { createQueryClient } from "@/lib/query-client";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/context/AuthContext";
-import { LanguageProvider } from "@/context/LanguageContext";
+import { NextIntlClientProvider } from "next-intl";
 
-export function Providers({ children }) {
+export function Providers({ children, locale, messages }) {
   const [queryClient] = useState(() => createQueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
+      <NextIntlClientProvider locale={locale} messages={messages}>
         <AuthProvider>
           {children}
           <Toaster
@@ -30,7 +30,7 @@ export function Providers({ children }) {
             }}
           />
         </AuthProvider>
-      </LanguageProvider>
+      </NextIntlClientProvider>
     </QueryClientProvider>
   );
 }

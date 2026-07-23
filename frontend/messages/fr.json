@@ -1,0 +1,74 @@
+{
+  "Navbar": {
+    "networkBanner": "Cliniques Dentaires SmileCare • Réseau de 10+ Succursales au Canada",
+    "emergencyLine": "Ligne d'urgence: 1-800-DENTAL-CA",
+    "services": "Services",
+    "whyUs": "Pourquoi Nous",
+    "dentists": "Dentistes",
+    "locations": "Emplacements",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "portalLogin": "Connexion Portail",
+    "dashboard": "Tableau de Bord",
+    "bookAppointment": "Prendre Rendez-vous"
+  },
+  "Hero": {
+    "trustedBadge": "Réseau Dentaire Multi-Succursales de Confiance au Canada",
+    "titlePrefix": "Soins Dentaires d'Exception pour les",
+    "titleSuffix": "Familles Canadiennes",
+    "subtitle": "Dossiers patients centralisés, spécialistes certifiés de premier ordre et facturation directe aux assurances à Toronto, Vancouver, Calgary, Ottawa et Mississauga.",
+    "bookOnline": "Réserver un Rendez-vous En Ligne",
+    "findBranch": "Trouver la Succursale la Plus Proche",
+    "directBilling": "Facturation Directe aux Assurances",
+    "sameDayEmergency": "Plages d'Urgence le Jour Même",
+    "sharedEmr": "Dossiers DME 100% Partagés",
+    "reviews": "Plus de 15 000+ avis vérifiés de patients canadiens",
+    "instantChecker": "Vérificateur de Rendez-vous Instantané",
+    "liveSlots": "Plages en Direct",
+    "selectBranch": "Sélectionner la Succursale Canadienne",
+    "selectService": "Service Dentaire Requis",
+    "nextSlots": "Prochaines Ouvertures Aujourd'hui:",
+    "proceedSlot": "Procéder à la Réservation"
+  },
+  "Services": {
+    "badge": "Soins Cliniques Complets",
+    "title": "Gammes Complètes de Services Dentaires pour Chaque Étape de la Vie",
+    "subtitle": "Des examens préventifs de routine aux chirurgies d'implants complexes, nos équipes certifiées utilisent des technologies de pointe.",
+    "bookService": "Réserver ce Service"
+  },
+  "Dentists": {
+    "badge": "Équipe Clinique Experte",
+    "title": "Rencontrez Nos Spécialistes Dentaires Certifiés",
+    "subtitle": "Nos dentistes sont agréés par l'Ordre royal des chirurgiens dentistes et les associations provinciales.",
+    "bookConsultation": "Réserver une Consultation"
+  },
+  "Locations": {
+    "badge": "Expansion Multi-Succursales",
+    "title": "Trouvez une Clinique DentalFlow Près de Chez Vous",
+    "subtitle": "Idéalement situé dans les grands centres urbains canadiens avec des horaires en soirée et les fins de semaine.",
+    "bookAt": "Réserver à",
+    "callDirect": "Appeler la Clinique"
+  },
+  "WhyUs": {
+    "badge": "Pourquoi DentalFlow",
+    "title": "Réinventer les Normes de la Pratique Dentaire au Canada",
+    "subtitle": "DentalFlow combine la commodité multi-succursales avec des technologies de qualité hospitalière et des structures tarifaires transparentes."
+  },
+  "Stats": {
+    "patientsServed": "Patients Vérifiés Traités",
+    "locations": "Cliniques au Canada",
+    "specialists": "Spécialistes Dentaires Agréés",
+    "satisfaction": "Taux de Satisfaction Patients"
+  },
+  "CTABanner": {
+    "badge": "Nouveaux Patients et Urgences Acceptés Aujourd'hui",
+    "title": "Prêt pour un Sourire Plus Sain et Plus Éclatant?",
+    "subtitle": "Réservez votre rendez-vous en ligne en moins de 60 secondes ou parlez directement avec notre équipe de coordination.",
+    "bookNow": "Réserver En Ligne",
+    "callHotline": "1-800-DENTAL-CA"
+  },
+  "Footer": {
+    "network": "Réseau Dentaire SmileCare",
+    "rights": "Tous droits réservés. Cliniques Dentaires SmileCare Canada."
+  }
+}
