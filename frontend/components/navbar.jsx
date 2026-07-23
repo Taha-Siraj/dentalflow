@@ -64,13 +64,18 @@ export function Navbar({ onOpenBooking }) {
           </a>
         </div>
 
-        <div className="hidden lg:flex lg:items-center lg:gap-x-4">
+        <div className="hidden lg:flex lg:items-center lg:gap-x-3">
           <a
-            href="tel:18003368252"
-            className="flex items-center gap-2 text-sm font-semibold text-[#0F766E] hover:text-[#0F766E]/80 transition-colors"
+            href="/login"
+            className="text-sm font-semibold text-slate-700 hover:text-[#0F766E] transition-colors px-3 py-2 rounded-lg"
           >
-            <Phone className="h-4 w-4" />
-            <span>1-800-336-8252</span>
+            Portal Login
+          </a>
+          <a
+            href="/dashboard"
+            className="text-sm font-semibold text-[#0F766E] bg-teal-50 border border-teal-200 hover:bg-teal-100 transition-colors px-3 py-2 rounded-lg"
+          >
+            Dashboard
           </a>
           <Button onClick={onOpenBooking} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white gap-2 font-medium shadow-sm transition-all active:scale-[0.98]">
             <Calendar className="h-4 w-4" />

@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toast from "react-hot-toast";
-import { Calendar as CalendarIcon, CheckCircle2, User, Phone, Mail, FileText, Shield, Clock, MapPin } from "lucide-react";
+import { Calendar as CalendarIcon, CheckCircle2, Shield, Clock, MapPin } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
+import { useAppointments } from "@/hooks/useAppointments";
 
 const bookingSchema = z.object({
   branch: z.string().min(1, "Please select a branch location"),
@@ -28,6 +28,7 @@ export function BookingModal({ isOpen, onClose }) {
   const [step, setStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("10:00 AM");
+  const { createAppointment } = useAppointments();
 
   const {
     register,
@@ -39,9 +40,9 @@ export function BookingModal({ isOpen, onClose }) {
   } = useForm({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
-      branch: "toronto",
-      service: "preventive",
-      doctor: "dr-jenkins",
+      branch: "SmileCare Toronto Central",
+      service: "Hygiene Checkup & Teeth Cleaning",
+      doctor: "Dr. Sarah Jenkins",
       patientName: "",
       email: "",
       phone: "",
@@ -53,19 +54,28 @@ export function BookingModal({ isOpen, onClose }) {
   const watchBranch = watch("branch");
   const watchService = watch("service");
 
-  const onSubmit = (data) => {
-    const formattedDate = selectedDate ? selectedDate.toLocaleDateString("en-CA") : "Today";
+  const onSubmit = async (data) => {
+    const formattedDate = selectedDate ? selectedDate.toISOString().split("T")[0] : "2026-07-28";
     
+    await createAppointment({
+      patientName: data.patientName,
+      patientPhone: data.phone,
+      patientEmail: data.email,
+      treatment: data.service,
+      appointmentDate: formattedDate,
+      appointmentTime: selectedTimeSlot,
+      branchName: data.branch,
+      doctorName: data.doctor,
+      notes: data.notes || "",
+    });
+
     toast.success(
       <div>
-        <p className="font-bold text-[#111827]">Appointment Confirmed!</p>
+        <p className="font-bold text-[#111827]">Appointment Confirmed & Saved!</p>
         <p className="text-xs text-[#6B7280] mt-0.5">
-          Reserved for <span className="font-semibold text-[#0F766E]">{data.patientName}</span> on {formattedDate} at {selectedTimeSlot}. Confirmation sent to {data.email}.
+          Reserved for <span className="font-semibold text-[#0F766E]">{data.patientName}</span> on {formattedDate} at {selectedTimeSlot}.
         </p>
-      </div>,
-      {
-        duration: 5000,
-      }
+      </div>
     );
 
     setStep(3);
@@ -79,8 +89,8 @@ export function BookingModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleResetAndClose}>
-      <DialogContent className="max-w-xl rounded-[20px] bg-white p-0 shadow-xl border-[#E5E7EB] overflow-hidden outline-none">
-        <div className="p-5 sm:p-6 max-h-[85vh] overflow-y-auto custom-scrollbar outline-none">
+      <DialogContent className="max-w-xl rounded-[20px] bg-white p-0 shadow-xl border-[#E5E7EB] overflow-hidden focus:outline-none">
+        <div className="p-5 sm:p-6 max-h-[85vh] overflow-y-auto focus:outline-none">
           <DialogHeader className="pb-1">
             <DialogTitle className="font-heading text-xl sm:text-2xl font-bold text-[#111827]">
               {step === 3 ? "Appointment Confirmation" : "Book Online Appointment"}
@@ -97,15 +107,13 @@ export function BookingModal({ isOpen, onClose }) {
                   <MapPin className="h-4 w-4 text-[#0F766E]" /> Select Canadian Branch
                 </label>
                 <Select value={watchBranch} onValueChange={(val) => setValue("branch", val)}>
-                  <SelectTrigger className="h-10 border-[#E5E7EB]">
+                  <SelectTrigger className="h-10 border-[#E5E7EB] focus:outline-none">
                     <SelectValue placeholder="Choose branch" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="toronto">Toronto Downtown Clinic (100 King St W)</SelectItem>
-                    <SelectItem value="vancouver">Vancouver Waterfront Clinic (1055 W Georgia St)</SelectItem>
-                    <SelectItem value="calgary">Calgary City Centre Clinic (215 9th Ave SW)</SelectItem>
-                    <SelectItem value="ottawa">Ottawa Capital Clinic (50 O'Connor St)</SelectItem>
-                    <SelectItem value="mississauga">Mississauga Square One Clinic (100 City Centre Dr)</SelectItem>
+                    <SelectItem value="SmileCare Toronto Central">SmileCare Toronto Central (100 King St W)</SelectItem>
+                    <SelectItem value="SmileCare Vancouver West">SmileCare Vancouver West (1055 W Georgia St)</SelectItem>
+                    <SelectItem value="SmileCare Montreal Clinic">SmileCare Montreal Clinic (1250 Rene-Levesque Blvd)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -113,38 +121,37 @@ export function BookingModal({ isOpen, onClose }) {
               <div className="space-y-1">
                 <label className="text-xs font-bold text-[#111827]">Dental Service Required</label>
                 <Select value={watchService} onValueChange={(val) => setValue("service", val)}>
-                  <SelectTrigger className="h-10 border-[#E5E7EB]">
+                  <SelectTrigger className="h-10 border-[#E5E7EB] focus:outline-none">
                     <SelectValue placeholder="Choose service" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="preventive">Hygiene Checkup & Teeth Cleaning</SelectItem>
-                    <SelectItem value="implants">Dental Implants & Restoration</SelectItem>
-                    <SelectItem value="cosmetic">Teeth Whitening & Veneers</SelectItem>
-                    <SelectItem value="orthodontics">Invisalign® Clear Aligners</SelectItem>
-                    <SelectItem value="emergency">Emergency Dental Relief (24/7 Urgent)</SelectItem>
-                    <SelectItem value="pediatric">Pediatric Children Dental Care</SelectItem>
+                    <SelectItem value="Hygiene Checkup & Teeth Cleaning">Hygiene Checkup & Teeth Cleaning</SelectItem>
+                    <SelectItem value="Dental Implants & Restoration">Dental Implants & Restoration</SelectItem>
+                    <SelectItem value="Teeth Whitening & Veneers">Teeth Whitening & Veneers</SelectItem>
+                    <SelectItem value="Invisalign® Clear Aligners">Invisalign® Clear Aligners</SelectItem>
+                    <SelectItem value="Emergency Dental Relief">Emergency Dental Relief (24/7 Urgent)</SelectItem>
+                    <SelectItem value="Pediatric Children Dental Care">Pediatric Children Dental Care</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-1">
                 <label className="text-xs font-bold text-[#111827]">Preferred Dentist</label>
-                <Select defaultValue="dr-jenkins" onValueChange={(val) => setValue("doctor", val)}>
-                  <SelectTrigger className="h-10 border-[#E5E7EB]">
+                <Select defaultValue="Dr. Sarah Jenkins" onValueChange={(val) => setValue("doctor", val)}>
+                  <SelectTrigger className="h-10 border-[#E5E7EB] focus:outline-none">
                     <SelectValue placeholder="Choose doctor" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="dr-jenkins">Dr. Sarah Jenkins, DDS (Implant Specialist)</SelectItem>
-                    <SelectItem value="dr-vance">Dr. Marcus Vance, DDS (Orthodontics & Invisalign)</SelectItem>
-                    <SelectItem value="dr-rostova">Dr. Elena Rostova, DMD (Cosmetic Dentistry)</SelectItem>
-                    <SelectItem value="dr-chen">Dr. David Chen, DDS (Pediatric Specialist)</SelectItem>
-                    <SelectItem value="any">First Available Dentist</SelectItem>
+                    <SelectItem value="Dr. Sarah Jenkins">Dr. Sarah Jenkins, DDS (Implant Specialist)</SelectItem>
+                    <SelectItem value="Dr. Marcus Vance">Dr. Marcus Vance, DDS (Orthodontics & Invisalign)</SelectItem>
+                    <SelectItem value="Dr. Elena Rostova">Dr. Elena Rostova, DMD (Cosmetic Dentistry)</SelectItem>
+                    <SelectItem value="Dr. Michael Chang">Dr. Michael Chang, DDS (Oral Surgeon)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="pt-2 flex justify-end">
-                <Button onClick={() => setStep(2)} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs px-6 h-9 rounded-[10px]">
+                <Button onClick={() => setStep(2)} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs px-6 h-9 rounded-[10px] focus:outline-none">
                   Continue to Date & Details
                 </Button>
               </div>
@@ -177,7 +184,7 @@ export function BookingModal({ isOpen, onClose }) {
                           key={slot}
                           type="button"
                           onClick={() => setSelectedTimeSlot(slot)}
-                          className={`px-2 py-1 rounded-[8px] text-[11px] font-semibold border ${
+                          className={`px-2 py-1 rounded-[8px] text-[11px] font-semibold border focus:outline-none ${
                             selectedTimeSlot === slot
                               ? "bg-[#0F766E] text-white border-[#0F766E]"
                               : "bg-white text-[#111827] border-[#E5E7EB] hover:bg-[#F8FAFC]"
@@ -191,19 +198,19 @@ export function BookingModal({ isOpen, onClose }) {
 
                   <div className="space-y-0.5">
                     <label className="text-xs font-bold text-[#111827]">Full Patient Name</label>
-                    <Input {...register("patientName")} placeholder="e.g. Sarah Connor" className="h-8.5 text-xs border-[#E5E7EB]" />
+                    <Input {...register("patientName")} placeholder="e.g. Sarah Connor" className="h-8.5 text-xs border-[#E5E7EB] focus:outline-none" />
                     {errors.patientName && <p className="text-[10px] text-[#DC2626] font-medium">{errors.patientName.message}</p>}
                   </div>
 
                   <div className="space-y-0.5">
                     <label className="text-xs font-bold text-[#111827]">Email Address</label>
-                    <Input {...register("email")} type="email" placeholder="sarah@example.ca" className="h-8.5 text-xs border-[#E5E7EB]" />
+                    <Input {...register("email")} type="email" placeholder="sarah@example.ca" className="h-8.5 text-xs border-[#E5E7EB] focus:outline-none" />
                     {errors.email && <p className="text-[10px] text-[#DC2626] font-medium">{errors.email.message}</p>}
                   </div>
 
                   <div className="space-y-0.5">
                     <label className="text-xs font-bold text-[#111827]">Phone Number</label>
-                    <Input {...register("phone")} placeholder="(416) 555-0199" className="h-8.5 text-xs border-[#E5E7EB]" />
+                    <Input {...register("phone")} placeholder="(416) 555-0199" className="h-8.5 text-xs border-[#E5E7EB] focus:outline-none" />
                     {errors.phone && <p className="text-[10px] text-[#DC2626] font-medium">{errors.phone.message}</p>}
                   </div>
                 </div>
@@ -213,15 +220,15 @@ export function BookingModal({ isOpen, onClose }) {
                 <label className="text-xs font-bold text-[#111827] flex items-center gap-1">
                   <Shield className="h-3.5 w-3.5 text-[#0F766E]" /> Insurance Provider (For Direct Billing)
                 </label>
-                <Input {...register("insurance")} placeholder="e.g. Sun Life Financial / Manulife / Canada Life" className="h-8.5 text-xs border-[#E5E7EB]" />
+                <Input {...register("insurance")} placeholder="e.g. Sun Life Financial / Manulife / Canada Life" className="h-8.5 text-xs border-[#E5E7EB] focus:outline-none" />
               </div>
 
               <div className="flex justify-between pt-1">
-                <Button type="button" variant="outline" onClick={() => setStep(1)} className="text-xs border-[#E5E7EB] h-9">
+                <Button type="button" variant="outline" onClick={() => setStep(1)} className="text-xs border-[#E5E7EB] h-9 focus:outline-none">
                   Back
                 </Button>
-                <Button type="submit" disabled={isSubmitting} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs px-6 h-9 rounded-[10px]">
-                  Confirm & Reserve Appointment
+                <Button type="submit" disabled={isSubmitting} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs px-6 h-9 rounded-[10px] focus:outline-none">
+                  Confirm & Save Appointment
                 </Button>
               </div>
             </form>
@@ -233,28 +240,13 @@ export function BookingModal({ isOpen, onClose }) {
                 <CheckCircle2 className="h-10 w-10" />
               </div>
               <div>
-                <h3 className="font-heading text-xl font-bold text-[#111827]">Your Appointment is Confirmed!</h3>
+                <h3 className="font-heading text-xl font-bold text-[#111827]">Your Appointment is Saved & Confirmed!</h3>
                 <p className="text-xs text-[#6B7280] mt-1 max-w-md mx-auto">
-                  We have sent an SMS and Email confirmation with calendar invitation and pre-visit check-in instructions.
+                  Confirmation sent to doctor schedule and live reception queue.
                 </p>
               </div>
 
-              <div className="rounded-[12px] bg-[#F8FAFC] p-4 border border-[#E5E7EB] text-left text-xs space-y-2 max-w-md mx-auto">
-                <div className="flex justify-between">
-                  <span className="text-[#6B7280]">Appointment Date:</span>
-                  <span className="font-bold text-[#111827]">{selectedDate ? selectedDate.toLocaleDateString("en-CA") : "Today"}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#6B7280]">Time Slot:</span>
-                  <span className="font-bold text-[#111827]">{selectedTimeSlot}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#6B7280]">Selected Branch:</span>
-                  <span className="font-bold text-[#0F766E] capitalize">{watchBranch} Clinic</span>
-                </div>
-              </div>
-
-              <Button onClick={handleResetAndClose} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white text-xs px-8 h-10 font-semibold">
+              <Button onClick={handleResetAndClose} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white text-xs px-8 h-10 font-semibold focus:outline-none">
                 Done
               </Button>
             </div>
