@@ -5,57 +5,54 @@ import { Stethoscope, Sparkles, Shield, Smile, HeartHandshake, AlertCircle, Arro
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useTranslations } from "next-intl";
 
 export function Services({ onOpenBooking }) {
-  const t = useTranslations("Services");
-
   const servicesList = [
     {
       icon: Stethoscope,
-      title: t("s1Title"),
+      title: "General & Preventive Dentistry",
       tag: "Most Popular",
-      description: t("s1Desc"),
+      description: "Comprehensive oral examinations, hygiene cleanings, digital X-rays, cavity fillings, and oral cancer screenings.",
       features: ["Hygiene & Polish", "Low-Radiation Digital X-Rays", "Fluoride & Sealants"],
       coverage: "Covered 80-100% by Insurance",
     },
     {
       icon: Sparkles,
-      title: t("s2Title"),
+      title: "Cosmetic Dentistry & Veneers",
       tag: "Smile Design",
-      description: t("s2Desc"),
+      description: "Transform your smile with professional teeth whitening, custom porcelain veneers, and composite bonding.",
       features: ["Custom Porcelain Veneers", "In-Office Teeth Whitening", "Smile Makeovers"],
       coverage: "Financing Plans Available",
     },
     {
       icon: Shield,
-      title: t("s3Title"),
+      title: "Dental Implants & Restorations",
       tag: "Permanent Solution",
-      description: t("s3Desc"),
+      description: "State-of-the-art titanium dental implants, porcelain crowns, and full-arch bridges engineered for lifetime durability.",
       features: ["3D Guided Surgery", "Full Porcelain Crowns", "All-on-4® Restorations"],
       coverage: "Direct Billing Available",
     },
     {
       icon: Smile,
-      title: t("s4Title"),
+      title: "Orthodontics & Invisalign®",
       tag: "Clear Aligners",
-      description: t("s4Desc"),
+      description: "Straighten teeth discreetly with Invisalign® clear aligners or modern ceramic braces for teens and adults.",
       features: ["Invisalign® Preferred Provider", "Digital 3D Intraoral Scanning", "Retainer Systems"],
       coverage: "Flexible Monthly Payments",
     },
     {
       icon: HeartHandshake,
-      title: t("s5Title"),
+      title: "Pediatric Dentistry",
       tag: "Child Friendly",
-      description: t("s5Desc"),
+      description: "Gentle, stress-free dental care designed specifically for children and toddlers in a warm, welcoming environment.",
       features: ["Cavity Prevention", "Gentle Cleaning", "Behavior Management"],
       coverage: "Covered 100% Basic Dental Plans",
     },
     {
       icon: AlertCircle,
-      title: t("s6Title"),
+      title: "24/7 Emergency Dental Care",
       tag: "Immediate Relief",
-      description: t("s6Desc"),
+      description: "Urgent care for severe toothaches, broken teeth, knocked-out teeth, and facial trauma with guaranteed same-day appointments.",
       features: ["Same-Day Urgent Care", "Immediate Pain Relief", "Emergency Extractions"],
       coverage: "Direct Insurance Submission",
     },
@@ -66,13 +63,13 @@ export function Services({ onOpenBooking }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto space-y-2">
           <Badge variant="outline" className="border-[#0F766E]/30 text-[#0F766E] bg-white px-3 py-0.5 font-semibold text-xs rounded-full">
-            {t("badge")}
+            Comprehensive Clinical Care
           </Badge>
           <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#111827]">
-            {t("title")}
+            Full-Spectrum Dental Services for Every Stage of Life
           </h2>
           <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed">
-            {t("subtitle")}
+            From routine preventive checkups to complex implant surgery, our board-certified Canadian dental teams use advanced diagnostic technology.
           </p>
         </div>
 
@@ -90,10 +87,10 @@ export function Services({ onOpenBooking }) {
                       {service.tag}
                     </Badge>
                   </div>
-                  <CardTitle className="font-heading text-base font-bold text-[#111827] text-left rtl:text-right">
+                  <CardTitle className="font-heading text-base font-bold text-[#111827]">
                     {service.title}
                   </CardTitle>
-                  <CardDescription className="text-[#6B7280] text-xs leading-relaxed mt-1 text-left rtl:text-right">
+                  <CardDescription className="text-[#6B7280] text-xs leading-relaxed mt-1">
                     {service.description}
                   </CardDescription>
                 </CardHeader>
@@ -111,8 +108,8 @@ export function Services({ onOpenBooking }) {
                       {service.coverage}
                     </span>
                     <Button onClick={onOpenBooking} variant="ghost" size="sm" className="text-[#0F766E] hover:text-[#0F766E] hover:bg-[#F8FAFC] font-bold text-xs gap-1 h-8 focus:outline-none">
-                      {t("bookService")}
-                      <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
+                      Book Service
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                 </CardContent>
