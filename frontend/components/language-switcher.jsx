@@ -33,15 +33,15 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1 shrink-0">
       <Globe className="h-4 w-4 text-[#0F766E] shrink-0" />
       <Select disabled={isPending} value={locale} onValueChange={handleLanguageChange}>
-        <SelectTrigger className="h-9 w-[115px] border-[#E5E7EB] bg-white text-xs font-semibold text-[#111827] focus:ring-[#0F766E]">
-          <SelectValue placeholder="Select Language" />
+        <SelectTrigger className="h-8.5 w-[105px] border-[#E5E7EB] bg-white text-xs font-semibold text-[#111827] focus:ring-[#0F766E] cursor-pointer hover:border-[#0F766E] transition-colors rounded-lg">
+          <SelectValue placeholder="Language" />
         </SelectTrigger>
         <SelectContent className="bg-white border-[#E5E7EB] text-xs">
           {LANGUAGES.map((lang) => (
-            <SelectItem key={lang.code} value={lang.code} className="text-xs font-medium">
+            <SelectItem key={lang.code} value={lang.code} className="text-xs font-medium cursor-pointer hover:bg-teal-50">
               {lang.name}
             </SelectItem>
           ))}
