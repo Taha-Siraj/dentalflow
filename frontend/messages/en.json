@@ -34,13 +34,55 @@
     "badge": "Comprehensive Clinical Care",
     "title": "Full-Spectrum Dental Services for Every Stage of Life",
     "subtitle": "From routine preventive checkups to complex implant surgery, our board-certified Canadian dental teams use advanced diagnostic technology.",
-    "bookService": "Book Service"
+    "bookService": "Book Service",
+    "s1Title": "General & Preventive Dentistry",
+    "s1Desc": "Comprehensive oral examinations, hygiene cleanings, digital X-rays, cavity fillings, and oral cancer screenings.",
+    "s2Title": "Cosmetic Dentistry & Veneers",
+    "s2Desc": "Transform your smile with professional teeth whitening, custom porcelain veneers, and composite bonding.",
+    "s3Title": "Dental Implants & Restorations",
+    "s3Desc": "State-of-the-art titanium dental implants, porcelain crowns, and full-arch bridges engineered for lifetime durability.",
+    "s4Title": "Orthodontics & Invisalign®",
+    "s4Desc": "Straighten teeth discreetly with Invisalign® clear aligners or modern ceramic braces for teens and adults.",
+    "s5Title": "Pediatric Dentistry",
+    "s5Desc": "Gentle, stress-free dental care designed specifically for children and toddlers in a warm, welcoming environment.",
+    "s6Title": "24/7 Emergency Dental Care",
+    "s6Desc": "Urgent care for severe toothaches, broken teeth, knocked-out teeth, and facial trauma with guaranteed same-day appointments."
+  },
+  "WhyUs": {
+    "badge": "Why DentalFlow",
+    "title": "Reinventing Dental Practice Standards Across Canada",
+    "subtitle": "DentalFlow combines multi-branch convenience with hospital-grade technology, transparent Canadian fee structures, and compassionate patient care.",
+    "p1Title": "100% Centralized EMR Records",
+    "p1Desc": "Visit any DentalFlow branch in Toronto, Vancouver, Calgary, Ottawa, or Mississauga. Your X-rays and medical history sync instantly.",
+    "p2Title": "Direct Electronic Insurance Billing",
+    "p2Desc": "We submit claims directly to Sun Life, Manulife, Canada Life, Desjardins, and Blue Cross to eliminate out-of-pocket stress.",
+    "p3Title": "Board-Certified Canadian Dentists",
+    "p3Desc": "Our dental team consists of DDS and FRCD(C) licensed specialists with over 15+ years of clinical experience.",
+    "p4Title": "3D Low-Radiation Digital Tech",
+    "p4Desc": "We utilize 3D CBCT imaging, iTero® intraoral digital scanners, and painless digital impression technology.",
+    "p5Title": "Gentle Care & Sedation Options",
+    "p5Desc": "From anxious patients to kids, we offer nitrous oxide, oral sedation, and gentle painless numbing techniques.",
+    "p6Title": "Provincial Fee Guide Compliance",
+    "p6Desc": "Complete fee transparency adhering to provincial dental association fee guides (ODA, BCDA, ADA) with zero hidden fees."
   },
   "Dentists": {
     "badge": "Expert Clinical Team",
     "title": "Meet Our Board-Certified Dental Specialists",
     "subtitle": "Our dentists are licensed by the Royal College of Dental Surgeons and provincial associations.",
     "bookConsultation": "Book Consultation"
+  },
+  "PatientJourney": {
+    "badge": "Seamless Patient Care",
+    "title": "Your Dental Journey with DentalFlow",
+    "subtitle": "Designed for convenience, transparency, and clinical excellence from appointment booking to insurance reimbursement.",
+    "step1Title": "Online Booking in 60 Seconds",
+    "step1Desc": "Choose your preferred Canadian branch, service, and doctor. Select a real-time slot that fits your schedule.",
+    "step2Title": "Digital Medical Check-In",
+    "step2Desc": "Complete your medical history and insurance forms on your mobile phone prior to arrival for zero waiting room delay.",
+    "step3Title": "Gentle Expert Treatment",
+    "step3Desc": "Receive comprehensive dental treatment using low-radiation 3D diagnostics and gentle numbing techniques.",
+    "step4Title": "Direct Billing & Aftercare",
+    "step4Desc": "We bill your insurance provider directly. Access digital prescriptions and follow-up care instructions in your portal."
   },
   "Locations": {
     "badge": "Multi-Branch Expansion",
@@ -49,10 +91,25 @@
     "bookAt": "Book at",
     "callDirect": "Call Branch Direct"
   },
-  "WhyUs": {
-    "badge": "Why DentalFlow",
-    "title": "Reinventing Dental Practice Standards Across Canada",
-    "subtitle": "DentalFlow combines multi-branch convenience with hospital-grade technology, transparent Canadian fee structures, and compassionate patient care."
+  "Testimonials": {
+    "badge": "Patient Reviews",
+    "title": "Trusted by 15,000+ Canadian Patients",
+    "subtitle": "Read verified feedback from patients across our Toronto, Vancouver, Calgary, Ottawa, and Mississauga clinic locations."
+  },
+  "FAQ": {
+    "badge": "Patient Information",
+    "title": "Most Questions We Have Answers",
+    "subtitle": "Have questions about insurance billing, emergency appointments, or first visits? Find quick answers below.",
+    "q1": "Do you offer direct electronic billing to insurance providers?",
+    "a1": "Yes! We bill directly to major Canadian insurance providers including Sun Life, Manulife, Canada Life, Desjardins, and Blue Cross so you pay zero upfront out-of-pocket costs for covered treatments.",
+    "q2": "Can I visit any branch if I am registered at one clinic?",
+    "a2": "Absolutely. Thanks to our 100% centralized EMR system, your X-rays, medical records, and treatment history are securely accessible by licensed staff across all 10+ Canadian locations.",
+    "q3": "How do same-day emergency appointments work?",
+    "a3": "We reserve daily emergency slots at every branch for severe toothaches, broken teeth, or facial trauma. Simply call 1-800-DENTAL-CA or book online for immediate care.",
+    "q4": "Are your fees compliant with provincial fee guides?",
+    "a4": "Yes, all our treatment fees follow official provincial dental association fee guides (Ontario ODA, BC BCDA, Alberta ADA) with zero hidden clinic markups.",
+    "q5": "What should I bring for my first dental visit?",
+    "q5a": "Please bring a valid photo ID, your dental insurance card/details, and any recent dental X-rays if available. You can also complete your digital intake forms online prior to arrival."
   },
   "Stats": {
     "patientsServed": "Verified Patients Served",

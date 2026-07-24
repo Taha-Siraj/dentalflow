@@ -5,8 +5,11 @@ import { GraduationCap, MapPin, Award, Calendar, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 export function Dentists({ onOpenBooking }) {
+  const t = useTranslations("Dentists");
+
   const doctors = [
     {
       name: "Dr. Sarah Jenkins",
@@ -55,25 +58,25 @@ export function Dentists({ onOpenBooking }) {
   ];
 
   return (
-    <section id="dentists" className="bg-[#F8FAFC] py-20 border-b border-[#E5E7EB]">
+    <section id="dentists" className="bg-[#F8FAFC] py-10 border-b border-[#E5E7EB] overflow-x-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto space-y-4">
-          <Badge variant="outline" className="border-[#0F766E]/30 text-[#0F766E] bg-white px-3.5 py-1 font-semibold text-xs rounded-full">
-            Expert Clinical Team
+        <div className="text-center max-w-3xl mx-auto space-y-2">
+          <Badge variant="outline" className="border-[#0F766E]/30 text-[#0F766E] bg-white px-3 py-0.5 font-semibold text-xs rounded-full">
+            {t("badge")}
           </Badge>
-          <h2 className="font-heading text-3xl sm:text-4xl font-bold text-[#111827]">
-            Meet Our Board-Certified Dental Specialists
+          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#111827]">
+            {t("title")}
           </h2>
-          <p className="text-[#6B7280] text-base leading-relaxed">
-            Our dentists are licensed by the Royal College of Dental Surgeons and provincial associations, bringing world-class expertise to your local community.
+          <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed">
+            {t("subtitle")}
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {doctors.map((doctor, index) => (
-            <Card key={index} className="border-[#E5E7EB] bg-white rounded-[16px] overflow-hidden hover:border-[#0F766E]/40 transition-all flex flex-col justify-between shadow-2xs hover:shadow-md h-full">
+            <Card key={index} className="border-[#E5E7EB] bg-white rounded-xl overflow-hidden hover:border-[#0F766E] transition-all flex flex-col justify-between shadow-sm h-full">
               <div>
-                <div className="relative h-60 w-full overflow-hidden bg-[#F8FAFC]">
+                <div className="relative h-48 w-full overflow-hidden bg-[#F8FAFC]">
                   <img
                     src={doctor.image}
                     alt={doctor.name}
@@ -83,22 +86,22 @@ export function Dentists({ onOpenBooking }) {
                       e.target.src = "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=400&q=80";
                     }}
                   />
-                  <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm border border-[#E5E7EB] px-2.5 py-1 rounded-full text-xs font-bold text-[#111827] flex items-center gap-1 shadow-2xs">
-                    <Star className="h-3.5 w-3.5 fill-[#F59E0B] text-[#F59E0B]" />
+                  <div className="absolute top-2.5 right-2.5 rtl:left-2.5 rtl:right-auto bg-white/95 border border-[#E5E7EB] px-2 py-0.5 rounded-full text-[10px] font-bold text-[#111827] flex items-center gap-1">
+                    <Star className="h-3 w-3 fill-[#F59E0B] text-[#F59E0B]" />
                     <span>{doctor.rating}</span>
                   </div>
                 </div>
 
-                <CardHeader className="p-5 pb-3">
+                <CardHeader className="p-4 pb-2 text-left rtl:text-right">
                   <div className="flex items-baseline justify-between">
-                    <h3 className="font-heading text-lg font-bold text-[#111827]">{doctor.name}</h3>
-                    <span className="text-xs font-bold text-[#0F766E]">{doctor.credentials}</span>
+                    <h3 className="font-heading text-sm font-bold text-[#111827]">{doctor.name}</h3>
+                    <span className="text-[10px] font-bold text-[#0F766E]">{doctor.credentials}</span>
                   </div>
-                  <p className="text-xs font-medium text-[#6B7280] mt-0.5">{doctor.role}</p>
+                  <p className="text-[11px] font-medium text-[#6B7280] mt-0.5">{doctor.role}</p>
                 </CardHeader>
 
-                <CardContent className="px-5 pt-0 space-y-3">
-                  <div className="space-y-1.5 border-t border-[#E5E7EB] pt-3 text-xs text-[#6B7280]">
+                <CardContent className="px-4 pt-0 space-y-2 text-left rtl:text-right">
+                  <div className="space-y-1 border-t border-[#E5E7EB] pt-2 text-[11px] text-[#6B7280]">
                     <div className="flex items-center gap-1.5">
                       <GraduationCap className="h-3.5 w-3.5 text-[#0F766E] shrink-0" />
                       <span className="truncate">{doctor.education}</span>
@@ -123,10 +126,10 @@ export function Dentists({ onOpenBooking }) {
                 </CardContent>
               </div>
 
-              <div className="p-5 pt-0 mt-4">
-                <Button onClick={onOpenBooking} className="w-full bg-[#0F766E] hover:bg-[#0F766E]/90 text-white text-xs font-semibold gap-1.5 h-10 rounded-[12px]">
+              <div className="p-4 pt-0 mt-2">
+                <Button onClick={onOpenBooking} className="w-full bg-[#0F766E] hover:bg-[#0F766E]/90 text-white text-xs font-semibold gap-1.5 h-9 rounded-lg focus:outline-none">
                   <Calendar className="h-3.5 w-3.5" />
-                  Book Consultation
+                  {t("bookConsultation")}
                 </Button>
               </div>
             </Card>
