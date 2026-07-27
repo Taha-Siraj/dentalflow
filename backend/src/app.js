@@ -11,6 +11,7 @@ export function createApp() {
   app.use(express.urlencoded({ extended: true }));
 
   app.use("/api/v1", apiRouter);
+  app.use("/api", apiRouter);
 
   app.use(errorHandler);
 

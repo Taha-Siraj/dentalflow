@@ -1,69 +1,92 @@
 "use client";
 
 import React from "react";
-import { CalendarCheck, ClipboardList, Stethoscope, HeartPulse } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { UserCheck, Cpu, Heart, ShieldCheck } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function PatientJourney() {
   const steps = [
     {
-      step: "01",
-      title: "Online Booking in 60 Seconds",
-      description: "Choose your preferred Canadian branch, service, and doctor. Select a real-time slot that fits your schedule.",
-      icon: CalendarCheck,
+      num: "01",
+      icon: UserCheck,
+      title: "Online Booking & Insurance Pre-Check",
+      description: "Reserve your slot in 60 seconds. Our EMR checks insurance coverage directly with Canadian providers before your visit.",
     },
     {
-      step: "02",
-      title: "Digital Medical Check-In",
-      description: "Complete your medical history and insurance forms on your mobile phone prior to arrival for zero waiting room delay.",
-      icon: ClipboardList,
+      num: "02",
+      icon: Cpu,
+      title: "3D Low-Radiation Diagnostics",
+      description: "Experience painless 3D CBCT imaging and iTero® intraoral scanning for instantaneous high-resolution diagnostic mapping.",
     },
     {
-      step: "03",
-      title: "Gentle Expert Treatment",
-      description: "Receive comprehensive dental treatment using low-radiation 3D diagnostics and gentle numbing techniques.",
-      icon: Stethoscope,
+      num: "03",
+      icon: Heart,
+      title: "Specialist Treatment & Gentle Care",
+      description: "Receive precision treatment under nitrous oxide or gentle numbing techniques from board-certified DDS specialists.",
     },
     {
-      step: "04",
-      title: "Direct Billing & Aftercare",
-      description: "We bill your insurance provider directly. Access digital prescriptions and follow-up care instructions in your portal.",
-      icon: HeartPulse,
+      num: "04",
+      icon: ShieldCheck,
+      title: "Direct Billing & Centralized EMR Sync",
+      description: "0 out-of-pocket stress. Claims are processed electronically on the spot, and records sync across all 5 Canadian branches.",
     },
   ];
 
   return (
-    <section className="bg-white py-10 border-b border-[#E5E7EB] overflow-x-hidden">
+    <section className="bg-white py-20 border-b border-slate-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto space-y-2">
-          <Badge variant="outline" className="border-[#0F766E]/30 text-[#0F766E] bg-white px-3 py-0.5 font-semibold text-xs">
-            Seamless Patient Care
-          </Badge>
-          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#111827]">
-            Your Dental Journey with DentalFlow
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3.5 py-1.5 rounded-full text-xs">
+            <span className="font-mono font-bold text-[#0F766E] uppercase tracking-widest">
+              PATIENT WORKFLOW • STEP-BY-STEP
+            </span>
+          </div>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
+            The 4-Step Patient Journey
           </h2>
-          <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed">
-            Designed for convenience, transparency, and clinical excellence from appointment booking to insurance reimbursement.
+          <p className="font-poppins text-slate-600 text-base leading-relaxed">
+            Designed for total convenience, zero billing surprises, and maximum clinical comfort.
           </p>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Steps Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <div key={idx} className="relative rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] p-5 transition-all hover:border-[#0F766E] shadow-xs text-left">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0F766E] text-white font-bold">
-                    <Icon className="h-5 w-5" />
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-6 card-hover flex flex-col justify-between space-y-4 relative"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-100 text-[#0F766E] font-bold">
+                    <Icon className="h-6 w-6" />
                   </div>
-                  <span className="font-heading text-2xl font-extrabold text-[#E5E7EB]">{item.step}</span>
+                  <span className="font-mono text-xl font-bold text-slate-300">
+                    STEP {item.num}
+                  </span>
                 </div>
-                <h3 className="font-heading text-base font-bold text-[#111827] mb-1">{item.title}</h3>
-                <p className="text-xs text-[#6B7280] leading-relaxed">{item.description}</p>
-              </div>
+
+                <div className="space-y-2">
+                  <h3 className="font-serif text-lg font-bold text-slate-900">{item.title}</h3>
+                  <p className="font-poppins text-xs sm:text-sm text-slate-600 leading-relaxed">{item.description}</p>
+                </div>
+
+                <div className="pt-2 font-mono text-[11px] font-bold text-[#0F766E] uppercase tracking-wider flex items-center space-x-1">
+                  <ShieldCheck className="h-4 w-4" />
+                  <span>AUTOMATED EMR PROTOCOL</span>
+                </div>
+              </motion.div>
             );
           })}
         </div>
+
       </div>
     </section>
   );

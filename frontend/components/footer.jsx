@@ -1,94 +1,96 @@
+"use client";
+
 import React from "react";
-import { Stethoscope, Phone, Mail, MapPin, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { Activity, ShieldCheck, MapPin } from "lucide-react";
 
 export function Footer() {
-  return (
-    <footer className="bg-[#111827] text-white pt-16 pb-8 border-t border-gray-800">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-gray-800">
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-[#0F766E] text-white">
-                <Stethoscope className="h-6 w-6" />
-              </div>
-              <div>
-                <span className="font-heading text-xl font-bold tracking-tight">
-                  Dental<span className="text-[#14B8A6]">Flow</span>
-                </span>
-                <p className="text-[11px] text-gray-400">SmileCare Dental Practice Network</p>
-              </div>
-            </div>
+  const branches = [
+    { city: "Toronto Central", phone: "(416) 555-0192" },
+    { city: "Vancouver West", phone: "(604) 555-0144" },
+    { city: "Calgary Downtown", phone: "(403) 555-0178" },
+    { city: "Ottawa Parliament", phone: "(613) 555-0123" },
+    { city: "Mississauga Medical", phone: "(905) 555-0189" },
+  ];
 
-            <p className="text-xs text-gray-400 leading-relaxed max-w-sm">
-              DentalFlow is a multi-branch Canadian dental management network providing general dentistry, orthodontics, implants, pediatric care, and 24/7 emergency dental relief.
+  return (
+    <footer className="bg-white text-slate-900 border-t border-slate-200 pt-16 pb-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-12 border-b border-slate-200">
+          
+          {/* Brand Info */}
+          <div className="md:col-span-5 space-y-4">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0F766E] text-white shadow-md">
+                <Activity className="h-5 w-5" />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-serif text-2xl font-bold tracking-tight text-slate-900">
+                  Dental<span className="text-[#0F766E]">Flow</span>
+                </span>
+                <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-slate-500">
+                  CANADIAN PRACTICE NETWORK
+                </span>
+              </div>
+            </Link>
+
+            <p className="font-sans text-xs sm:text-sm text-slate-600 max-w-md leading-relaxed">
+              DentalFlow is a multi-branch Canadian dental practice network providing 100% centralized electronic medical records and direct electronic insurance billing across 5 major metro centers.
             </p>
 
-            <div className="space-y-2 text-xs text-gray-300">
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-[#14B8A6]" />
-                <a href="tel:18003368252" className="hover:underline font-medium text-white">Toll-Free: 1-800-DENTAL-CA (1-800-336-8252)</a>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-[#14B8A6]" />
-                <a href="mailto:care@smilecare.ca" className="hover:underline text-gray-300">care@smilecare.ca</a>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 pt-2">
-              <span className="inline-flex items-center rounded-full border border-gray-700 bg-gray-800 px-3 py-1 text-xs font-semibold text-gray-200 shadow-2xs">
-                <ShieldCheck className="h-3.5 w-3.5 mr-1.5 text-[#14B8A6]" /> CDA Accredited
-              </span>
-              <span className="inline-flex items-center rounded-full border border-gray-700 bg-gray-800 px-3 py-1 text-xs font-semibold text-gray-200 shadow-2xs">
-                Direct Insurance Billing
-              </span>
+            <div className="pt-2 flex items-center space-x-2 text-xs font-bold text-[#0F766E]">
+              <ShieldCheck className="h-4 w-4 text-[#0F766E]" />
+              <span className="font-mono text-xs uppercase tracking-wider">Provincial Dental Association Fee Guide Compliant</span>
             </div>
           </div>
 
-          <div>
-            <h4 className="font-heading text-sm font-bold text-white mb-4">Quick Links</h4>
-            <ul className="space-y-2.5 text-xs text-gray-400">
-              <li><a href="#services" className="hover:text-white transition-colors">General Dentistry</a></li>
-              <li><a href="#services" className="hover:text-white transition-colors">Cosmetic & Veneers</a></li>
-              <li><a href="#services" className="hover:text-white transition-colors">Dental Implants</a></li>
-              <li><a href="#services" className="hover:text-white transition-colors">Invisalign® Orthodontics</a></li>
-              <li><a href="#services" className="hover:text-white transition-colors">24/7 Emergency Care</a></li>
-              <li><a href="#services" className="hover:text-white transition-colors">Pediatric Dentistry</a></li>
+          {/* Quick Links */}
+          <div className="md:col-span-3 space-y-3">
+            <h4 className="font-mono text-xs uppercase font-bold tracking-widest text-slate-400">
+              CLINICAL NAVIGATION
+            </h4>
+            <ul className="space-y-2 font-sans text-xs font-semibold text-slate-700">
+              <li><a href="#services" className="hover:text-[#0F766E] transition-colors">Clinical Services</a></li>
+              <li><a href="#why-us" className="hover:text-[#0F766E] transition-colors">Practice Standards</a></li>
+              <li><a href="#doctors" className="hover:text-[#0F766E] transition-colors">Specialist Directory</a></li>
+              <li><a href="#branches" className="hover:text-[#0F766E] transition-colors">Branch Locations</a></li>
+              <li><a href="#faq" className="hover:text-[#0F766E] transition-colors">Patient FAQ</a></li>
             </ul>
           </div>
 
-          <div>
-            <h4 className="font-heading text-sm font-bold text-white mb-4">Clinic Locations</h4>
-            <ul className="space-y-2.5 text-xs text-gray-400">
-              <li className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-[#14B8A6]" /> Toronto Downtown (ON)</li>
-              <li className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-[#14B8A6]" /> Vancouver Waterfront (BC)</li>
-              <li className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-[#14B8A6]" /> Calgary City Centre (AB)</li>
-              <li className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-[#14B8A6]" /> Ottawa Capital (ON)</li>
-              <li className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5 text-[#14B8A6]" /> Mississauga Square One (ON)</li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-heading text-sm font-bold text-white mb-4">Clinic Hours</h4>
-            <ul className="space-y-2 text-xs text-gray-400">
-              <li className="flex justify-between"><span>Mon - Fri:</span> <span className="font-medium text-white">8:00 AM – 8:00 PM</span></li>
-              <li className="flex justify-between"><span>Saturday:</span> <span className="font-medium text-white">8:00 AM – 6:00 PM</span></li>
-              <li className="flex justify-between"><span>Sunday:</span> <span className="font-medium text-[#14B8A6]">24/7 Emergency</span></li>
-            </ul>
-            <div className="mt-4 p-3 rounded-[12px] bg-gray-900 border border-gray-800 text-[11px] text-gray-400">
-              <p className="font-medium text-white">Need emergency care?</p>
-              <p className="mt-0.5">Call 1-800-336-8252 for immediate on-call dispatch.</p>
+          {/* Branch Directory */}
+          <div className="md:col-span-4 space-y-3">
+            <h4 className="font-mono text-xs uppercase font-bold tracking-widest text-slate-400">
+              CENTRAL BRANCH DIRECTORY
+            </h4>
+            <div className="space-y-2 text-xs">
+              {branches.map((b, idx) => (
+                <div key={idx} className="flex items-center justify-between py-1.5 border-b border-slate-100 font-mono">
+                  <span className="font-bold text-slate-800 flex items-center space-x-1.5">
+                    <MapPin className="h-3.5 w-3.5 text-[#0F766E]" />
+                    <span>{b.city}</span>
+                  </span>
+                  <a href={`tel:${b.phone}`} className="text-[#0F766E] font-bold hover:underline">
+                    {b.phone}
+                  </a>
+                </div>
+              ))}
             </div>
+          </div>
+
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-slate-500">
+          <p>© {new Date().getFullYear()} DENTALFLOW PRACTICE NETWORK INC. ALL RIGHTS RESERVED.</p>
+          <div className="flex space-x-6">
+            <a href="#" className="hover:text-[#0F766E] transition-colors">PRIVACY POLICY</a>
+            <a href="#" className="hover:text-[#0F766E] transition-colors">TERMS OF SERVICE</a>
+            <a href="#" className="hover:text-[#0F766E] transition-colors">PATIENT EMR PORTAL</a>
           </div>
         </div>
 
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
-          <p>© 2026 SmileCare Dental Clinics / DentalFlow™. All rights reserved across Canada.</p>
-          <div className="flex gap-4">
-            <a href="#" className="hover:text-gray-400">Privacy Policy</a>
-            <a href="#" className="hover:text-gray-400">Terms of Service</a>
-            <a href="#" className="hover:text-gray-400">ODA Fee Guide</a>
-          </div>
-        </div>
       </div>
     </footer>
   );

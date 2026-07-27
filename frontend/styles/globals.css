@@ -2,28 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --font-poppins: 'Poppins', system-ui, -apple-system, sans-serif;
-  }
+:root {
+  --font-poppins: 'Poppins', sans-serif;
+  --font-fraunces: 'Poppins', sans-serif;
+  --font-inter: 'Poppins', sans-serif;
+  --font-space-mono: 'Poppins', sans-serif;
+}
 
+@layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+    background-color: #F8FAFC;
+    color: #0F172A;
+    font-family: var(--font-poppins), 'Poppins', sans-serif !important;
   }
 
   * {
-    border-color: #E5E7EB;
+    border-color: #E2E8F0;
+    font-family: var(--font-poppins), 'Poppins', sans-serif !important;
   }
 
   body {
-    background-color: #FFFFFF;
-    color: #111827;
-    font-family: var(--font-poppins);
+    background-color: #F8FAFC;
+    color: #0F172A;
+    font-family: var(--font-poppins), 'Poppins', sans-serif !important;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  p, span, div, a, button, input, select, textarea {
+    background-color: transparent;
+    color: inherit;
+    font-family: var(--font-poppins), 'Poppins', sans-serif !important;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-poppins);
+    font-family: var(--font-poppins), 'Poppins', sans-serif !important;
+    color: #0F172A;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -36,129 +54,92 @@
 button:focus, button:focus-visible,
 input:focus, input:focus-visible,
 select:focus, select:focus-visible,
-textarea:focus, textarea:focus-visible,
-[role="button"]:focus, [role="button"]:focus-visible,
-[role="dialog"]:focus, [role="dialog"]:focus-visible,
-[data-radix-focus-guard]:focus {
+textarea:focus, textarea:focus-visible {
   outline: none !important;
   box-shadow: none !important;
 }
 
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
+/* Infinite Continuous Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  100% {
+    transform: translateX(-50%);
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-in-out forwards;
+/* Solid Primary Button (Zero Gradients, Poppins Font) */
+.btn-primary {
+  font-family: var(--font-poppins), 'Poppins', sans-serif !important;
+  background-color: #0F766E;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px 0 rgba(15, 118, 110, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.hover-lift {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+.btn-primary:hover {
+  background-color: #0D9488;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px 0 rgba(15, 118, 110, 0.3);
 }
 
-.hover-lift:hover {
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Solid Secondary Button */
+.btn-secondary {
+  font-family: var(--font-poppins), 'Poppins', sans-serif !important;
+  background-color: #FFFFFF;
+  color: #0F766E;
+  border: 1.5px solid #CBD5E1;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-secondary:hover {
+  border-color: #0F766E;
+  background-color: #F0FDF4;
+  transform: translateY(-2px);
+}
+
+/* Card Hover Elevation */
+.card-hover {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.08), 0 8px 10px -6px rgba(15, 118, 110, 0.04);
+  box-shadow: 0 10px 25px -8px rgba(15, 118, 110, 0.1), 0 4px 10px -4px rgba(0, 0, 0, 0.04);
+  border-color: #99F6E4;
 }
 
-/* React Day Picker Grid & Calendar Layout Fixes */
-.rdp {
-  --rdp-cell-size: 38px;
-  --rdp-accent-color: #0F766E;
-  margin: 0;
-}
-
-.rdp-month_grid, table.rdp-table {
-  width: 100% !important;
-  border-collapse: collapse !important;
-  display: table !important;
-}
-
-.rdp-weekdays, tr.rdp-head_row {
-  display: table-row !important;
-}
-
-.rdp-weekday, th.rdp-head_cell {
-  display: table-cell !important;
-  width: 38px !important;
-  height: 32px !important;
-  text-align: center !important;
-  vertical-align: middle !important;
-  font-size: 0.75rem !important;
-  font-weight: 600 !important;
-  color: #6B7280 !important;
-}
-
-.rdp-weeks, tbody.rdp-tbody {
-  display: table-row-group !important;
-}
-
-.rdp-week, tr.rdp-row {
-  display: table-row !important;
-}
-
-.rdp-day, td.rdp-cell {
-  display: table-cell !important;
-  width: 38px !important;
-  height: 38px !important;
-  text-align: center !important;
-  vertical-align: middle !important;
-  padding: 2px !important;
-}
-
-/* Thin Sleek Custom Scrollbar */
+/* Thin Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
   background: #F8FAFC;
-  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(15, 118, 110, 0.25);
-  border-radius: 8px;
+  background: #CBD5E1;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(15, 118, 110, 0.55);
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(15, 118, 110, 0.4);
-  border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #0F766E;
 }
-
-
-

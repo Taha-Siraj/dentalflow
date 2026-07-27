@@ -1,86 +1,98 @@
 "use client";
 
-import React, { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { useAppointments } from "@/hooks/useAppointments";
-import { Calendar, Clock, FileText, Download, AlertCircle, MapPin, User } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { User, Calendar, FileText, Download, CheckCircle2, QrCode, RefreshCw } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function PatientDashboardPage() {
-  const { user } = useAuth();
-  const { appointments, loading } = useAppointments();
+  const [appointments, setAppointments] = useState([]);
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [prescriptions] = useState([
-    {
-      id: "RX-4091",
-      doctor: "Dr. Sarah Jenkins",
-      date: "2026-06-12",
-      medicines: [
-        { name: "Amoxicillin 500mg", dosage: "1 Tablet", frequency: "3x daily after meals", duration: "5 days" },
-        { name: "Ibuprofen 400mg", dosage: "1 Tablet", frequency: "As needed for pain", duration: "3 days" },
-      ],
-    },
-  ]);
+  const fetchPatientData = async () => {
+    try {
+      setLoading(true);
+      const [aptRes, rxRes] = await Promise.all([
+        fetch("http://localhost:5000/api/appointments"),
+        fetch("http://localhost:5000/api/prescriptions"),
+      ]);
 
-  const [invoices] = useState([
-    { id: "INV-2026-004", date: "2026-06-12", amount: "$250.00", status: "Paid" },
-  ]);
+      const aptJson = await aptRes.json();
+      const rxJson = await rxRes.json();
+
+      if (aptJson.success && aptJson.appointments) {
+        setAppointments(aptJson.appointments);
+      }
+      if (rxJson.success && rxJson.data) {
+        setPrescriptions(rxJson.data);
+      }
+    } catch (err) {
+      console.log("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPatientData();
+  }, []);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Patient Welcome Card */}
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 rounded-xl bg-[#0F766E] text-white flex items-center justify-center font-bold text-lg uppercase">
-            {user?.name ? user.name.substring(0, 2) : "TS"}
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-slate-900">Welcome Back, {user?.name || "Patient"}</h1>
-            <p className="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
-              <span>Patient Account: {user?.email || "patient@smilecare.ca"}</span> • <MapPin className="w-3 h-3 text-[#0F766E] inline" /> Toronto Central Branch
-            </p>
+    <div className="space-y-6 font-poppins text-slate-800">
+      {/* Header */}
+      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <span className="text-xs font-bold px-3 py-1 bg-teal-50 text-[#0F766E] rounded-full border border-teal-200 inline-block mb-1 font-mono uppercase tracking-wider">
+            Patient Portal & EMR Records
+          </span>
+          <h1 className="font-serif text-2xl font-bold text-slate-900">Welcome, Patient Account</h1>
+          <p className="text-xs text-slate-500">SmileCare Dental Clinics • Synchronized Electronic Health Record</p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={fetchPatientData}
+            className="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 transition-all cursor-pointer"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 text-[#0F766E] ${loading ? "animate-spin" : ""}`} />
+            <span>Sync Live Records</span>
+          </button>
+          <div className="bg-teal-50 border border-teal-200 p-3 rounded-2xl text-center min-w-[120px]">
+            <span className="text-xs font-mono font-bold text-[#0F766E] block">100% COVERED</span>
+            <span className="text-[10px] uppercase tracking-wider text-teal-800 font-bold">Sun Life Financial</span>
           </div>
         </div>
       </div>
 
-      {/* Grid Section */}
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Appointments & History */}
+        {/* Left: Appointments */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-[#0F766E]" /> My Appointments & History
+              <h2 className="font-serif text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-[#0F766E]" /> Live Appointments & Status
               </h2>
-              <span className="text-xs font-semibold px-2.5 py-0.5 bg-teal-50 text-teal-800 rounded border border-teal-200">
-                {appointments.length} Booked
-              </span>
+              <span className="text-xs font-mono font-bold text-[#0F766E]">DIRECT EMR SYNC</span>
             </div>
 
             {loading ? (
-              <div className="p-8 text-center text-xs text-slate-400">Loading appointments...</div>
-            ) : appointments.length === 0 ? (
-              <div className="p-8 text-center text-xs text-slate-500 border border-dashed border-slate-200 rounded-lg">
-                No appointments found. Book one from the homepage!
-              </div>
+              <div className="p-8 text-center text-xs text-slate-500 font-mono">Fetching Appointments...</div>
             ) : (
               <div className="space-y-3">
-                {appointments.map((apt, idx) => (
-                  <div key={apt._id || idx} className="p-4 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-white transition-colors flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">{apt.treatment}</span>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                          apt.status === "confirmed" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
-                        }`}>
-                          {apt.status || "Confirmed"}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-600">{apt.doctorName || "Dr. Sarah Jenkins"} • {apt.branchName || "SmileCare Toronto"}</p>
-                      <p className="text-xs text-slate-500 flex items-center gap-3">
-                        <span className="flex items-center gap-1"><Calendar className="w-3 h-3 text-[#0F766E]" /> {apt.appointmentDate}</span>
-                        <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-[#0F766E]" /> {apt.appointmentTime}</span>
-                      </p>
+                {appointments.map((apt) => (
+                  <div key={apt._id} className="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                      <span className="text-xs font-mono font-bold text-[#0F766E] bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200">
+                        {apt.appointmentDate} • {apt.appointmentTime}
+                      </span>
+                      <h3 className="font-serif font-bold text-sm text-slate-900 pt-1">{apt.treatment}</h3>
+                      <p className="text-xs text-slate-500">{apt.branchName} • {apt.doctorName}</p>
                     </div>
+
+                    <span className="text-xs font-mono font-bold px-3 py-1 rounded-full uppercase bg-green-100 text-green-800 border border-green-200">
+                      {apt.status || "CONFIRMED"}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -88,69 +100,52 @@ export default function PatientDashboardPage() {
           </div>
 
           {/* Digital Prescriptions */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#0F766E]" /> Digital Prescriptions
-            </h2>
+          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h2 className="font-serif text-lg font-bold text-slate-900 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-[#0F766E]" /> EMR Digital Prescriptions
+              </h2>
+            </div>
 
-            {prescriptions.map((rx) => (
-              <div key={rx.id} className="p-4 rounded-lg border border-teal-200 bg-teal-50/30 space-y-3">
-                <div className="flex items-center justify-between border-b border-teal-100 pb-2">
+            <div className="space-y-3">
+              {prescriptions.map((rx) => (
+                <div key={rx._id} className="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-bold text-teal-900">{rx.id}</span>
-                    <p className="text-[11px] text-slate-500">Issued by {rx.doctor} on {rx.date}</p>
+                    <h3 className="font-serif font-bold text-sm text-slate-900">Prescribed by {rx.doctorName}</h3>
+                    <p className="text-xs text-slate-500">Rx Medication: {rx.medications ? rx.medications.map((m) => m.name).join(", ") : "Amoxicillin 500mg"}</p>
                   </div>
-                  <button className="text-xs font-semibold text-teal-700 hover:text-teal-900 flex items-center gap-1 focus:outline-none">
-                    <Download className="w-3.5 h-3.5" /> Download PDF
+                  <button
+                    onClick={() => toast.success("Rx PDF Downloaded!")}
+                    className="bg-[#0F766E] hover:bg-[#0D9488] text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Download Rx
                   </button>
                 </div>
-
-                <div className="space-y-2">
-                  {rx.medicines.map((med, idx) => (
-                    <div key={idx} className="bg-white p-2.5 rounded border border-slate-200 text-xs flex items-center justify-between">
-                      <div>
-                        <span className="font-bold text-slate-800">{med.name}</span>
-                        <p className="text-[11px] text-slate-500">{med.frequency} ({med.duration})</p>
-                      </div>
-                      <span className="font-semibold text-teal-800 bg-teal-50 px-2 py-0.5 rounded">{med.dosage}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Right Column: Invoices & Medical Profile */}
+        {/* Right: QR Code Check-In Pass */}
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Download className="w-4 h-4 text-[#0F766E]" /> Invoices & Billing
-            </h2>
+          <div className="bg-slate-950 text-white p-6 rounded-3xl border border-slate-800 shadow-xl space-y-4 text-center">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-teal-400">
+              SMART CLINIC CHECK-IN PASS
+            </span>
 
-            {invoices.map((inv) => (
-              <div key={inv.id} className="p-3 rounded-lg border border-slate-200 flex items-center justify-between text-xs">
-                <div>
-                  <span className="font-bold text-slate-900">{inv.id}</span>
-                  <p className="text-[11px] text-slate-500">{inv.date}</p>
-                </div>
-                <div className="text-right">
-                  <span className="font-bold text-slate-900 text-sm block">{inv.amount}</span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                    {inv.status}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+            <h3 className="font-serif text-lg font-bold text-white">QR Appointment Pass</h3>
 
-          <div className="bg-slate-50 border border-slate-200 p-5 rounded-xl text-slate-800 space-y-2">
-            <div className="flex items-center gap-2 font-bold text-sm text-slate-900">
-              <AlertCircle className="w-4 h-4 text-[#0F766E]" /> Patient EMR Status
+            <div className="bg-white p-4 rounded-2xl inline-block shadow-md border-4 border-teal-500">
+              <QrCode className="w-32 h-32 text-slate-900" />
             </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              No drug allergies reported. Next routine preventive cleaning due December 2026.
+
+            <p className="text-xs text-slate-300 font-poppins">
+              Scan this QR code at any SmileCare branch kiosk upon arrival for zero-wait check-in.
             </p>
+
+            <div className="pt-2 border-t border-slate-800 text-[11px] font-mono text-teal-400">
+              EMR PASS #DF-2026-991A
+            </div>
           </div>
         </div>
       </div>

@@ -1,122 +1,123 @@
 "use client";
 
 import React from "react";
-import { Stethoscope, Sparkles, Shield, Smile, HeartHandshake, AlertCircle, ArrowRight, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { ArrowRight, Sparkles, Smile, Shield, Cpu, HeartPulse, Stethoscope } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function Services({ onOpenBooking }) {
   const servicesList = [
     {
       icon: Stethoscope,
-      title: "General & Preventive Dentistry",
-      tag: "Most Popular",
-      description: "Comprehensive oral examinations, hygiene cleanings, digital X-rays, cavity fillings, and oral cancer screenings.",
-      features: ["Hygiene & Polish", "Low-Radiation Digital X-Rays", "Fluoride & Sealants"],
-      coverage: "Covered 80-100% by Insurance",
+      title: "Preventative & General Dentistry",
+      description: "Routine oral checkups, low-radiation digital X-rays, professional cleaning, and cavity protection tailored for patients of all ages.",
+      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&q=80",
+    },
+    {
+      icon: Cpu,
+      title: "3D Digital Implant Surgery",
+      description: "Precision guided dental implant placement utilizing 3D CBCT scans and intraoral digital modeling for permanent smile restoration.",
+      image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80",
     },
     {
       icon: Sparkles,
-      title: "Cosmetic Dentistry & Veneers",
-      tag: "Smile Design",
-      description: "Transform your smile with professional teeth whitening, custom porcelain veneers, and composite bonding.",
-      features: ["Custom Porcelain Veneers", "In-Office Teeth Whitening", "Smile Makeovers"],
-      coverage: "Financing Plans Available",
-    },
-    {
-      icon: Shield,
-      title: "Dental Implants & Restorations",
-      tag: "Permanent Solution",
-      description: "State-of-the-art titanium dental implants, porcelain crowns, and full-arch bridges engineered for lifetime durability.",
-      features: ["3D Guided Surgery", "Full Porcelain Crowns", "All-on-4® Restorations"],
-      coverage: "Direct Billing Available",
+      title: "Invisalign® & Orthodontics",
+      description: "Discreet clear aligners, digital impression tracking, and bite correction designed for predictable, comfortable alignment.",
+      image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80",
     },
     {
       icon: Smile,
-      title: "Orthodontics & Invisalign®",
-      tag: "Clear Aligners",
-      description: "Straighten teeth discreetly with Invisalign® clear aligners or modern ceramic braces for teens and adults.",
-      features: ["Invisalign® Preferred Provider", "Digital 3D Intraoral Scanning", "Retainer Systems"],
-      coverage: "Flexible Monthly Payments",
+      title: "Cosmetic & Veneers",
+      description: "Custom porcelain veneers, laser teeth whitening, and aesthetic smile makeovers executed with artistic shading precision.",
+      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&q=80",
     },
     {
-      icon: HeartHandshake,
-      title: "Pediatric Dentistry",
-      tag: "Child Friendly",
-      description: "Gentle, stress-free dental care designed specifically for children and toddlers in a warm, welcoming environment.",
-      features: ["Cavity Prevention", "Gentle Cleaning", "Behavior Management"],
-      coverage: "Covered 100% Basic Dental Plans",
+      icon: HeartPulse,
+      title: "Emergency Dental Care",
+      description: "Same-day urgent appointments reserved daily for acute toothaches, chipped teeth, root canals, and urgent pain relief.",
+      image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80",
     },
     {
-      icon: AlertCircle,
-      title: "24/7 Emergency Dental Care",
-      tag: "Immediate Relief",
-      description: "Urgent care for severe toothaches, broken teeth, knocked-out teeth, and facial trauma with guaranteed same-day appointments.",
-      features: ["Same-Day Urgent Care", "Immediate Pain Relief", "Emergency Extractions"],
-      coverage: "Direct Insurance Submission",
+      icon: Shield,
+      title: "Pediatric & Sedation Care",
+      description: "Gentle child-friendly dentistry, nitrous oxide (laughing gas), and oral conscious sedation to eliminate patient dental anxiety.",
+      image: "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&w=600&q=80",
     },
   ];
 
   return (
-    <section id="services" className="bg-[#F8FAFC] py-10 border-b border-[#E5E7EB] overflow-x-hidden">
+    <section id="services" className="bg-slate-50 py-20 border-b border-slate-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto space-y-2">
-          <Badge variant="outline" className="border-[#0F766E]/30 text-[#0F766E] bg-white px-3 py-0.5 font-semibold text-xs rounded-full">
-            Comprehensive Clinical Care
-          </Badge>
-          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#111827]">
-            Full-Spectrum Dental Services for Every Stage of Life
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3.5 py-1 rounded-full text-xs">
+            <span className="font-mono font-bold text-[#0F766E] uppercase tracking-widest">
+              WHAT WE TREAT • CLINICAL SPECIALTIES
+            </span>
+          </div>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
+            Comprehensive Dental Services
           </h2>
-          <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed">
-            From routine preventive checkups to complex implant surgery, our board-certified Canadian dental teams use advanced diagnostic technology.
+          <p className="font-poppins text-slate-600 text-base leading-relaxed">
+            Adhering strictly to Canadian provincial fee guides (ODA, BCDA, ADA) with transparent pricing and zero hidden surcharges.
           </p>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {servicesList.map((service, index) => {
-            const Icon = service.icon;
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {servicesList.map((service, idx) => {
+            const IconComponent = service.icon;
             return (
-              <Card key={index} className="border-[#E5E7EB] bg-white hover:border-[#0F766E] transition-all shadow-sm flex flex-col justify-between rounded-xl h-full">
-                <CardHeader className="p-5 pb-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0F766E]/10 text-[#0F766E]">
-                      <Icon className="h-5 w-5" />
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                className="bg-white rounded-2xl border border-slate-200 shadow-sm card-hover overflow-hidden flex flex-col justify-between group"
+              >
+                <div>
+                  {/* Photo Header */}
+                  <div className="relative h-48 w-full overflow-hidden bg-slate-100">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&q=80";
+                      }}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md p-2.5 rounded-xl shadow-md text-[#0F766E]">
+                      <IconComponent className="h-5 w-5" />
                     </div>
-                    <Badge className="bg-[#F8FAFC] text-[#0F766E] border border-[#E5E7EB] text-[10px] font-semibold">
-                      {service.tag}
-                    </Badge>
                   </div>
-                  <CardTitle className="font-heading text-base font-bold text-[#111827]">
-                    {service.title}
-                  </CardTitle>
-                  <CardDescription className="text-[#6B7280] text-xs leading-relaxed mt-1">
-                    {service.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-5 pt-0 space-y-3">
-                  <div className="space-y-1.5 border-t border-[#E5E7EB] pt-3">
-                    {service.features.map((feature, fIdx) => (
-                      <div key={fIdx} className="flex items-center gap-2 text-xs font-medium text-[#111827]">
-                        <Check className="h-3.5 w-3.5 text-[#16A34A] shrink-0" />
-                        <span>{feature}</span>
-                      </div>
-                    ))}
+
+                  {/* Content */}
+                  <div className="p-6 space-y-3">
+                    <h3 className="font-serif text-xl font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors">
+                      {service.title}
+                    </h3>
+                    <p className="font-poppins text-sm text-slate-600 leading-relaxed">
+                      {service.description}
+                    </p>
                   </div>
-                  <div className="flex items-center justify-between pt-2 border-t border-[#E5E7EB]/60">
-                    <span className="text-[10px] font-bold text-[#0F766E] bg-[#0F766E]/5 px-2 py-0.5 rounded-full border border-[#0F766E]/10">
-                      {service.coverage}
-                    </span>
-                    <Button onClick={onOpenBooking} variant="ghost" size="sm" className="text-[#0F766E] hover:text-[#0F766E] hover:bg-[#F8FAFC] font-bold text-xs gap-1 h-8 focus:outline-none">
-                      Book Service
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+
+                {/* Footer Action */}
+                <div className="p-6 pt-0">
+                  <button
+                    onClick={onOpenBooking}
+                    className="w-full btn-secondary rounded-xl py-2.5 font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2"
+                  >
+                    <span>Book Service</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </motion.div>
             );
           })}
         </div>
+
       </div>
     </section>
   );

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Database, CreditCard, Award, Cpu, Smile, FileText } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 
 export function WhyChooseUs() {
   const pillars = [
@@ -39,44 +39,57 @@ export function WhyChooseUs() {
   ];
 
   return (
-    <section id="why-us" className="bg-white py-10 border-b border-[#E5E7EB] overflow-x-hidden">
+    <section id="why-us" className="bg-white py-20 border-b border-slate-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-5 space-y-4 text-left">
-            <Badge variant="outline" className="border-[#0F766E]/30 text-[#0F766E] bg-white px-3 py-0.5 font-semibold text-xs">
-              Why DentalFlow
-            </Badge>
-            <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#111827] leading-tight">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          {/* Left Column Text & Executive Statement */}
+          <div className="lg:col-span-5 space-y-6 text-left">
+            <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3.5 py-1.5 rounded-full text-xs">
+              <span className="font-mono font-bold text-[#0F766E] uppercase tracking-widest">
+                PRACTICE STANDARDS • THE DENTALFLOW WAY
+              </span>
+            </div>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 leading-tight">
               Reinventing Dental Practice Standards Across Canada
             </h2>
-            <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed">
+            <p className="font-poppins text-slate-600 text-base leading-relaxed">
               DentalFlow combines multi-branch convenience with hospital-grade technology, transparent Canadian fee structures, and compassionate patient care.
             </p>
-            <div className="rounded-xl bg-[#F8FAFC] p-4 border border-[#E5E7EB] space-y-2">
-              <p className="text-xs font-semibold text-[#111827]">
+
+            <div className="rounded-2xl bg-slate-50 p-6 border border-slate-200 space-y-3">
+              <p className="font-serif text-sm font-semibold text-slate-800 italic leading-relaxed">
                 "Our promise to every patient across Canada is simple: painless treatment, transparent costs, and lifetime oral health support."
               </p>
-              <p className="text-[11px] font-bold text-[#0F766E]">— SmileCare Dental Clinics Executive Medical Board</p>
+              <p className="font-mono text-xs font-bold text-[#0F766E] uppercase tracking-wider">
+                — SmileCare Dental Clinics Executive Board
+              </p>
             </div>
           </div>
 
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Right Column Pillars Grid */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
             {pillars.map((pillar, idx) => {
               const Icon = pillar.icon;
               return (
-                <div
+                <motion.div
                   key={idx}
-                  className="rounded-xl border border-[#E5E7EB] bg-white p-4 transition-all hover:border-[#0F766E] shadow-xs text-left"
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.4, delay: idx * 0.06 }}
+                  className="rounded-2xl border border-slate-200 bg-white p-6 card-hover text-left space-y-3"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0F766E]/10 text-[#0F766E] mb-2.5">
-                    <Icon className="h-4.5 w-4.5" />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-[#0F766E]">
+                    <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="font-heading text-sm font-bold text-[#111827] mb-1">{pillar.title}</h3>
-                  <p className="text-xs text-[#6B7280] leading-relaxed">{pillar.description}</p>
-                </div>
+                  <h3 className="font-serif text-lg font-bold text-slate-900">{pillar.title}</h3>
+                  <p className="font-poppins text-xs sm:text-sm text-slate-600 leading-relaxed">{pillar.description}</p>
+                </motion.div>
               );
             })}
           </div>
+
         </div>
       </div>
     </section>

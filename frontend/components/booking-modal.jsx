@@ -5,12 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toast from "react-hot-toast";
-import { Calendar as CalendarIcon, CheckCircle2, Shield, Clock, MapPin } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
+import { CheckCircle2, ShieldCheck } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useAppointments } from "@/hooks/useAppointments";
 
 const bookingSchema = z.object({
@@ -33,15 +29,13 @@ export function BookingModal({ isOpen, onClose }) {
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     formState: { errors, isSubmitting },
     reset,
   } = useForm({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       branch: "SmileCare Toronto Central",
-      service: "Hygiene Checkup & Teeth Cleaning",
+      service: "Preventative & General Dentistry",
       doctor: "Dr. Sarah Jenkins",
       patientName: "",
       email: "",
@@ -50,9 +44,6 @@ export function BookingModal({ isOpen, onClose }) {
       notes: "",
     },
   });
-
-  const watchBranch = watch("branch");
-  const watchService = watch("service");
 
   const onSubmit = async (data) => {
     const formattedDate = selectedDate ? selectedDate.toISOString().split("T")[0] : "2026-07-28";
@@ -71,9 +62,9 @@ export function BookingModal({ isOpen, onClose }) {
 
     toast.success(
       <div>
-        <p className="font-bold text-[#111827]">Appointment Confirmed & Saved!</p>
-        <p className="text-xs text-[#6B7280] mt-0.5">
-          Reserved for <span className="font-semibold text-[#0F766E]">{data.patientName}</span> on {formattedDate} at {selectedTimeSlot}.
+        <p className="font-serif font-bold text-slate-900">Appointment Confirmed!</p>
+        <p className="font-sans text-xs text-slate-600 mt-0.5">
+          Reserved for {data.patientName} on {formattedDate} at {selectedTimeSlot}.
         </p>
       </div>
     );
@@ -89,168 +80,164 @@ export function BookingModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleResetAndClose}>
-      <DialogContent className="max-w-xl rounded-[20px] bg-white p-0 shadow-xl border-[#E5E7EB] overflow-hidden focus:outline-none">
-        <div className="p-5 sm:p-6 max-h-[85vh] overflow-y-auto focus:outline-none">
-          <DialogHeader className="pb-1">
-            <DialogTitle className="font-heading text-xl sm:text-2xl font-bold text-[#111827]">
-              {step === 3 ? "Appointment Confirmation" : "Book Online Appointment"}
+      <DialogContent className="max-w-xl bg-white p-0 border border-slate-200 shadow-2xl rounded-2xl overflow-hidden focus:outline-none">
+        <div className="p-6 sm:p-8 max-h-[85vh] overflow-y-auto">
+          
+          <DialogHeader className="pb-4 border-b border-slate-200">
+            <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full text-xs mb-1 w-max">
+              <ShieldCheck className="h-3.5 w-3.5 text-[#0F766E]" />
+              <span className="font-mono font-bold uppercase tracking-widest text-[#0F766E]">
+                DIRECT ELECTRONIC BILLING PORTAL
+              </span>
+            </div>
+            <DialogTitle className="font-serif text-2xl font-bold text-slate-900">
+              {step === 3 ? "Appointment Confirmation" : "Online Dental Booking"}
             </DialogTitle>
-            <DialogDescription className="text-xs text-[#6B7280]">
-              SmileCare Dental Practice Network • Direct Electronic Insurance Billing
+            <DialogDescription className="font-sans text-xs text-slate-600">
+              SmileCare Dental Practice Network • Provincial Fee Guide Compliant
             </DialogDescription>
           </DialogHeader>
 
-          {step === 1 && (
-            <div className="space-y-3 pt-1">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-[#111827] flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4 text-[#0F766E]" /> Select Canadian Branch
-                </label>
-                <Select value={watchBranch} onValueChange={(val) => setValue("branch", val)}>
-                  <SelectTrigger className="h-10 border-[#E5E7EB] focus:outline-none">
-                    <SelectValue placeholder="Choose branch" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="SmileCare Toronto Central">SmileCare Toronto Central (100 King St W)</SelectItem>
-                    <SelectItem value="SmileCare Vancouver West">SmileCare Vancouver West (1055 W Georgia St)</SelectItem>
-                    <SelectItem value="SmileCare Montreal Clinic">SmileCare Montreal Clinic (1250 Rene-Levesque Blvd)</SelectItem>
-                  </SelectContent>
-                </Select>
+          {step === 3 ? (
+            <div className="py-8 text-center space-y-6">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-100 text-[#0F766E]">
+                <CheckCircle2 className="h-8 w-8" />
               </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-[#111827]">Dental Service Required</label>
-                <Select value={watchService} onValueChange={(val) => setValue("service", val)}>
-                  <SelectTrigger className="h-10 border-[#E5E7EB] focus:outline-none">
-                    <SelectValue placeholder="Choose service" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Hygiene Checkup & Teeth Cleaning">Hygiene Checkup & Teeth Cleaning</SelectItem>
-                    <SelectItem value="Dental Implants & Restoration">Dental Implants & Restoration</SelectItem>
-                    <SelectItem value="Teeth Whitening & Veneers">Teeth Whitening & Veneers</SelectItem>
-                    <SelectItem value="Invisalign® Clear Aligners">Invisalign® Clear Aligners</SelectItem>
-                    <SelectItem value="Emergency Dental Relief">Emergency Dental Relief (24/7 Urgent)</SelectItem>
-                    <SelectItem value="Pediatric Children Dental Care">Pediatric Children Dental Care</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="space-y-2">
+                <h3 className="font-serif text-2xl font-bold text-slate-900">Appointment Confirmed!</h3>
+                <p className="font-sans text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
+                  Your appointment has been synchronized into the DentalFlow EMR system. A confirmation email and SMS reminder have been sent.
+                </p>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-[#111827]">Preferred Dentist</label>
-                <Select defaultValue="Dr. Sarah Jenkins" onValueChange={(val) => setValue("doctor", val)}>
-                  <SelectTrigger className="h-10 border-[#E5E7EB] focus:outline-none">
-                    <SelectValue placeholder="Choose doctor" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Dr. Sarah Jenkins">Dr. Sarah Jenkins, DDS (Implant Specialist)</SelectItem>
-                    <SelectItem value="Dr. Marcus Vance">Dr. Marcus Vance, DDS (Orthodontics & Invisalign)</SelectItem>
-                    <SelectItem value="Dr. Elena Rostova">Dr. Elena Rostova, DMD (Cosmetic Dentistry)</SelectItem>
-                    <SelectItem value="Dr. Michael Chang">Dr. Michael Chang, DDS (Oral Surgeon)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="pt-2 flex justify-end">
-                <Button onClick={() => setStep(2)} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs px-6 h-9 rounded-[10px] focus:outline-none">
-                  Continue to Date & Details
-                </Button>
-              </div>
+              <button
+                onClick={handleResetAndClose}
+                className="btn-primary rounded-full px-6 py-3 font-sans text-xs font-bold uppercase tracking-wider"
+              >
+                Return to Website
+              </button>
             </div>
-          )}
-
-          {step === 2 && (
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 pt-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-start">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-[#111827] flex items-center gap-1">
-                    <CalendarIcon className="h-4 w-4 text-[#0F766E]" /> Select Preferred Date
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 pt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
+                    CLINIC BRANCH
                   </label>
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    className="rounded-[12px] border border-[#E5E7EB] p-2"
+                  <select
+                    {...register("branch")}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                  >
+                    <option value="SmileCare Toronto Central">Toronto Central</option>
+                    <option value="SmileCare Vancouver West">Vancouver West</option>
+                    <option value="SmileCare Calgary Downtown">Calgary Downtown</option>
+                    <option value="SmileCare Ottawa Parliament">Ottawa Parliament</option>
+                    <option value="SmileCare Mississauga Medical">Mississauga Medical</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
+                    SERVICE SPECIALTY
+                  </label>
+                  <select
+                    {...register("service")}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                  >
+                    <option value="Preventative & General Dentistry">Preventative & General</option>
+                    <option value="3D Digital Implant Surgery">3D Implant Surgery</option>
+                    <option value="Invisalign® & Orthodontics">Invisalign® Orthodontics</option>
+                    <option value="Cosmetic & Veneers">Cosmetic Veneers</option>
+                    <option value="Emergency Dental Care">Emergency Care</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
+                    PATIENT NAME
+                  </label>
+                  <input
+                    {...register("patientName")}
+                    placeholder="Full Name"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
                   />
+                  {errors.patientName && (
+                    <span className="font-mono text-[10px] text-red-600 mt-0.5 block font-bold">
+                      {errors.patientName.message}
+                    </span>
+                  )}
                 </div>
 
-                <div className="space-y-2.5">
-                  <div>
-                    <label className="text-xs font-bold text-[#111827] flex items-center gap-1 mb-1">
-                      <Clock className="h-4 w-4 text-[#0F766E]" /> Select Time Slot
-                    </label>
-                    <div className="grid grid-cols-2 gap-1.5">
-                      {["09:00 AM", "10:30 AM", "01:15 PM", "03:45 PM"].map((slot) => (
-                        <button
-                          key={slot}
-                          type="button"
-                          onClick={() => setSelectedTimeSlot(slot)}
-                          className={`px-2 py-1 rounded-[8px] text-[11px] font-semibold border focus:outline-none ${
-                            selectedTimeSlot === slot
-                              ? "bg-[#0F766E] text-white border-[#0F766E]"
-                              : "bg-white text-[#111827] border-[#E5E7EB] hover:bg-[#F8FAFC]"
-                          }`}
-                        >
-                          {slot}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                <div>
+                  <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
+                    EMAIL ADDRESS
+                  </label>
+                  <input
+                    {...register("email")}
+                    placeholder="name@domain.ca"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                  />
+                  {errors.email && (
+                    <span className="font-mono text-[10px] text-red-600 mt-0.5 block font-bold">
+                      {errors.email.message}
+                    </span>
+                  )}
+                </div>
 
-                  <div className="space-y-0.5">
-                    <label className="text-xs font-bold text-[#111827]">Full Patient Name</label>
-                    <Input {...register("patientName")} placeholder="e.g. Sarah Connor" className="h-8.5 text-xs border-[#E5E7EB] focus:outline-none" />
-                    {errors.patientName && <p className="text-[10px] text-[#DC2626] font-medium">{errors.patientName.message}</p>}
-                  </div>
-
-                  <div className="space-y-0.5">
-                    <label className="text-xs font-bold text-[#111827]">Email Address</label>
-                    <Input {...register("email")} type="email" placeholder="sarah@example.ca" className="h-8.5 text-xs border-[#E5E7EB] focus:outline-none" />
-                    {errors.email && <p className="text-[10px] text-[#DC2626] font-medium">{errors.email.message}</p>}
-                  </div>
-
-                  <div className="space-y-0.5">
-                    <label className="text-xs font-bold text-[#111827]">Phone Number</label>
-                    <Input {...register("phone")} placeholder="(416) 555-0199" className="h-8.5 text-xs border-[#E5E7EB] focus:outline-none" />
-                    {errors.phone && <p className="text-[10px] text-[#DC2626] font-medium">{errors.phone.message}</p>}
-                  </div>
+                <div>
+                  <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
+                    PHONE NUMBER
+                  </label>
+                  <input
+                    {...register("phone")}
+                    placeholder="(416) 000-0000"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                  />
+                  {errors.phone && (
+                    <span className="font-mono text-[10px] text-red-600 mt-0.5 block font-bold">
+                      {errors.phone.message}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              <div className="space-y-0.5">
-                <label className="text-xs font-bold text-[#111827] flex items-center gap-1">
-                  <Shield className="h-3.5 w-3.5 text-[#0F766E]" /> Insurance Provider (For Direct Billing)
+              <div>
+                <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
+                  DIRECT INSURANCE PROVIDER
                 </label>
-                <Input {...register("insurance")} placeholder="e.g. Sun Life Financial / Manulife / Canada Life" className="h-8.5 text-xs border-[#E5E7EB] focus:outline-none" />
+                <select
+                  {...register("insurance")}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                >
+                  <option value="Sun Life Financial">Sun Life Financial</option>
+                  <option value="Manulife">Manulife</option>
+                  <option value="Canada Life">Canada Life</option>
+                  <option value="Desjardins Insurance">Desjardins Insurance</option>
+                  <option value="Pacific Blue Cross">Pacific Blue Cross</option>
+                  <option value="Other / Self-Pay">Other / Self-Pay</option>
+                </select>
               </div>
 
-              <div className="flex justify-between pt-1">
-                <Button type="button" variant="outline" onClick={() => setStep(1)} className="text-xs border-[#E5E7EB] h-9 focus:outline-none">
-                  Back
-                </Button>
-                <Button type="submit" disabled={isSubmitting} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs px-6 h-9 rounded-[10px] focus:outline-none">
-                  Confirm & Save Appointment
-                </Button>
+              <div className="pt-4 border-t border-slate-200 flex justify-end space-x-3">
+                <button
+                  type="button"
+                  onClick={handleResetAndClose}
+                  className="btn-secondary rounded-xl px-5 py-2.5 font-sans text-xs font-bold uppercase"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-primary rounded-xl px-6 py-2.5 font-sans text-xs font-bold uppercase tracking-wider"
+                >
+                  {isSubmitting ? "Processing EMR..." : "Confirm Appointment"}
+                </button>
               </div>
             </form>
           )}
 
-          {step === 3 && (
-            <div className="text-center py-6 space-y-4">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#16A34A]/10 text-[#16A34A]">
-                <CheckCircle2 className="h-10 w-10" />
-              </div>
-              <div>
-                <h3 className="font-heading text-xl font-bold text-[#111827]">Your Appointment is Saved & Confirmed!</h3>
-                <p className="text-xs text-[#6B7280] mt-1 max-w-md mx-auto">
-                  Confirmation sent to doctor schedule and live reception queue.
-                </p>
-              </div>
-
-              <Button onClick={handleResetAndClose} className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white text-xs px-8 h-10 font-semibold focus:outline-none">
-                Done
-              </Button>
-            </div>
-          )}
         </div>
       </DialogContent>
     </Dialog>

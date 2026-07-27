@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User, Mail, Lock, Phone, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, Phone, ArrowRight, ShieldCheck } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -11,26 +12,52 @@ export default function RegisterPage() {
 
   const handleRegister = (e) => {
     e.preventDefault();
+    toast.success("Patient Account Created Successfully!");
     router.push("/dashboard/patient");
   };
 
+  const handleQuickDemoRegister = () => {
+    setFormData({
+      fullName: "Taha Siraj",
+      email: "taha@example.com",
+      phone: "(416) 555-0199",
+      password: "password123",
+    });
+    toast.success("Demo Patient Details Loaded!");
+    setTimeout(() => {
+      router.push("/dashboard/patient");
+    }, 500);
+  };
+
   return (
-    <div className="min-h-screen bg-[#0F172A] flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-xl text-white space-y-6">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 font-poppins selection:bg-teal-700 selection:text-white">
+      <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl text-white space-y-6">
+        
+        {/* Header */}
         <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-[#0F766E] text-white flex items-center justify-center font-bold text-xl">
+          <Link href="/" className="inline-flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#0F766E] text-white flex items-center justify-center font-bold text-xl shadow-md">
               D
             </div>
-            <span className="font-bold text-xl text-white tracking-tight">
-              DentalFlow<span className="text-[#14B8A6]">™</span>
+            <span className="font-serif font-bold text-2xl text-white tracking-tight">
+              Dental<span className="text-teal-400">Flow</span>
             </span>
           </Link>
-          <h1 className="text-xl font-bold text-slate-100">Patient Registration</h1>
-          <p className="text-xs text-slate-400">Create your SmileCare account to book & track appointments</p>
+          <h1 className="font-serif text-xl font-bold text-slate-100 pt-2">Patient Account Registration</h1>
+          <p className="font-poppins text-xs text-slate-400">Create your account to access EMR records & book appointments</p>
         </div>
 
-        <form onSubmit={handleRegister} className="space-y-3.5 text-xs">
+        {/* 1-Click Quick Register Demo */}
+        <button
+          onClick={handleQuickDemoRegister}
+          className="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 p-3 rounded-2xl flex items-center justify-center space-x-2 transition-all cursor-pointer"
+        >
+          <ShieldCheck className="h-4 w-4 text-teal-400" />
+          <span className="font-poppins text-xs font-bold text-slate-200">1-Click Auto-Fill Demo Patient Registration</span>
+        </button>
+
+        {/* Form */}
+        <form onSubmit={handleRegister} className="space-y-3.5 text-xs font-poppins">
           <div className="space-y-1">
             <label className="font-bold text-slate-300">Full Name</label>
             <div className="relative">
@@ -41,7 +68,7 @@ export default function RegisterPage() {
                 placeholder="Taha Siraj"
                 value={formData.fullName}
                 onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#0F766E]"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#0F766E]"
               />
             </div>
           </div>
@@ -53,10 +80,10 @@ export default function RegisterPage() {
               <input
                 type="email"
                 required
-                placeholder="name@example.com"
+                placeholder="taha@example.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#0F766E]"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#0F766E]"
               />
             </div>
           </div>
@@ -71,7 +98,7 @@ export default function RegisterPage() {
                 placeholder="(416) 555-0199"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#0F766E]"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#0F766E]"
               />
             </div>
           </div>
@@ -86,16 +113,17 @@ export default function RegisterPage() {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#0F766E]"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 focus:outline-none focus:border-[#0F766E]"
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full py-3 bg-[#0F766E] hover:bg-[#0D655D] text-white font-bold text-sm rounded-lg transition-colors flex items-center justify-center gap-2 mt-2"
+            className="w-full py-3 bg-[#0F766E] hover:bg-[#0D9488] text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center space-x-2 mt-2 cursor-pointer shadow-lg"
           >
-            Create Patient Account <ArrowRight className="w-4 h-4" />
+            <span>Create Patient Account</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 

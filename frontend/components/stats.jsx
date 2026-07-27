@@ -1,62 +1,35 @@
 "use client";
 
 import React from "react";
-import { Users, Building2, UserCheck, Award } from "lucide-react";
+import { ShieldCheck, Check, Star } from "lucide-react";
 
 export function Stats() {
-  const stats = [
-    {
-      id: 1,
-      name: "Verified Patients Served",
-      value: "15,000+",
-      description: "Across Ontario, BC, and Alberta",
-      icon: Users,
-    },
-    {
-      id: 2,
-      name: "Clinic Locations in Canada",
-      value: "10+",
-      description: "Fully synchronized EMR network",
-      icon: Building2,
-    },
-    {
-      id: 3,
-      name: "Licensed Dental Specialists",
-      value: "50+",
-      description: "DDS & FRCD(C) board certified",
-      icon: UserCheck,
-    },
-    {
-      id: 4,
-      name: "Patient Satisfaction Rate",
-      value: "98%",
-      description: "Based on 12,000+ clinic reviews",
-      icon: Award,
-    },
+  const marqueeItems = [
+    "100% DIRECT ELECTRONIC INSURANCE BILLING",
+    "CENTRALIZED EMR RECORDS ACROSS 5 CITIES",
+    "3D LOW-RADIATION CBCT DIAGNOSTICS",
+    "BOARD-CERTIFIED CANADIAN DDS SPECIALISTS",
+    "PROVINCIAL FEE GUIDE COMPLIANT (ODA, BCDA, ADA)",
+    "SUN LIFE • MANULIFE • CANADA LIFE • DESJARDINS • BLUE CROSS",
+    "SAME-DAY EMERGENCY DENTAL APPOINTMENTS",
+    "GENTLE CARE & NITROUS SEDATION OPTIONS",
   ];
 
   return (
-    <section className="bg-white py-6 border-b border-[#E5E7EB] overflow-x-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={stat.id}
-                className="flex items-center space-x-3.5 rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] p-4 transition-all hover:border-[#0F766E]"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#0F766E]/10 text-[#0F766E]">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="font-heading text-xl font-bold text-[#111827]">{stat.value}</div>
-                  <div className="text-xs font-semibold text-[#111827]">{stat.name}</div>
-                  <div className="text-[11px] text-[#6B7280] mt-0.5">{stat.description}</div>
-                </div>
+    <section className="bg-white py-5 border-y border-slate-200 shadow-2xs overflow-hidden select-none">
+      <div className="relative flex overflow-x-hidden">
+        {/* Doubled list for seamless continuous infinite marquee scroll */}
+        <div className="animate-marquee flex items-center space-x-12 whitespace-nowrap">
+          {marqueeItems.concat(marqueeItems).map((item, idx) => (
+            <div key={idx} className="flex items-center space-x-3">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-100 text-[#0F766E]">
+                <Check className="h-3.5 w-3.5 stroke-[3]" />
               </div>
-            );
-          })}
+              <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-800">
+                {item}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

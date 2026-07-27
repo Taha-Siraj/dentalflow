@@ -1,60 +1,96 @@
 "use client";
 
-import React from "react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
+import React, { useState } from "react";
+import { Plus, Minus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function FAQ() {
+  const [openIndex, setOpenIndex] = useState(0);
+
   const faqs = [
     {
-      q: "How does DentalFlow handle direct insurance billing in Canada?",
-      a: "We submit claims electronically directly to major Canadian insurance providers including Sun Life, Manulife, Canada Life, Desjardins, and Blue Cross. In most cases, you only pay the non-covered co-pay portion during your visit.",
+      question: "Which insurance providers do you bill directly?",
+      answer: "We offer 100% direct electronic claims processing for Sun Life Financial, Manulife, Canada Life, Desjardins Insurance, Pacific Blue Cross, Medavie Blue Cross, and provincial dental programs (CDCP, ODP). Claims are submitted before you leave the clinic to eliminate out-of-pocket stress.",
     },
     {
-      q: "Can I visit a different DentalFlow branch if I travel or relocate in Canada?",
-      a: "Yes! Because DentalFlow utilizes a 100% centralized cloud EMR system, your dental records, X-rays, and treatment history are securely accessible across all our locations in Toronto, Vancouver, Calgary, Ottawa, and Mississauga.",
+      question: "How does centralized EMR record syncing work across branches?",
+      answer: "When you register at any DentalFlow branch, your electronic medical record (EMR), high-resolution 3D CBCT scans, dental history, and treatment plans are stored in an encrypted Canadian cloud server. If you visit our Toronto, Vancouver, Calgary, Ottawa, or Mississauga clinic, any dentist can access your full record seamlessly.",
     },
     {
-      q: "What should I do if I experience a dental emergency after hours?",
-      a: "We maintain 24/7 on-call emergency dentists across all regions. Call our toll-free emergency hotline at 1-800-DENTAL-CA (1-800-336-8252) to be connected immediately with an on-call specialist.",
+      question: "Do you follow provincial dental fee guides?",
+      answer: "Yes. All treatments adhere strictly to annual provincial dental association fee guides (including ODA in Ontario, BCDA in British Columbia, and ADA in Alberta). We provide upfront cost estimates with zero hidden clinic surcharges.",
     },
     {
-      q: "Are same-day dental appointments available for new patients?",
-      a: "Yes, we reserve dedicated daily slots at every branch specifically for urgent care and new patient consultations. You can check real-time availability on our website or call your local clinic directly.",
+      question: "What sedation options are available for anxious patients?",
+      answer: "We offer tiered sedation care tailored to your comfort level: nitrous oxide (laughing gas), oral conscious sedation, and IV deep sedation monitored by licensed anesthesiologists and certified clinical teams.",
     },
     {
-      q: "What payment options and financial financing plans do you accept?",
-      a: "We accept Interac Debit, Visa, Mastercard, American Express, and offer zero-interest flexible monthly payment plans for major cosmetic, orthodontic (Invisalign®), and implant procedures.",
+      question: "Can I book same-day emergency appointments?",
+      answer: "Yes. Every branch reserves dedicated daily emergency slots for acute toothaches, chipped or knocked-out teeth, root canal pain, and trauma. Call any branch or use our online booking portal for instant confirmation.",
     },
   ];
 
   return (
-    <section id="faq" className="bg-white py-10 border-b border-[#E5E7EB] overflow-x-hidden">
+    <section id="faq" className="bg-slate-50 py-20 border-b border-slate-200">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center space-y-2 mb-8">
-          <Badge variant="outline" className="border-[#0F766E]/30 text-[#0F766E] bg-white px-3 py-0.5 font-semibold text-xs">
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3.5 py-1.5 rounded-full text-xs">
+            <span className="font-mono font-bold text-[#0F766E] uppercase tracking-widest">
+              PATIENT KNOWLEDGE BASE • FAQ
+            </span>
+          </div>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
             Frequently Asked Questions
-          </Badge>
-          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#111827]">
-            Got Questions? We Have Answers.
           </h2>
-          <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed">
-            Everything you need to know about insurance billing, multi-branch access, and emergency care.
+          <p className="font-sans text-slate-600 text-base">
+            Everything you need to know about our practice, electronic billing, and appointment procedures.
           </p>
         </div>
 
-        <Accordion type="single" collapsible className="w-full space-y-3">
-          {faqs.map((faq, idx) => (
-            <AccordionItem key={idx} value={`faq-${idx}`} className="rounded-xl border border-[#E5E7EB] bg-[#F8FAFC] px-5">
-              <AccordionTrigger className="font-heading text-sm font-bold text-[#111827] hover:no-underline py-3 text-left">
-                {faq.q}
-              </AccordionTrigger>
-              <AccordionContent className="text-xs text-[#6B7280] leading-relaxed pb-3 text-left">
-                {faq.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        {/* Accordion List */}
+        <div className="space-y-4">
+          {faqs.map((faq, idx) => {
+            const isOpen = openIndex === idx;
+            return (
+              <div
+                key={idx}
+                className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden transition-all"
+              >
+                <button
+                  onClick={() => setOpenIndex(isOpen ? -1 : idx)}
+                  className="w-full p-6 flex items-center justify-between text-left focus:outline-none group"
+                >
+                  <span className="font-serif text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors pr-4">
+                    {faq.question}
+                  </span>
+
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-50 text-[#0F766E] flex-shrink-0">
+                    {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                  </div>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <div className="p-6 pt-0 font-sans text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+
       </div>
     </section>
   );

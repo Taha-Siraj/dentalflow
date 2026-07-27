@@ -1,163 +1,176 @@
 "use client";
 
-import React, { useState } from "react";
-import { Calendar, ShieldCheck, ArrowRight, Star, Clock, CheckCircle2, Building2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import React, { useEffect, useRef, useState } from "react";
+import { ArrowRight, ShieldCheck, Calendar, MapPin, CheckCircle2, Play, Pause } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function Hero({ onOpenBooking }) {
-  const [selectedBranch, setSelectedBranch] = useState("toronto");
-  const [selectedService, setSelectedService] = useState("preventive");
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  // Programmatic Video Auto-Play Trigger
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => {
+          console.log("Autoplay notification:", err);
+        });
+    }
+  }, []);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.08,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 25 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.65,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+  };
 
   return (
-    <section className="relative overflow-x-hidden bg-[#F8FAFC] py-8 lg:py-12 border-b border-[#E5E7EB]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 space-y-4 text-left">
-            <div className="inline-flex items-center gap-2 rounded-md border border-[#0F766E]/20 bg-[#0F766E]/5 px-3 py-1 text-xs font-semibold text-[#0F766E]">
-              <ShieldCheck className="h-4 w-4 text-[#0F766E]" />
-              <span>Canada’s Trusted Multi-Branch Dental Network</span>
-            </div>
+    <section className="relative min-h-[700px] sm:min-h-[780px] pt-36 sm:pt-40 pb-24 border-b border-slate-200 overflow-hidden flex items-center justify-center bg-slate-950">
+      
+      {/* FULL-BLEED LOCAL HD DENTAL CLINIC BACKGROUND VIDEO */}
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-80 transition-opacity duration-1000"
+      >
+        <source src="/hero-video.mp4" type="video/mp4" />
+      </video>
 
-            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#111827] leading-tight">
-              Exceptional Dental Care for <span className="text-[#0F766E]">Canadian Families</span>
-            </h1>
+      {/* EXECUTIVE DARK SLATE & SOFT BLUR OVERLAY (Zero Neon, Matte Legibility) */}
+      <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[1.5px] z-10 pointer-events-none" />
 
-            <p className="text-sm sm:text-base text-[#6B7280] leading-relaxed max-w-2xl">
-              Centralized patient records, top-rated board-certified specialists, and direct electronic insurance billing across Toronto, Vancouver, Calgary, Ottawa, and Mississauga.
-            </p>
+      {/* FOREGROUND CENTERED HERO CONTENT */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 w-full flex justify-center">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-4xl space-y-8 text-center flex flex-col items-center justify-center"
+        >
+          {/* Space Mono Eyebrow Badge (Matte Executive Styling, Zero Neon) */}
+          <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 bg-slate-900/90 border border-slate-700/60 px-4 py-1.5 rounded-full backdrop-blur-md shadow-md">
+            <ShieldCheck className="h-4 w-4 text-teal-400" />
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-200">
+              DIRECT ELECTRONIC BILLING ACROSS CANADA
+            </span>
+          </motion.div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
-              <Button
-                onClick={onOpenBooking}
-                size="lg"
-                className="bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-sm px-6 h-11 gap-2 shadow-sm rounded-lg transition-transform active:scale-[0.98] focus:outline-none"
-              >
-                <Calendar className="h-4 w-4" />
-                Book Online Appointment
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-              <a href="/branches">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto h-11 text-sm font-medium rounded-lg border-[#E5E7EB] text-[#111827] hover:bg-white focus:outline-none">
-                  <Building2 className="h-4 w-4 mr-2 text-[#0F766E]" />
-                  Find Nearest Branch
-                </Button>
-              </a>
-            </div>
+          {/* Fraunces Serif Centered Headline */}
+          <motion.h1
+            variants={itemVariants}
+            className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.12] tracking-tight max-w-3xl"
+          >
+            World-Class Dental Care, <br />
+            <span className="text-teal-400 italic font-normal">
+              Painless & Synchronized.
+            </span>
+          </motion.h1>
 
-            <div className="pt-4 border-t border-[#E5E7EB] grid grid-cols-2 sm:grid-cols-3 gap-3">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-[#16A34A] shrink-0" />
-                <span className="text-xs text-[#111827] font-medium">Direct Insurance Billing</span>
+          {/* Poppins Centered Subtext */}
+          <motion.p
+            variants={itemVariants}
+            className="font-poppins text-base sm:text-xl text-slate-200 max-w-2xl text-center leading-relaxed font-normal"
+          >
+            Visit any DentalFlow clinic in Toronto, Vancouver, Calgary, Ottawa, or Mississauga. Your X-rays, medical records, and treatment plans sync instantly.
+          </motion.p>
+
+          {/* Centered Action Row */}
+          <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <button
+              onClick={onOpenBooking}
+              className="bg-[#0F766E] hover:bg-[#0D9488] text-white rounded-full px-8 py-4 font-sans text-xs font-bold uppercase tracking-wider flex items-center space-x-3 shadow-xl transition-all hover:scale-105 cursor-pointer"
+            >
+              <span>Book Appointment Online</span>
+              <ArrowRight className="h-4 w-4" />
+            </button>
+
+            <a
+              href="#branches"
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-full px-7 py-4 font-sans text-xs font-bold uppercase tracking-wider flex items-center space-x-2 transition-all hover:scale-105"
+            >
+              <MapPin className="h-4 w-4 text-teal-300" />
+              <span>Find Clinic Location</span>
+            </a>
+
+            <button
+              onClick={togglePlay}
+              className="bg-slate-900/80 hover:bg-slate-900 border border-white/20 text-slate-200 px-4 py-3 rounded-full font-mono text-xs font-bold uppercase tracking-wider flex items-center space-x-2 backdrop-blur-md transition-all cursor-pointer"
+            >
+              {isPlaying ? <Pause className="h-3.5 w-3.5 text-teal-300" /> : <Play className="h-3.5 w-3.5 text-teal-300 fill-teal-300" />}
+              <span>{isPlaying ? "PAUSE VIDEO" : "PLAY VIDEO"}</span>
+            </button>
+          </motion.div>
+
+          {/* Hairline Border-Top Centered Stats Bar */}
+          <motion.div
+            variants={itemVariants}
+            className="pt-8 border-t border-slate-700/80 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl w-full"
+          >
+            <div className="flex items-center justify-center space-x-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/90 border border-slate-700/60 text-teal-400 font-bold">
+                <ShieldCheck className="h-5 w-5" />
               </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-[#16A34A] shrink-0" />
-                <span className="text-xs text-[#111827] font-medium">Same-Day Emergency Slots</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-[#16A34A] shrink-0" />
-                <span className="text-xs text-[#111827] font-medium">100% Shared EMR Records</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 pt-1">
-              <div className="flex -space-x-2">
-                <img className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Patient" />
-                <img className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Patient" />
-                <img className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=100&q=80" alt="Patient" />
-                <img className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt="Patient" />
-              </div>
-              <div>
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-[#F59E0B] text-[#F59E0B]" />
-                  ))}
-                  <span className="text-xs font-bold text-[#111827] ml-1">4.9/5.0</span>
-                </div>
-                <p className="text-[11px] text-[#6B7280]">Over 15,000+ verified Canadian patient reviews</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-5 space-y-4">
-            <Card className="border-[#E5E7EB] bg-white shadow-sm rounded-xl overflow-hidden">
-              <div className="bg-[#0F766E] p-4 text-white">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-heading text-base font-bold">Instant Appointment Checker</h3>
-                  <Badge variant="secondary" className="bg-[#14B8A6] text-white text-[10px] font-semibold">
-                    Live Slots
-                  </Badge>
-                </div>
-                <p className="text-xs text-white/90 mt-0.5">Select location and service to view instant open openings</p>
-              </div>
-              <CardContent className="p-5 space-y-3">
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-[#111827]">Select Canadian Branch Location</label>
-                  <Select value={selectedBranch} onValueChange={setSelectedBranch}>
-                    <SelectTrigger className="h-10 border-[#E5E7EB] focus:ring-[#0F766E] text-xs">
-                      <SelectValue placeholder="Select location" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="toronto">Toronto Downtown Clinic (King St W)</SelectItem>
-                      <SelectItem value="vancouver">Vancouver Waterfront Clinic (Georgia St)</SelectItem>
-                      <SelectItem value="calgary">Calgary City Centre Clinic (9th Ave)</SelectItem>
-                      <SelectItem value="ottawa">Ottawa Capital Clinic (O'Connor St)</SelectItem>
-                      <SelectItem value="mississauga">Mississauga Square One Clinic</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-[#111827]">Required Dental Service</label>
-                  <Select value={selectedService} onValueChange={setSelectedService}>
-                    <SelectTrigger className="h-10 border-[#E5E7EB] focus:ring-[#0F766E] text-xs">
-                      <SelectValue placeholder="Select service" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="preventive">Hygiene Checkup & Teeth Cleaning</SelectItem>
-                      <SelectItem value="implants">Dental Implants & Restoration</SelectItem>
-                      <SelectItem value="cosmetic">Teeth Whitening & Veneers</SelectItem>
-                      <SelectItem value="orthodontics">Invisalign® Clear Aligners</SelectItem>
-                      <SelectItem value="emergency">Emergency Dental Relief (24/7)</SelectItem>
-                      <SelectItem value="pediatric">Pediatric Children Dental Care</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="rounded-lg bg-[#F8FAFC] p-3 border border-[#E5E7EB] text-xs text-[#6B7280] space-y-1">
-                  <div className="flex items-center gap-1.5 font-medium text-[#0F766E]">
-                    <Clock className="h-3.5 w-3.5" />
-                    <span>Next Open Openings Today:</span>
-                  </div>
-                  <div className="flex gap-2 pt-1">
-                    <span className="bg-white px-2 py-0.5 rounded border border-[#E5E7EB] text-[#111827] font-semibold text-[11px]">10:30 AM</span>
-                    <span className="bg-white px-2 py-0.5 rounded border border-[#E5E7EB] text-[#111827] font-semibold text-[11px]">02:15 PM</span>
-                    <span className="bg-white px-2 py-0.5 rounded border border-[#E5E7EB] text-[#111827] font-semibold text-[11px]">04:45 PM</span>
-                  </div>
-                </div>
-
-                <Button onClick={onOpenBooking} className="w-full h-10 bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-semibold text-xs rounded-lg focus:outline-none">
-                  Proceed to Reserve Slot
-                </Button>
-              </CardContent>
-            </Card>
-
-            <div className="rounded-xl border border-[#E5E7EB] bg-white p-3 flex items-center justify-around text-center">
-              <div>
-                <p className="text-[10px] text-[#6B7280]">Direct Electronic Billing</p>
-                <p className="text-xs font-bold text-[#111827] mt-0.5">Sun Life • Manulife • Canada Life</p>
-              </div>
-              <div className="h-6 w-px bg-[#E5E7EB]" />
-              <div>
-                <p className="text-[10px] text-[#6B7280]">Emergency Hotline</p>
-                <p className="text-xs font-bold text-[#0F766E] mt-0.5">24/7 On-Call Specialists</p>
+              <div className="text-left">
+                <p className="font-mono text-lg font-extrabold text-white">100%</p>
+                <p className="font-mono text-[10px] uppercase tracking-wider text-slate-300 font-bold">EMR SYNCED</p>
               </div>
             </div>
-          </div>
-        </div>
+
+            <div className="flex items-center justify-center space-x-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/90 border border-slate-700/60 text-teal-400 font-bold">
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
+              <div className="text-left">
+                <p className="font-mono text-lg font-extrabold text-white">$0 STRESS</p>
+                <p className="font-mono text-[10px] uppercase tracking-wider text-slate-300 font-bold">DIRECT CLAIMS</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center space-x-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/90 border border-slate-700/60 text-teal-400 font-bold">
+                <Calendar className="h-5 w-5" />
+              </div>
+              <div className="text-left">
+                <p className="font-mono text-lg font-extrabold text-white">15+ YRS</p>
+                <p className="font-mono text-[10px] uppercase tracking-wider text-slate-300 font-bold">DDS SPECIALISTS</p>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
       </div>
+
     </section>
   );
 }
