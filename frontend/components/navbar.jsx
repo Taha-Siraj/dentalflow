@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Activity, Phone, Calendar, Menu, X, UserCheck } from "lucide-react";
+import { Phone, Calendar, Menu, X, UserCheck } from "lucide-react";
+import { Logo } from "@/components/logo";
 
 export function Navbar({ onOpenBooking }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -31,20 +32,8 @@ export function Navbar({ onOpenBooking }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* Brand Logo */}
-          <Link href="/" className="flex items-center space-x-3 group flex-shrink-0">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#0F766E] text-white shadow-md group-hover:bg-[#0D9488] transition-colors">
-              <Activity className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col">
-              <span className={`font-poppins text-xl sm:text-2xl font-bold tracking-tight ${isScrolled ? "text-slate-900" : "text-white"}`}>
-                Dental<span className="text-teal-400">Flow</span>
-              </span>
-              <span className={`font-poppins text-[8px] sm:text-[9px] font-bold uppercase tracking-widest ${isScrolled ? "text-slate-500" : "text-slate-300"}`}>
-                CANADIAN PRACTICE NETWORK
-              </span>
-            </div>
-          </Link>
+          {/* Brand Executive Logo */}
+          <Logo isWhiteText={!isScrolled} />
 
           {/* Desktop Nav Links */}
           <nav className="hidden xl:flex items-center space-x-7 font-poppins text-xs font-semibold">
