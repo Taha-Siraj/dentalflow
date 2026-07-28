@@ -5,6 +5,20 @@ import { Calendar, FileText, Download, QrCode, RefreshCw, CalendarX, FileX } fro
 import { toast } from "react-hot-toast";
 import { generateRxPDF } from "@/utils/pdf-generator";
 
+const getStatusBadgeClass = (status) => {
+  const s = (status || "").toLowerCase();
+  if (s === "pending" || s === "scheduled" || s === "queued" || s === "in-progress") {
+    return "bg-amber-50 text-amber-800 border-amber-300 font-semibold";
+  }
+  if (s === "confirmed" || s === "completed" || s === "paid" || s === "active" || s === "success") {
+    return "bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold";
+  }
+  if (s === "cancelled" || s === "failed" || s === "unpaid" || s === "inactive") {
+    return "bg-rose-50 text-rose-800 border-rose-300 font-semibold";
+  }
+  return "bg-slate-100 text-slate-700 border-slate-300 font-semibold";
+};
+
 export default function PatientDashboardPage() {
   const [appointments, setAppointments] = useState([]);
   const [prescriptions, setPrescriptions] = useState([]);
@@ -104,8 +118,8 @@ export default function PatientDashboardPage() {
                       <p className="text-[11px] text-slate-500 font-normal">{apt.branchName} • {apt.doctorName}</p>
                     </div>
 
-                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase bg-emerald-50 text-emerald-800 border border-emerald-200">
-                      {apt.status || "CONFIRMED"}
+                    <span className={`text-[10px] px-2.5 py-1 rounded-full uppercase border ${getStatusBadgeClass(apt.status)}`}>
+                      {apt.status || "PENDING"}
                     </span>
                   </div>
                 ))}

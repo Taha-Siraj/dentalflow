@@ -5,6 +5,20 @@ import { Users, CreditCard, Plus, CheckCircle2, RefreshCw, UserX, Receipt, Downl
 import { toast } from "react-hot-toast";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
 
+const getStatusBadgeClass = (status) => {
+  const s = (status || "").toLowerCase();
+  if (s === "pending" || s === "scheduled" || s === "queued" || s === "in-progress") {
+    return "bg-amber-50 text-amber-800 border-amber-300 font-semibold";
+  }
+  if (s === "confirmed" || s === "completed" || s === "paid" || s === "active" || s === "success") {
+    return "bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold";
+  }
+  if (s === "cancelled" || s === "failed" || s === "unpaid" || s === "inactive") {
+    return "bg-rose-50 text-rose-800 border-rose-300 font-semibold";
+  }
+  return "bg-slate-100 text-slate-700 border-slate-300 font-semibold";
+};
+
 export default function ReceptionDashboardPage() {
   const [queue, setQueue] = useState([]);
   const [invoices, setInvoices] = useState([]);
@@ -138,12 +152,17 @@ export default function ReceptionDashboardPage() {
                     <p className="text-[11px] text-slate-500 font-normal">{item.treatment} • {item.patientPhone || "(416) 555-0199"}</p>
                   </div>
 
-                  <button
-                    onClick={() => toast.success(`Checked in ${item.patientName}!`)}
-                    className="bg-[#0F766E] hover:bg-[#0D9488] text-white text-[11px] font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer transition-all shadow-xs"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Check-In
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase border ${getStatusBadgeClass(item.status)}`}>
+                      {item.status || "QUEUED"}
+                    </span>
+                    <button
+                      onClick={() => toast.success(`Checked in ${item.patientName}!`)}
+                      className="bg-[#0F766E] hover:bg-[#0D9488] text-white text-[11px] font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer transition-all shadow-xs"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Check-In
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -205,7 +224,12 @@ export default function ReceptionDashboardPage() {
                 {invoices.map((inv) => (
                   <div key={inv._id} className="p-2.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between text-xs font-poppins">
                     <div>
-                      <span className="font-semibold text-slate-900 block">{inv.patientName}</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-semibold text-slate-900 block">{inv.patientName}</span>
+                        <span className={`text-[9px] px-1.5 py-0.2 rounded uppercase border ${getStatusBadgeClass(inv.status)}`}>
+                          {inv.status || "PAID"}
+                        </span>
+                      </div>
                       <span className="font-mono text-[10px] text-slate-400">{inv.invoiceNumber} • ${inv.amount}</span>
                     </div>
                     <button

@@ -3,6 +3,20 @@
 import React, { useState, useEffect } from "react";
 import { BarChart3, Building2, DollarSign, Users, TrendingUp, RefreshCw } from "lucide-react";
 
+const getStatusBadgeClass = (status) => {
+  const s = (status || "").toLowerCase();
+  if (s === "pending" || s === "scheduled" || s === "queued" || s === "in-progress") {
+    return "bg-amber-50 text-amber-800 border-amber-300 font-semibold";
+  }
+  if (s === "confirmed" || s === "completed" || s === "paid" || s === "active" || s === "success") {
+    return "bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold";
+  }
+  if (s === "cancelled" || s === "failed" || s === "unpaid" || s === "inactive") {
+    return "bg-rose-50 text-rose-800 border-rose-300 font-semibold";
+  }
+  return "bg-slate-100 text-slate-700 border-slate-300 font-semibold";
+};
+
 export default function AdminAnalyticsPage() {
   const [analytics, setAnalytics] = useState(null);
   const [branches, setBranches] = useState([]);
@@ -140,7 +154,7 @@ export default function AdminAnalyticsPage() {
               <div key={b._id} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
                 <div className="flex justify-between items-center">
                   <h3 className="font-serif font-semibold text-xs text-slate-900">{b.name}</h3>
-                  <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 uppercase">
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase border ${getStatusBadgeClass(b.status)}`}>
                     {b.status || "ACTIVE"}
                   </span>
                 </div>
