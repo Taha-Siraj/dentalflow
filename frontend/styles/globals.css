@@ -2,142 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-poppins: 'Poppins', sans-serif;
-  --font-fraunces: 'Poppins', sans-serif;
-  --font-inter: 'Poppins', sans-serif;
-  --font-space-mono: 'Poppins', sans-serif;
-}
-
 @layer base {
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 90px;
-    background-color: #F8FAFC;
-    color: #0F172A;
-    font-family: var(--font-poppins), 'Poppins', sans-serif !important;
-  }
-
-  * {
-    border-color: #E2E8F0;
+  html, body, h1, h2, h3, h4, h5, h6, input, button, select, textarea {
     font-family: var(--font-poppins), 'Poppins', sans-serif !important;
   }
 
   body {
     background-color: #F8FAFC;
-    color: #0F172A;
-    font-family: var(--font-poppins), 'Poppins', sans-serif !important;
+    color: #1E293B;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
-  }
-
-  p, span, div, a, button, input, select, textarea {
-    background-color: transparent;
-    color: inherit;
-    font-family: var(--font-poppins), 'Poppins', sans-serif !important;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-poppins), 'Poppins', sans-serif !important;
-    color: #0F172A;
-    letter-spacing: -0.02em;
   }
 }
 
-/* Complete Global Outline & Focus Reset */
-*, *:focus, *:focus-visible, *:focus-within {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-button:focus, button:focus-visible,
-input:focus, input:focus-visible,
-select:focus, select:focus-visible,
-textarea:focus, textarea:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Infinite Continuous Marquee Animation */
-@keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 30s linear infinite;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
-}
-
-/* Solid Primary Button (Zero Gradients, Poppins Font) */
-.btn-primary {
-  font-family: var(--font-poppins), 'Poppins', sans-serif !important;
-  background-color: #0F766E;
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px 0 rgba(15, 118, 110, 0.2);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-primary:hover {
-  background-color: #0D9488;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px 0 rgba(15, 118, 110, 0.3);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-/* Solid Secondary Button */
-.btn-secondary {
-  font-family: var(--font-poppins), 'Poppins', sans-serif !important;
-  background-color: #FFFFFF;
-  color: #0F766E;
-  border: 1.5px solid #CBD5E1;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.03);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-secondary:hover {
-  border-color: #0F766E;
-  background-color: #F0FDF4;
-  transform: translateY(-2px);
-}
-
-/* Card Hover Elevation */
-.card-hover {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px -8px rgba(15, 118, 110, 0.1), 0 4px 10px -4px rgba(0, 0, 0, 0.04);
-  border-color: #99F6E4;
-}
-
-/* Thin Custom Scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #F8FAFC;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
-  border-radius: 9999px;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

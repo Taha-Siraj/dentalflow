@@ -35,7 +35,7 @@ export function Navbar({ onOpenBooking }) {
           {/* Brand Executive Logo */}
           <Logo isWhiteText={!isScrolled} />
 
-          {/* Desktop Nav Links */}
+          {/* Desktop Nav Links (Cross-Page Hash Navigation) */}
           <nav className="hidden xl:flex items-center space-x-7 font-poppins text-xs font-semibold">
             <Link
               href="/about"
@@ -43,36 +43,36 @@ export function Navbar({ onOpenBooking }) {
             >
               About
             </Link>
-            <a
-              href="#services"
+            <Link
+              href="/#services"
               className={`transition-colors ${isScrolled ? "text-slate-700 hover:text-[#0F766E]" : "text-slate-200 hover:text-white"}`}
             >
               Services
-            </a>
-            <a
-              href="#why-us"
+            </Link>
+            <Link
+              href="/#why-us"
               className={`transition-colors ${isScrolled ? "text-slate-700 hover:text-[#0F766E]" : "text-slate-200 hover:text-white"}`}
             >
               Why DentalFlow
-            </a>
-            <a
-              href="#doctors"
+            </Link>
+            <Link
+              href="/#doctors"
               className={`transition-colors ${isScrolled ? "text-slate-700 hover:text-[#0F766E]" : "text-slate-200 hover:text-white"}`}
             >
               Specialists
-            </a>
-            <a
-              href="#branches"
+            </Link>
+            <Link
+              href="/#branches"
               className={`transition-colors ${isScrolled ? "text-slate-700 hover:text-[#0F766E]" : "text-slate-200 hover:text-white"}`}
             >
               Locations
-            </a>
-            <a
-              href="#faq"
+            </Link>
+            <Link
+              href="/#faq"
               className={`transition-colors ${isScrolled ? "text-slate-700 hover:text-[#0F766E]" : "text-slate-200 hover:text-white"}`}
             >
               FAQ
-            </a>
+            </Link>
           </nav>
 
           {/* Right Action Bar - PROMINENT PORTAL LOGIN & BOOKING CTAs */}
@@ -117,12 +117,12 @@ export function Navbar({ onOpenBooking }) {
       {/* Mobile Drawer */}
       {isMobileOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white text-slate-900 px-4 pt-4 pb-6 space-y-3 font-poppins text-sm shadow-xl">
-          <Link href="/about" className="block py-2 font-semibold hover:text-[#0F766E]">About Practice</Link>
-          <a href="#services" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Services</a>
-          <a href="#why-us" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Why DentalFlow</a>
-          <a href="#doctors" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Specialists</a>
-          <a href="#branches" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Locations</a>
-          <a href="#faq" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>FAQ</a>
+          <Link href="/about" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>About Practice</Link>
+          <Link href="/#services" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Services</Link>
+          <Link href="/#why-us" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Why DentalFlow</Link>
+          <Link href="/#doctors" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Specialists</Link>
+          <Link href="/#branches" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Locations</Link>
+          <Link href="/#faq" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>FAQ</Link>
           
           <div className="pt-3 border-t border-slate-200 flex flex-col space-y-2">
             <Link

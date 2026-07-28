@@ -30,9 +30,9 @@ export function Footer() {
             <h3 className="font-serif font-bold text-sm text-white">Practice</h3>
             <ul className="space-y-2 text-xs text-slate-400 font-normal">
               <li><Link href="/about" className="hover:text-teal-300 transition-colors">About Practice</Link></li>
-              <li><a href="#services" className="hover:text-teal-300 transition-colors">Clinical Services</a></li>
-              <li><a href="#doctors" className="hover:text-teal-300 transition-colors">DDS Specialists</a></li>
-              <li><a href="#branches" className="hover:text-teal-300 transition-colors">Canadian Clinics</a></li>
+              <li><Link href="/#services" className="hover:text-teal-300 transition-colors">Clinical Services</Link></li>
+              <li><Link href="/#doctors" className="hover:text-teal-300 transition-colors">DDS Specialists</Link></li>
+              <li><Link href="/#branches" className="hover:text-teal-300 transition-colors">Canadian Clinics</Link></li>
               <li><Link href="/login" className="hover:text-teal-300 transition-colors">Portal Sign In</Link></li>
             </ul>
           </div>
