@@ -22,11 +22,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${poppins.variable} scroll-smooth`}>
+    <html lang="en" className={`${poppins.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
       </head>
-      <body className={`${poppins.className} font-poppins bg-[#F8FAFC] text-slate-800 antialiased selection:bg-[#0F766E] selection:text-white`}>
+      <body
+        className={`${poppins.className} font-poppins bg-[#F8FAFC] text-slate-800 antialiased selection:bg-[#0F766E] selection:text-white`}
+        suppressHydrationWarning
+      >
         <AuthProvider>
           <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
           {children}

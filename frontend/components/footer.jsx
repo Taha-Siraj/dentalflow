@@ -72,7 +72,7 @@ export function Footer() {
 
         {/* Bottom Rights */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-normal gap-4">
-          <p>© {new Date().getFullYear()} SmileCare Dental Practice Network. All rights reserved.</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} SmileCare Dental Practice Network. All rights reserved.</p>
           <div className="flex space-x-6 text-xs text-slate-400">
             <span>Privacy Policy</span>
             <span>Terms of Service</span>
