@@ -1,20 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+export const dynamic = "force-dynamic";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import {
   LayoutDashboard,
-  Calendar,
   User,
   Users,
   Stethoscope,
-  Building2,
-  FileText,
-  CreditCard,
   BarChart3,
-  Bell,
   LogOut,
   ShieldAlert,
   Menu,
@@ -54,14 +51,6 @@ export default function DashboardLayout({ children }) {
   const { user, loading, logout } = useAuth();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  const currentUserRole = user?.role || "patient";
-
-  const isAccessAllowed = () => {
-    if (!user) return false;
-    const allowed = ALLOWED_ROUTES_BY_ROLE[user.role] || [];
-    return allowed.includes(pathname);
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen w-screen flex items-center justify-center bg-[#0F172A] text-white font-poppins">
@@ -94,6 +83,12 @@ export default function DashboardLayout({ children }) {
       </div>
     );
   }
+
+  const isAccessAllowed = () => {
+    if (!user) return false;
+    const allowed = ALLOWED_ROUTES_BY_ROLE[user.role] || [];
+    return allowed.includes(pathname);
+  };
 
   const navItems = ROLE_NAV_ITEMS[user.role] || ROLE_NAV_ITEMS.patient;
 
@@ -186,7 +181,7 @@ export default function DashboardLayout({ children }) {
         </div>
       </aside>
 
-      {/* Main Right Body - FULL VERTICAL SCROLL AREA */}
+      {/* Main Right Body */}
       <div className="flex-1 flex flex-col min-h-screen min-w-0">
         {/* Top Bar */}
         <header className="h-14 bg-white border-b border-slate-200 px-4 md:px-6 flex items-center justify-between shrink-0 z-20 sticky top-0">
@@ -216,7 +211,7 @@ export default function DashboardLayout({ children }) {
           </div>
         </header>
 
-        {/* Dynamic Content Body (UNRESTRICTED VERTICAL SCROLLING) */}
+        {/* Dynamic Content Body */}
         <main className="flex-1 p-4 md:p-8 bg-[#F8FAFC] overflow-y-auto">
           {isAccessAllowed() ? (
             children

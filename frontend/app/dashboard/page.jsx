@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React from "react";
 import Link from "next/link";
 import { User, Stethoscope, Users, BarChart3, Calendar, ArrowRight, CheckCircle } from "lucide-react";
@@ -38,7 +40,7 @@ export default function DashboardOverviewPage() {
 
   return (
     <div className="space-y-6">
-      {/* Top Banner - Clean Solid UI */}
+      {/* Top Banner */}
       <div className="bg-[#0F172A] text-white p-6 rounded-xl border border-slate-800">
         <div className="max-w-2xl space-y-2">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-medium bg-[#0F766E] text-white">
@@ -77,7 +79,7 @@ export default function DashboardOverviewPage() {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900">{dash.title}</h3>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">{dash.description}</p>
+                  <p className="text-xs text-[#6B7280] mt-1 leading-relaxed">{dash.description}</p>
                 </div>
               </div>
 

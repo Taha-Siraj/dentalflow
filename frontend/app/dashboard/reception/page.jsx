@@ -1,8 +1,12 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React, { useState, useEffect } from "react";
-import { Users, Clock, CreditCard, Plus, CheckCircle2, RefreshCw } from "lucide-react";
+import { Users, CreditCard, Plus, CheckCircle2, RefreshCw } from "lucide-react";
 import { toast } from "react-hot-toast";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export default function ReceptionDashboardPage() {
   const [queue, setQueue] = useState([]);
@@ -15,18 +19,21 @@ export default function ReceptionDashboardPage() {
     try {
       setLoading(true);
       const [aptRes, invRes] = await Promise.all([
-        fetch("http://localhost:5000/api/appointments"),
-        fetch("http://localhost:5000/api/invoices"),
+        fetch(`${API_BASE_URL}/appointments`),
+        fetch(`${API_BASE_URL}/invoices`),
       ]);
 
-      const aptJson = await aptRes.json();
-      const invJson = await invRes.json();
-
-      if (aptJson.success && aptJson.appointments) {
-        setQueue(aptJson.appointments);
+      if (aptRes.ok) {
+        const aptJson = await aptRes.json();
+        if (aptJson.success && aptJson.appointments) {
+          setQueue(aptJson.appointments);
+        }
       }
-      if (invJson.success && invJson.data) {
-        setInvoices(invJson.data);
+      if (invRes.ok) {
+        const invJson = await invRes.json();
+        if (invJson.success && invJson.data) {
+          setInvoices(invJson.data);
+        }
       }
     } catch (err) {
       console.log("Fetch error:", err);
@@ -45,7 +52,7 @@ export default function ReceptionDashboardPage() {
 
     try {
       setIsCreating(true);
-      const res = await fetch("http://localhost:5000/api/invoices", {
+      const res = await fetch(`${API_BASE_URL}/invoices`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -74,7 +81,7 @@ export default function ReceptionDashboardPage() {
       {/* Header */}
       <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-bold px-3 py-1 bg-teal-50 text-[#0F766E] rounded-full border border-teal-200 inline-block mb-1 font-mono uppercase tracking-wider">
+          <span className="text-xs font-bold px-3 py-1 bg-teal-50 text-[#0F766E] rounded-full border border-[#0F766E]/20 inline-block mb-1 font-mono uppercase tracking-wider">
             Reception Desk Operations
           </span>
           <h1 className="font-serif text-2xl font-bold text-slate-900">Toronto Central Reception Desk</h1>
@@ -112,7 +119,7 @@ export default function ReceptionDashboardPage() {
                       {item.appointmentTime || "10:30 AM"}
                     </span>
                     <h3 className="font-serif font-bold text-sm text-slate-900 pt-1">{item.patientName}</h3>
-                    <p className="text-xs text-slate-500">{item.treatment} • {item.patientPhone || "(416) 555-0199"}</p>
+                    <p className="text-xs text-[#6B7280]">{item.treatment} • {item.patientPhone || "(416) 555-0199"}</p>
                   </div>
 
                   <button
@@ -177,7 +184,7 @@ export default function ReceptionDashboardPage() {
                 <div key={inv._id} className="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between text-xs font-poppins">
                   <div>
                     <span className="font-bold text-slate-900 block">{inv.patientName}</span>
-                    <span className="font-mono text-[10px] text-slate-400">{inv.invoiceNumber}</span>
+                    <span className="font-mono text-[10px] text-[#6B7280]">{inv.invoiceNumber}</span>
                   </div>
                   <span className="font-mono font-bold text-[#0F766E]">${inv.amount}</span>
                 </div>

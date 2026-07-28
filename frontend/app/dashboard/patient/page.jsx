@@ -1,8 +1,12 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React, { useState, useEffect } from "react";
-import { User, Calendar, FileText, Download, CheckCircle2, QrCode, RefreshCw } from "lucide-react";
+import { Calendar, FileText, Download, QrCode, RefreshCw } from "lucide-react";
 import { toast } from "react-hot-toast";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export default function PatientDashboardPage() {
   const [appointments, setAppointments] = useState([]);
@@ -13,18 +17,21 @@ export default function PatientDashboardPage() {
     try {
       setLoading(true);
       const [aptRes, rxRes] = await Promise.all([
-        fetch("http://localhost:5000/api/appointments"),
-        fetch("http://localhost:5000/api/prescriptions"),
+        fetch(`${API_BASE_URL}/appointments`),
+        fetch(`${API_BASE_URL}/prescriptions`),
       ]);
 
-      const aptJson = await aptRes.json();
-      const rxJson = await rxRes.json();
-
-      if (aptJson.success && aptJson.appointments) {
-        setAppointments(aptJson.appointments);
+      if (aptRes.ok) {
+        const aptJson = await aptRes.json();
+        if (aptJson.success && aptJson.appointments) {
+          setAppointments(aptJson.appointments);
+        }
       }
-      if (rxJson.success && rxJson.data) {
-        setPrescriptions(rxJson.data);
+      if (rxRes.ok) {
+        const rxJson = await rxRes.json();
+        if (rxJson.success && rxJson.data) {
+          setPrescriptions(rxJson.data);
+        }
       }
     } catch (err) {
       console.log("Fetch error:", err);
@@ -87,7 +94,7 @@ export default function PatientDashboardPage() {
                         {apt.appointmentDate} • {apt.appointmentTime}
                       </span>
                       <h3 className="font-serif font-bold text-sm text-slate-900 pt-1">{apt.treatment}</h3>
-                      <p className="text-xs text-slate-500">{apt.branchName} • {apt.doctorName}</p>
+                      <p className="text-xs text-[#6B7280]">{apt.branchName} • {apt.doctorName}</p>
                     </div>
 
                     <span className="text-xs font-mono font-bold px-3 py-1 rounded-full uppercase bg-green-100 text-green-800 border border-green-200">

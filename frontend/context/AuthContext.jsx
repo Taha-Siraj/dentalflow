@@ -14,17 +14,18 @@ export function AuthProvider({ children }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Load persisted auth from localStorage
-    const savedToken = localStorage.getItem("dentalflow_token");
-    const savedUser = localStorage.getItem("dentalflow_user");
+    const savedToken = typeof window !== "undefined" ? localStorage.getItem("dentalflow_token") : null;
+    const savedUser = typeof window !== "undefined" ? localStorage.getItem("dentalflow_user") : null;
 
     if (savedToken && savedUser) {
       try {
         setToken(savedToken);
         setUser(JSON.parse(savedUser));
       } catch (e) {
-        localStorage.removeItem("dentalflow_token");
-        localStorage.removeItem("dentalflow_user");
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("dentalflow_token");
+          localStorage.removeItem("dentalflow_user");
+        }
       }
     }
     setLoading(false);
@@ -45,10 +46,11 @@ export function AuthProvider({ children }) {
 
       setToken(data.token);
       setUser(data.user);
-      localStorage.setItem("dentalflow_token", data.token);
-      localStorage.setItem("dentalflow_user", JSON.stringify(data.user));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("dentalflow_token", data.token);
+        localStorage.setItem("dentalflow_user", JSON.stringify(data.user));
+      }
 
-      // Redirect strictly based on user role
       if (data.user.role === "admin") router.push("/dashboard/admin");
       else if (data.user.role === "doctor") router.push("/dashboard/doctor");
       else if (data.user.role === "receptionist") router.push("/dashboard/reception");
@@ -75,8 +77,10 @@ export function AuthProvider({ children }) {
 
       setToken(data.token);
       setUser(data.user);
-      localStorage.setItem("dentalflow_token", data.token);
-      localStorage.setItem("dentalflow_user", JSON.stringify(data.user));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("dentalflow_token", data.token);
+        localStorage.setItem("dentalflow_user", JSON.stringify(data.user));
+      }
 
       router.push("/dashboard/patient");
       return { success: true };
@@ -88,8 +92,10 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem("dentalflow_token");
-    localStorage.removeItem("dentalflow_user");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("dentalflow_token");
+      localStorage.removeItem("dentalflow_user");
+    }
     router.push("/login");
   };
 
@@ -103,7 +109,14 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    return {
+      user: null,
+      token: null,
+      loading: true,
+      login: async () => ({ success: false, message: "AuthProvider not mounted" }),
+      register: async () => ({ success: false, message: "AuthProvider not mounted" }),
+      logout: () => {},
+    };
   }
   return context;
 }

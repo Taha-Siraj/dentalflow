@@ -1,8 +1,12 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React, { useState, useEffect } from "react";
-import { Stethoscope, Clock, Plus, FileText, CheckCircle2, Send, RefreshCw } from "lucide-react";
+import { Clock, Plus, FileText, Send, RefreshCw } from "lucide-react";
 import { toast } from "react-hot-toast";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export default function DoctorDashboardPage() {
   const [schedule, setSchedule] = useState([]);
@@ -16,12 +20,14 @@ export default function DoctorDashboardPage() {
   const fetchSchedule = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/api/appointments");
-      const json = await res.json();
-      if (json.success && json.appointments) {
-        setSchedule(json.appointments);
-        if (json.appointments.length > 0) {
-          setSelectedPatient(json.appointments[0].patientName);
+      const res = await fetch(`${API_BASE_URL}/appointments`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.appointments) {
+          setSchedule(json.appointments);
+          if (json.appointments.length > 0) {
+            setSelectedPatient(json.appointments[0].patientName);
+          }
         }
       }
     } catch (err) {
@@ -49,7 +55,7 @@ export default function DoctorDashboardPage() {
 
     try {
       setIsSaving(true);
-      const res = await fetch("http://localhost:5000/api/prescriptions", {
+      const res = await fetch(`${API_BASE_URL}/prescriptions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -140,7 +146,7 @@ export default function DoctorDashboardPage() {
                     </span>
                   </div>
                   <h3 className="font-serif font-bold text-sm text-slate-900">{item.patientName}</h3>
-                  <p className="text-xs text-slate-500 font-poppins">{item.treatment}</p>
+                  <p className="text-xs text-[#6B7280] font-poppins">{item.treatment}</p>
                 </div>
               ))}
             </div>

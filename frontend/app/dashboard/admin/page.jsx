@@ -1,7 +1,11 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React, { useState, useEffect } from "react";
-import { BarChart3, Building2, DollarSign, Users, TrendingUp, RefreshCw, CheckCircle2 } from "lucide-react";
+import { BarChart3, Building2, DollarSign, Users, TrendingUp, RefreshCw } from "lucide-react";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 export default function AdminAnalyticsPage() {
   const [analytics, setAnalytics] = useState(null);
@@ -12,18 +16,21 @@ export default function AdminAnalyticsPage() {
     try {
       setLoading(true);
       const [analyticsRes, branchRes] = await Promise.all([
-        fetch("http://localhost:5000/api/admin/analytics"),
-        fetch("http://localhost:5000/api/branches"),
+        fetch(`${API_BASE_URL}/admin/analytics`),
+        fetch(`${API_BASE_URL}/branches`),
       ]);
 
-      const analyticsJson = await analyticsRes.json();
-      const branchJson = await branchRes.json();
-
-      if (analyticsJson.success && analyticsJson.data) {
-        setAnalytics(analyticsJson.data);
+      if (analyticsRes.ok) {
+        const analyticsJson = await analyticsRes.json();
+        if (analyticsJson.success && analyticsJson.data) {
+          setAnalytics(analyticsJson.data);
+        }
       }
-      if (branchJson.success && branchJson.data) {
-        setBranches(branchJson.data);
+      if (branchRes.ok) {
+        const branchJson = await branchRes.json();
+        if (branchJson.success && branchJson.data) {
+          setBranches(branchJson.data);
+        }
       }
     } catch (err) {
       console.log("Fetch error:", err);
