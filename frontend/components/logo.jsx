@@ -7,9 +7,9 @@ export function Logo({
   href = "/",
   showText = true,
   isWhiteText = false,
-  className = "flex items-center space-x-2.5 group cursor-pointer",
+  className = "flex items-center space-x-2.5 group cursor-pointer flex-shrink-0",
   iconSize = 36,
-  textSize = "text-xl sm:text-2xl",
+  textSize = "text-lg sm:text-xl font-bold tracking-tight",
 }) {
   return (
     <Link href={href} className={className}>
@@ -43,16 +43,16 @@ export function Logo({
 
       {/* Brand Title */}
       {showText && (
-        <div className="flex flex-col text-left">
+        <div className="flex flex-col text-left whitespace-nowrap">
           <span
-            className={`font-serif font-bold tracking-tight ${
+            className={`font-serif leading-none ${
               isWhiteText ? "text-white" : "text-slate-900"
             } ${textSize}`}
           >
             Smile <span className="text-[#0F766E]">Dental Clinic</span>
           </span>
           <span
-            className={`font-poppins text-[8px] font-semibold uppercase tracking-widest ${
+            className={`font-poppins text-[7.5px] sm:text-[8px] font-semibold uppercase tracking-widest mt-0.5 ${
               isWhiteText ? "text-slate-300" : "text-slate-500"
             }`}
           >
