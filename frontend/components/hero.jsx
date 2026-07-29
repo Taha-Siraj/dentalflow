@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight, ShieldCheck, Calendar, MapPin, CheckCircle2, Play, Pause } from "lucide-react";
 import { motion } from "framer-motion";
+import { SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function Hero({ onOpenBooking }) {
   const videoRef = useRef(null);
@@ -54,7 +55,7 @@ export function Hero({ onOpenBooking }) {
   };
 
   return (
-    <section className="relative min-h-[700px] sm:min-h-[780px] pt-36 sm:pt-40 pb-24 border-b border-slate-200 overflow-hidden flex items-center justify-center bg-slate-950">
+    <section className="relative min-h-[700px] sm:min-h-[780px] pt-36 sm:pt-40 pb-28 sm:pb-36 border-b border-slate-200 overflow-hidden flex items-center justify-center bg-slate-950">
       
       {/* FULL-BLEED LOCAL HD DENTAL CLINIC BACKGROUND VIDEO */}
       <video
@@ -68,7 +69,7 @@ export function Hero({ onOpenBooking }) {
         <source src="/hero-video.mp4" type="video/mp4" />
       </video>
 
-      {/* EXECUTIVE DARK SLATE & SOFT BLUR OVERLAY (Zero Neon, Matte Legibility) */}
+      {/* EXECUTIVE DARK SLATE & SOFT BLUR OVERLAY */}
       <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[1.5px] z-10 pointer-events-none" />
 
       {/* FOREGROUND CENTERED HERO CONTENT */}
@@ -79,7 +80,7 @@ export function Hero({ onOpenBooking }) {
           animate="visible"
           className="max-w-4xl space-y-8 text-center flex flex-col items-center justify-center"
         >
-          {/* Space Mono Eyebrow Badge (Matte Executive Styling, Zero Neon) */}
+          {/* Space Mono Eyebrow Badge */}
           <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 bg-slate-900/90 border border-slate-700/60 px-4 py-1.5 rounded-full backdrop-blur-md shadow-md">
             <ShieldCheck className="h-4 w-4 text-teal-400" />
             <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-200">
@@ -170,6 +171,9 @@ export function Hero({ onOpenBooking }) {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* CURVED WAVE TRANSITION AT BOTTOM OF HERO */}
+      <SectionWaveBottom fill="#F8FAFC" className="absolute bottom-0 left-0 right-0 z-30" />
 
     </section>
   );

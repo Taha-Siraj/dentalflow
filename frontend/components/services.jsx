@@ -3,6 +3,7 @@
 import React from "react";
 import { ArrowRight, Sparkles, Smile, Shield, Cpu, HeartPulse, Stethoscope } from "lucide-react";
 import { motion } from "framer-motion";
+import { SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function Services({ onOpenBooking }) {
   const servicesList = [
@@ -45,7 +46,7 @@ export function Services({ onOpenBooking }) {
   ];
 
   return (
-    <section id="services" className="bg-slate-50 py-20 border-b border-slate-200">
+    <section id="services" className="relative bg-slate-50 py-20 border-b border-slate-200 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -119,6 +120,8 @@ export function Services({ onOpenBooking }) {
         </div>
 
       </div>
+
+      <SectionWaveBottom fill="#FFFFFF" className="absolute bottom-0 left-0 right-0 z-10" />
     </section>
   );
 }

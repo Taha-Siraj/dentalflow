@@ -4,6 +4,7 @@ import React, { useState, useRef, useCallback } from "react";
 import { Sparkles, Calendar, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SectionWaveTop, SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function SmileTransformations({ onOpenBooking }) {
   const [sliderPosition, setSliderPosition] = useState(50);
@@ -39,8 +40,10 @@ export function SmileTransformations({ onOpenBooking }) {
   const fallbackAfter = "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80";
 
   return (
-    <section id="transformations" className="bg-white py-10 border-b border-[#E5E7EB] overflow-x-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="transformations" className="relative bg-white py-12 border-b border-[#E5E7EB] overflow-hidden">
+      <SectionWaveTop fill="#F8FAFC" className="absolute top-0 left-0 right-0 z-10" />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 py-6">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-2 mb-8">
           <Badge variant="outline" className="border-[#0F766E]/30 text-[#0F766E] bg-[#0F766E]/5 px-3 py-0.5 font-bold text-xs rounded-full inline-flex items-center gap-1.5">
@@ -206,6 +209,8 @@ export function SmileTransformations({ onOpenBooking }) {
           </div>
         </div>
       </div>
+
+      <SectionWaveBottom fill="#F8FAFC" className="absolute bottom-0 left-0 right-0 z-10" />
     </section>
   );
 }
