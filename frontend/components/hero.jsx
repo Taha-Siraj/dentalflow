@@ -1,35 +1,23 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { ArrowRight, ShieldCheck, Calendar, MapPin, CheckCircle2, Play, Pause } from "lucide-react";
+import React, { useEffect, useRef } from "react";
+import { ArrowRight, ShieldCheck, Calendar, MapPin, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function Hero({ onOpenBooking }) {
   const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(true);
 
   // Programmatic Video Auto-Play Trigger
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current
         .play()
-        .then(() => setIsPlaying(true))
         .catch((err) => {
           console.log("Autoplay notification:", err);
         });
     }
   }, []);
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
-    }
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -96,7 +84,7 @@ export function Hero({ onOpenBooking }) {
             variants={itemVariants}
             className="font-poppins text-base sm:text-xl text-slate-200 max-w-2xl text-center leading-relaxed font-normal"
           >
-            Visit any DentalFlow clinic in Toronto, Vancouver, Calgary, Ottawa, or Mississauga. Your X-rays, medical records, and treatment plans sync instantly.
+            Visit any Smile Dental Clinic in Toronto, Vancouver, Calgary, Ottawa, or Mississauga. Your X-rays, medical records, and treatment plans sync instantly.
           </motion.p>
 
           {/* Centered Action Row */}
@@ -116,14 +104,6 @@ export function Hero({ onOpenBooking }) {
               <MapPin className="h-4 w-4 text-teal-300" />
               <span>Find Clinic Location</span>
             </a>
-
-            <button
-              onClick={togglePlay}
-              className="bg-slate-900/80 hover:bg-slate-900 border border-white/20 text-slate-200 px-4 py-3 rounded-full font-sans text-xs font-bold uppercase tracking-wider flex items-center space-x-2 backdrop-blur-md transition-all cursor-pointer"
-            >
-              {isPlaying ? <Pause className="h-3.5 w-3.5 text-teal-300" /> : <Play className="h-3.5 w-3.5 text-teal-300 fill-teal-300" />}
-              <span>{isPlaying ? "PAUSE VIDEO" : "PLAY VIDEO"}</span>
-            </button>
           </motion.div>
 
           {/* Hairline Border-Top Centered Stats Bar */}

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ShieldCheck, Check, Star } from "lucide-react";
+import { Check } from "lucide-react";
 
 export function Stats() {
   const marqueeItems = [
@@ -16,16 +16,16 @@ export function Stats() {
   ];
 
   return (
-    <section className="bg-white py-5 border-y border-slate-200 shadow-2xs overflow-hidden select-none">
-      <div className="relative flex overflow-x-hidden">
-        {/* Doubled list for seamless continuous infinite marquee scroll */}
+    <section className="bg-white py-4 shadow-2xs overflow-hidden select-none">
+      <div className="relative w-full overflow-hidden">
+        {/* Infinite marquee ticker container */}
         <div className="animate-marquee flex items-center space-x-12 whitespace-nowrap">
           {marqueeItems.concat(marqueeItems).map((item, idx) => (
             <div key={idx} className="flex items-center space-x-3">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-100 text-[#0F766E]">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-100 text-[#0F766E] flex-shrink-0">
                 <Check className="h-3.5 w-3.5 stroke-[3]" />
               </div>
-              <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-800">
+              <span className="font-poppins text-xs font-bold uppercase tracking-wider text-slate-800">
                 {item}
               </span>
             </div>
