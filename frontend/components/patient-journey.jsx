@@ -3,6 +3,7 @@
 import React from "react";
 import { UserCheck, Cpu, Heart, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
+import { SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function PatientJourney() {
   const steps = [
@@ -33,16 +34,11 @@ export function PatientJourney() {
   ];
 
   return (
-    <section className="bg-white py-20 border-b border-slate-200">
+    <section className="relative bg-white py-20 border-b border-slate-200 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3.5 py-1.5 rounded-full text-xs">
-            <span className="font-mono font-bold text-[#0F766E] uppercase tracking-widest">
-              PATIENT WORKFLOW • STEP-BY-STEP
-            </span>
-          </div>
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
             The 4-Step Patient Journey
           </h2>
@@ -68,7 +64,7 @@ export function PatientJourney() {
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-100 text-[#0F766E] font-bold">
                     <Icon className="h-6 w-6" />
                   </div>
-                  <span className="font-mono text-xl font-bold text-slate-300">
+                  <span className="font-poppins text-xl font-bold text-slate-300">
                     STEP {item.num}
                   </span>
                 </div>
@@ -78,9 +74,9 @@ export function PatientJourney() {
                   <p className="font-poppins text-xs sm:text-sm text-slate-600 leading-relaxed">{item.description}</p>
                 </div>
 
-                <div className="pt-2 font-mono text-[11px] font-bold text-[#0F766E] uppercase tracking-wider flex items-center space-x-1">
+                <div className="pt-2 font-poppins text-[11px] font-bold text-[#0F766E] uppercase tracking-wider flex items-center space-x-1">
                   <ShieldCheck className="h-4 w-4" />
-                  <span>AUTOMATED EMR PROTOCOL</span>
+                  <span>Automated EMR Protocol</span>
                 </div>
               </motion.div>
             );
@@ -88,6 +84,8 @@ export function PatientJourney() {
         </div>
 
       </div>
+
+      <SectionWaveBottom fill="#F8FAFC" className="absolute bottom-0 left-0 right-0 z-10" />
     </section>
   );
 }

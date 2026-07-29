@@ -50,12 +50,7 @@ export function Services({ onOpenBooking }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3.5 py-1 rounded-full text-xs">
-            <span className="font-mono font-bold text-[#0F766E] uppercase tracking-widest">
-              WHAT WE TREAT • CLINICAL SPECIALTIES
-            </span>
-          </div>
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
             Comprehensive Dental Services
           </h2>

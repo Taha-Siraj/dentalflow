@@ -3,6 +3,7 @@
 import React from "react";
 import { MapPin, Phone, Clock, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function Locations({ onOpenBooking }) {
   const branches = [
@@ -49,16 +50,11 @@ export function Locations({ onOpenBooking }) {
   ];
 
   return (
-    <section id="branches" className="bg-slate-50 py-20 border-b border-slate-200">
+    <section id="branches" className="relative bg-slate-50 py-20 border-b border-slate-200 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3.5 py-1.5 rounded-full text-xs">
-            <span className="font-mono font-bold text-[#0F766E] uppercase tracking-widest">
-              CANADIAN CLINIC NETWORK • 5 LOCATIONS
-            </span>
-          </div>
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
             5 Centralized Branch Locations
           </h2>
@@ -89,12 +85,12 @@ export function Locations({ onOpenBooking }) {
                     }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-3 left-3 bg-[#0F766E] text-white font-mono font-bold text-[11px] px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                  <div className="absolute top-3 left-3 bg-[#0F766E] text-white font-poppins font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
                     {branch.city}
                   </div>
-                  <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-mono font-bold text-[#0F766E] flex items-center space-x-1 shadow-md">
+                  <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-poppins font-bold text-[#0F766E] flex items-center space-x-1 shadow-md">
                     <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
-                    <span>EMR ONLINE</span>
+                    <span>EMR Online</span>
                   </div>
                 </div>
 
@@ -112,7 +108,7 @@ export function Locations({ onOpenBooking }) {
 
                     <p className="flex items-center space-x-2">
                       <Phone className="h-4 w-4 text-[#0F766E] flex-shrink-0" />
-                      <a href={`tel:${branch.phone}`} className="font-mono font-bold text-slate-800 hover:text-[#0F766E]">
+                      <a href={`tel:${branch.phone}`} className="font-poppins font-bold text-slate-800 hover:text-[#0F766E]">
                         {branch.phone}
                       </a>
                     </p>
@@ -140,6 +136,8 @@ export function Locations({ onOpenBooking }) {
         </div>
 
       </div>
+
+      <SectionWaveBottom fill="#FFFFFF" className="absolute bottom-0 left-0 right-0 z-10" />
     </section>
   );
 }

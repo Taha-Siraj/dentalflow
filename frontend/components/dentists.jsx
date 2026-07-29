@@ -3,12 +3,13 @@
 import React from "react";
 import { ArrowRight, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import { SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function Dentists({ onOpenBooking }) {
   const doctors = [
     {
       name: "Dr. Sarah Jenkins",
-      credentials: "DDS, FRCD(C) • Orthodontic Specialist",
+      credentials: "DDS, FRCD(C) - Orthodontic Specialist",
       experience: "16+ Yrs Exp",
       branch: "Toronto Central",
       specialty: "Invisalign®, 3D Alignment & Orthodontic Rehabilitation",
@@ -16,7 +17,7 @@ export function Dentists({ onOpenBooking }) {
     },
     {
       name: "Dr. Michael Chen",
-      credentials: "DDS, MS • Implant Specialist",
+      credentials: "DDS, MS - Implant Specialist",
       experience: "14+ Yrs Exp",
       branch: "Vancouver West",
       specialty: "3D CBCT Guided Implant Surgery & Full-Arch Restorations",
@@ -24,7 +25,7 @@ export function Dentists({ onOpenBooking }) {
     },
     {
       name: "Dr. Elena Rostova",
-      credentials: "DMD • Cosmetic Specialist",
+      credentials: "DMD - Cosmetic Specialist",
       experience: "12+ Yrs Exp",
       branch: "Calgary Downtown",
       specialty: "Porcelain Veneers, Aesthetic Smile Design & Bonding",
@@ -32,7 +33,7 @@ export function Dentists({ onOpenBooking }) {
     },
     {
       name: "Dr. Marcus Vance",
-      credentials: "DDS • Endodontic Specialist",
+      credentials: "DDS - Endodontic Specialist",
       experience: "18+ Yrs Exp",
       branch: "Ottawa Parliament",
       specialty: "Microscopic Root Canal Therapy & Emergency Care",
@@ -41,16 +42,11 @@ export function Dentists({ onOpenBooking }) {
   ];
 
   return (
-    <section id="doctors" className="bg-slate-50 py-20 border-b border-slate-200">
+    <section id="doctors" className="relative bg-slate-50 py-20 border-b border-slate-200 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3.5 py-1.5 rounded-full text-xs">
-            <span className="font-mono font-bold text-[#0F766E] uppercase tracking-widest">
-              SPECIALIST DIRECTORY • CANADIAN CLINICIANS
-            </span>
-          </div>
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
             Board-Certified Dentists & Specialists
           </h2>
@@ -81,7 +77,7 @@ export function Dentists({ onOpenBooking }) {
                     }}
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md text-[11px] font-mono font-bold text-[#0F766E] flex items-center space-x-1">
+                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md text-xs font-semibold text-[#0F766E] flex items-center space-x-1">
                     <MapPin className="h-3 w-3 text-[#0F766E]" />
                     <span>{doc.branch}</span>
                   </div>
@@ -92,7 +88,7 @@ export function Dentists({ onOpenBooking }) {
                   <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors">
                     {doc.name}
                   </h3>
-                  <p className="font-mono text-xs font-bold text-[#0F766E] tracking-wider">{doc.credentials}</p>
+                  <p className="font-poppins text-xs font-bold text-[#0F766E]">{doc.credentials}</p>
                   <p className="font-poppins text-xs text-slate-600 leading-relaxed pt-1">
                     {doc.specialty}
                   </p>
@@ -114,6 +110,8 @@ export function Dentists({ onOpenBooking }) {
         </div>
 
       </div>
+
+      <SectionWaveBottom fill="#FFFFFF" className="absolute bottom-0 left-0 right-0 z-10" />
     </section>
   );
 }

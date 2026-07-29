@@ -3,6 +3,7 @@
 import React from "react";
 import { Database, CreditCard, Award, Cpu, Smile, FileText } from "lucide-react";
 import { motion } from "framer-motion";
+import { SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function WhyChooseUs() {
   const pillars = [
@@ -39,17 +40,12 @@ export function WhyChooseUs() {
   ];
 
   return (
-    <section id="why-us" className="bg-white py-20 border-b border-slate-200">
+    <section id="why-us" className="relative bg-white py-20 border-b border-slate-200 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Column Text & Executive Statement */}
           <div className="lg:col-span-5 space-y-6 text-left">
-            <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3.5 py-1.5 rounded-full text-xs">
-              <span className="font-mono font-bold text-[#0F766E] uppercase tracking-widest">
-                PRACTICE STANDARDS • THE DENTALFLOW WAY
-              </span>
-            </div>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 leading-tight">
               Reinventing Dental Practice Standards Across Canada
             </h2>
@@ -61,8 +57,8 @@ export function WhyChooseUs() {
               <p className="font-serif text-sm font-semibold text-slate-800 italic leading-relaxed">
                 "Our promise to every patient across Canada is simple: painless treatment, transparent costs, and lifetime oral health support."
               </p>
-              <p className="font-mono text-xs font-bold text-[#0F766E] uppercase tracking-wider">
-                — SmileCare Dental Clinics Executive Board
+              <p className="font-poppins text-xs font-bold text-[#0F766E]">
+                - SmileCare Dental Clinics Executive Board
               </p>
             </div>
           </div>
@@ -92,6 +88,8 @@ export function WhyChooseUs() {
 
         </div>
       </div>
+
+      <SectionWaveBottom fill="#F8FAFC" className="absolute bottom-0 left-0 right-0 z-10" />
     </section>
   );
 }

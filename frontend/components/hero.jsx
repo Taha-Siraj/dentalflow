@@ -80,14 +80,6 @@ export function Hero({ onOpenBooking }) {
           animate="visible"
           className="max-w-4xl space-y-8 text-center flex flex-col items-center justify-center"
         >
-          {/* Space Mono Eyebrow Badge */}
-          <motion.div variants={itemVariants} className="inline-flex items-center space-x-2 bg-slate-900/90 border border-slate-700/60 px-4 py-1.5 rounded-full backdrop-blur-md shadow-md">
-            <ShieldCheck className="h-4 w-4 text-teal-400" />
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-200">
-              DIRECT ELECTRONIC BILLING ACROSS CANADA
-            </span>
-          </motion.div>
-
           {/* Fraunces Serif Centered Headline */}
           <motion.h1
             variants={itemVariants}
@@ -127,7 +119,7 @@ export function Hero({ onOpenBooking }) {
 
             <button
               onClick={togglePlay}
-              className="bg-slate-900/80 hover:bg-slate-900 border border-white/20 text-slate-200 px-4 py-3 rounded-full font-mono text-xs font-bold uppercase tracking-wider flex items-center space-x-2 backdrop-blur-md transition-all cursor-pointer"
+              className="bg-slate-900/80 hover:bg-slate-900 border border-white/20 text-slate-200 px-4 py-3 rounded-full font-sans text-xs font-bold uppercase tracking-wider flex items-center space-x-2 backdrop-blur-md transition-all cursor-pointer"
             >
               {isPlaying ? <Pause className="h-3.5 w-3.5 text-teal-300" /> : <Play className="h-3.5 w-3.5 text-teal-300 fill-teal-300" />}
               <span>{isPlaying ? "PAUSE VIDEO" : "PLAY VIDEO"}</span>
@@ -144,8 +136,8 @@ export function Hero({ onOpenBooking }) {
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div className="text-left">
-                <p className="font-mono text-lg font-extrabold text-white">100%</p>
-                <p className="font-mono text-[10px] uppercase tracking-wider text-slate-300 font-bold">EMR SYNCED</p>
+                <p className="font-poppins text-lg font-extrabold text-white">100%</p>
+                <p className="font-poppins text-xs text-slate-300 font-medium">EMR Synced</p>
               </div>
             </div>
 
@@ -154,8 +146,8 @@ export function Hero({ onOpenBooking }) {
                 <CheckCircle2 className="h-5 w-5" />
               </div>
               <div className="text-left">
-                <p className="font-mono text-lg font-extrabold text-white">$0 STRESS</p>
-                <p className="font-mono text-[10px] uppercase tracking-wider text-slate-300 font-bold">DIRECT CLAIMS</p>
+                <p className="font-poppins text-lg font-extrabold text-white">Direct Claims</p>
+                <p className="font-poppins text-xs text-slate-300 font-medium">Canadian Billing</p>
               </div>
             </div>
 
@@ -164,8 +156,8 @@ export function Hero({ onOpenBooking }) {
                 <Calendar className="h-5 w-5" />
               </div>
               <div className="text-left">
-                <p className="font-mono text-lg font-extrabold text-white">15+ YRS</p>
-                <p className="font-mono text-[10px] uppercase tracking-wider text-slate-300 font-bold">DDS SPECIALISTS</p>
+                <p className="font-poppins text-lg font-extrabold text-white">15+ Years</p>
+                <p className="font-poppins text-xs text-slate-300 font-medium">DDS Specialists</p>
               </div>
             </div>
           </motion.div>
