@@ -42,7 +42,7 @@ export function Dentists({ onOpenBooking }) {
   ];
 
   return (
-    <section id="doctors" className="relative bg-slate-50 py-20 border-b border-slate-200 overflow-hidden">
+    <section id="doctors" className="relative bg-slate-50 py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -99,7 +99,7 @@ export function Dentists({ onOpenBooking }) {
               <div className="p-5 pt-0">
                 <button
                   onClick={onOpenBooking}
-                  className="w-full btn-primary rounded-xl py-2.5 font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2"
+                  className="w-full btn-primary rounded-xl py-2.5 font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer"
                 >
                   <span>Book Specialist</span>
                   <ArrowRight className="h-3.5 w-3.5" />

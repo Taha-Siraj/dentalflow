@@ -7,7 +7,7 @@ import { Logo } from "@/components/logo";
 
 export function Footer() {
   return (
-    <footer className="bg-slate-950 text-white pt-16 pb-12 font-poppins border-t border-slate-800">
+    <footer className="bg-slate-950 text-white pt-16 pb-12 font-poppins">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800">
           
@@ -19,7 +19,7 @@ export function Footer() {
               SmileCare Dental Clinics is a unified multi-branch dental practice management network in Canada providing 100% synchronized EMR records and direct electronic insurance billing.
             </p>
 
-            <div className="inline-flex items-center space-x-2 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-full text-xs font-mono text-teal-400">
+            <div className="inline-flex items-center space-x-2 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-full text-xs font-poppins text-teal-400">
               <ShieldCheck className="h-4 w-4" />
               <span>Provincial Dental Association Fee Guide Compliant</span>
             </div>
@@ -55,7 +55,7 @@ export function Footer() {
             <div className="space-y-2 text-xs text-slate-400 font-normal">
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-teal-400 flex-shrink-0" />
-                <span className="font-mono font-bold text-white">1-800-DENTAL-CARE</span>
+                <span className="font-poppins font-bold text-white">1-800-DENTAL-CARE</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-teal-400 flex-shrink-0" />

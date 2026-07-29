@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState(0);
@@ -31,20 +32,15 @@ export function FAQ() {
   ];
 
   return (
-    <section id="faq" className="bg-slate-50 py-20 border-b border-slate-200">
+    <section id="faq" className="relative bg-slate-50 py-20 overflow-hidden">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3.5 py-1.5 rounded-full text-xs">
-            <span className="font-mono font-bold text-[#0F766E] uppercase tracking-widest">
-              PATIENT KNOWLEDGE BASE • FAQ
-            </span>
-          </div>
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
             Frequently Asked Questions
           </h2>
-          <p className="font-sans text-slate-600 text-base">
+          <p className="font-poppins text-slate-600 text-base">
             Everything you need to know about our practice, electronic billing, and appointment procedures.
           </p>
         </div>
@@ -60,7 +56,7 @@ export function FAQ() {
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? -1 : idx)}
-                  className="w-full p-6 flex items-center justify-between text-left focus:outline-none group"
+                  className="w-full p-6 flex items-center justify-between text-left focus:outline-none cursor-pointer group"
                 >
                   <span className="font-serif text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors pr-4">
                     {faq.question}
@@ -80,7 +76,7 @@ export function FAQ() {
                       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <div className="p-6 pt-0 font-sans text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                      <div className="p-6 pt-0 font-poppins text-sm text-slate-600 leading-relaxed border-t border-slate-100">
                         {faq.answer}
                       </div>
                     </motion.div>
@@ -92,6 +88,8 @@ export function FAQ() {
         </div>
 
       </div>
+
+      <SectionWaveBottom fill="#0F172A" className="absolute bottom-0 left-0 right-0 z-10" />
     </section>
   );
 }

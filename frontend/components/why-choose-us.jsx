@@ -40,7 +40,7 @@ export function WhyChooseUs() {
   ];
 
   return (
-    <section id="why-us" className="relative bg-white py-20 border-b border-slate-200 overflow-hidden">
+    <section id="why-us" className="relative bg-white py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           

@@ -50,7 +50,7 @@ export function Locations({ onOpenBooking }) {
   ];
 
   return (
-    <section id="branches" className="relative bg-slate-50 py-20 border-b border-slate-200 overflow-hidden">
+    <section id="branches" className="relative bg-slate-50 py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -125,7 +125,7 @@ export function Locations({ onOpenBooking }) {
               <div className="p-6 pt-0">
                 <button
                   onClick={onOpenBooking}
-                  className="w-full btn-primary rounded-xl py-3 font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2"
+                  className="w-full btn-primary rounded-xl py-3 font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer"
                 >
                   <span>Book at {branch.city}</span>
                   <ArrowRight className="h-4 w-4" />
