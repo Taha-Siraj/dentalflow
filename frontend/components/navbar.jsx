@@ -35,7 +35,7 @@ export function Navbar({ onOpenBooking }) {
           {/* Brand Executive Logo */}
           <Logo isWhiteText={!isScrolled} />
 
-          {/* Desktop Nav Links (Cross-Page Hash Navigation) */}
+          {/* Desktop Nav Links */}
           <nav className="hidden xl:flex items-center space-x-7 font-poppins text-xs font-semibold">
             <Link
               href="/about"
@@ -48,6 +48,12 @@ export function Navbar({ onOpenBooking }) {
               className={`transition-colors ${isScrolled ? "text-slate-700 hover:text-[#0F766E]" : "text-slate-200 hover:text-white"}`}
             >
               Services
+            </Link>
+            <Link
+              href="/#transformations"
+              className={`transition-colors ${isScrolled ? "text-slate-700 hover:text-[#0F766E]" : "text-slate-200 hover:text-white"}`}
+            >
+              Transformations
             </Link>
             <Link
               href="/#why-us"
@@ -75,10 +81,8 @@ export function Navbar({ onOpenBooking }) {
             </Link>
           </nav>
 
-          {/* Right Action Bar - PROMINENT PORTAL LOGIN & BOOKING CTAs */}
+          {/* Right Action Bar */}
           <div className="hidden md:flex items-center space-x-3 sm:space-x-4">
-            
-            {/* Prominent Portal Login Button */}
             <Link
               href="/login"
               className={`rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 border transition-all cursor-pointer ${
@@ -91,7 +95,6 @@ export function Navbar({ onOpenBooking }) {
               <span>Portal Login</span>
             </Link>
 
-            {/* Primary Booking CTA */}
             <button
               onClick={onOpenBooking}
               className="bg-[#0F766E] hover:bg-[#0D9488] text-white rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shadow-md hover:scale-105 transition-all cursor-pointer"
@@ -119,6 +122,7 @@ export function Navbar({ onOpenBooking }) {
         <div className="md:hidden border-t border-slate-200 bg-white text-slate-900 px-4 pt-4 pb-6 space-y-3 font-poppins text-sm shadow-xl">
           <Link href="/about" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>About Practice</Link>
           <Link href="/#services" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Services</Link>
+          <Link href="/#transformations" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Smile Transformations</Link>
           <Link href="/#why-us" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Why DentalFlow</Link>
           <Link href="/#doctors" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Specialists</Link>
           <Link href="/#branches" className="block py-2 font-semibold hover:text-[#0F766E]" onClick={() => setIsMobileOpen(false)}>Locations</Link>

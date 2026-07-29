@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { Stats } from "@/components/stats";
 import { Services } from "@/components/services";
+import { SmileTransformations } from "@/components/smile-transformations";
 import { WhyChooseUs } from "@/components/why-choose-us";
 import { Dentists } from "@/components/dentists";
 import { PatientJourney } from "@/components/patient-journey";
@@ -35,6 +36,7 @@ export default function Home() {
         <Hero onOpenBooking={handleOpenBooking} />
         <Stats />
         <Services onOpenBooking={handleOpenBooking} />
+        <SmileTransformations onOpenBooking={handleOpenBooking} />
         <WhyChooseUs />
         <Dentists onOpenBooking={handleOpenBooking} />
         <PatientJourney />
