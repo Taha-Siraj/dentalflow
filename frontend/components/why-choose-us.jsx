@@ -10,7 +10,7 @@ export function WhyChooseUs() {
     {
       icon: Database,
       title: "100% Centralized EMR Records",
-      description: "Visit any DentalFlow branch in Toronto, Vancouver, Calgary, Ottawa, or Mississauga. Your X-rays, medical history, and treatment plans sync instantly.",
+      description: "Visit any Smile Dental Clinic branch in Toronto, Vancouver, Calgary, Ottawa, or Mississauga. Your X-rays, medical history, and treatment plans sync instantly.",
     },
     {
       icon: CreditCard,
@@ -50,7 +50,7 @@ export function WhyChooseUs() {
               Reinventing Dental Practice Standards Across Canada
             </h2>
             <p className="font-poppins text-slate-600 text-base leading-relaxed">
-              DentalFlow combines multi-branch convenience with hospital-grade technology, transparent Canadian fee structures, and compassionate patient care.
+              Smile Dental Clinic combines multi-branch convenience with hospital-grade technology, transparent Canadian fee structures, and compassionate patient care.
             </p>
 
             <div className="rounded-2xl bg-slate-50 p-6 border border-slate-200 space-y-3">
@@ -58,7 +58,7 @@ export function WhyChooseUs() {
                 "Our promise to every patient across Canada is simple: painless treatment, transparent costs, and lifetime oral health support."
               </p>
               <p className="font-poppins text-xs font-bold text-[#0F766E]">
-                - SmileCare Dental Clinics Executive Board
+                - Smile Dental Clinic Executive Board
               </p>
             </div>
           </div>

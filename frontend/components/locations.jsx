@@ -9,7 +9,7 @@ export function Locations({ onOpenBooking }) {
   const branches = [
     {
       city: "Toronto Central",
-      name: "SmileCare Toronto Financial District",
+      name: "Smile Dental Clinic - Toronto Financial District",
       address: "100 King Street West, Suite 1200, Toronto, ON M5X 1A9",
       phone: "(416) 555-0192",
       hours: "Mon-Sat: 7:00 AM - 8:00 PM",
@@ -17,7 +17,7 @@ export function Locations({ onOpenBooking }) {
     },
     {
       city: "Vancouver West",
-      name: "SmileCare Vancouver Waterfront",
+      name: "Smile Dental Clinic - Vancouver Waterfront",
       address: "200 Burrard Street, Suite 450, Vancouver, BC V6C 3L6",
       phone: "(604) 555-0144",
       hours: "Mon-Fri: 8:00 AM - 7:00 PM",
@@ -25,7 +25,7 @@ export function Locations({ onOpenBooking }) {
     },
     {
       city: "Calgary Downtown",
-      name: "SmileCare Calgary City Centre",
+      name: "Smile Dental Clinic - Calgary City Centre",
       address: "400 3rd Avenue SW, Suite 800, Calgary, AB T2P 4H2",
       phone: "(403) 555-0178",
       hours: "Mon-Sat: 8:00 AM - 6:00 PM",
@@ -33,7 +33,7 @@ export function Locations({ onOpenBooking }) {
     },
     {
       city: "Ottawa Parliament",
-      name: "SmileCare Ottawa Capital",
+      name: "Smile Dental Clinic - Ottawa Capital",
       address: "150 Elgin Street, Suite 300, Ottawa, ON K2P 1L4",
       phone: "(613) 555-0123",
       hours: "Mon-Fri: 8:00 AM - 6:00 PM",
@@ -41,7 +41,7 @@ export function Locations({ onOpenBooking }) {
     },
     {
       city: "Mississauga Medical",
-      name: "SmileCare Mississauga Square One",
+      name: "Smile Dental Clinic - Mississauga Square One",
       address: "100 City Centre Drive, Suite 500, Mississauga, ON L5B 2C9",
       phone: "(905) 555-0189",
       hours: "Mon-Sun: 8:00 AM - 8:00 PM",
@@ -59,7 +59,7 @@ export function Locations({ onOpenBooking }) {
             5 Centralized Branch Locations
           </h2>
           <p className="font-poppins text-slate-600 text-base leading-relaxed">
-            Your medical record, 3D scans, and treatment plan are instantly accessible at any DentalFlow clinic.
+            Your medical record, 3D scans, and treatment plan are instantly accessible at any Smile Dental Clinic.
           </p>
         </div>
 

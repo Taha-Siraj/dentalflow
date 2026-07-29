@@ -16,7 +16,7 @@ export function Footer() {
             <Logo isWhiteText={true} />
 
             <p className="text-xs text-slate-400 max-w-sm leading-relaxed font-normal">
-              SmileCare Dental Clinics is a unified multi-branch dental practice management network in Canada providing 100% synchronized EMR records and direct electronic insurance billing.
+              Smile Dental Clinic is a unified multi-branch dental practice management network in Canada providing 100% synchronized EMR records and direct electronic insurance billing.
             </p>
 
             <div className="inline-flex items-center space-x-2 bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-full text-xs font-poppins text-teal-400">
@@ -59,7 +59,7 @@ export function Footer() {
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-teal-400 flex-shrink-0" />
-                <span>care@smilecare.ca</span>
+                <span>care@smiledentalclinic.ca</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4 text-teal-400 flex-shrink-0" />
@@ -72,7 +72,7 @@ export function Footer() {
 
         {/* Bottom Rights */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-normal gap-4">
-          <p suppressHydrationWarning>© {new Date().getFullYear()} SmileCare Dental Practice Network. All rights reserved.</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} Smile Dental Clinic Network. All rights reserved.</p>
           <div className="flex space-x-6 text-xs text-slate-400">
             <span>Privacy Policy</span>
             <span>Terms of Service</span>

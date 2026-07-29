@@ -34,7 +34,7 @@ export function BookingModal({ isOpen, onClose }) {
   } = useForm({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
-      branch: "SmileCare Toronto Central",
+      branch: "Smile Dental Clinic - Toronto Central",
       service: "Preventative & General Dentistry",
       doctor: "Dr. Sarah Jenkins",
       patientName: "",
@@ -88,7 +88,7 @@ export function BookingModal({ isOpen, onClose }) {
               {step === 3 ? "Appointment Confirmation" : "Online Dental Booking"}
             </DialogTitle>
             <DialogDescription className="font-sans text-xs text-slate-500">
-              SmileCare Dental Practice Network • Provincial Fee Guide Compliant
+              Smile Dental Clinic Network • Provincial Fee Guide Compliant
             </DialogDescription>
           </DialogHeader>
 
@@ -100,7 +100,7 @@ export function BookingModal({ isOpen, onClose }) {
               <div className="space-y-2">
                 <h3 className="font-serif text-2xl font-bold text-slate-900">Appointment Confirmed!</h3>
                 <p className="font-sans text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-                  Your appointment has been synchronized into the DentalFlow EMR system. A confirmation email and SMS reminder have been sent.
+                  Your appointment has been synchronized into the Smile Dental Clinic EMR system. A confirmation email and SMS reminder have been sent.
                 </p>
               </div>
               <button
@@ -121,11 +121,11 @@ export function BookingModal({ isOpen, onClose }) {
                     {...register("branch")}
                     className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all cursor-pointer"
                   >
-                    <option value="SmileCare Toronto Central">Toronto Central</option>
-                    <option value="SmileCare Vancouver West">Vancouver West</option>
-                    <option value="SmileCare Calgary Downtown">Calgary Downtown</option>
-                    <option value="SmileCare Ottawa Parliament">Ottawa Parliament</option>
-                    <option value="SmileCare Mississauga Medical">Mississauga Medical</option>
+                    <option value="Smile Dental Clinic - Toronto Central">Toronto Central</option>
+                    <option value="Smile Dental Clinic - Vancouver West">Vancouver West</option>
+                    <option value="Smile Dental Clinic - Calgary Downtown">Calgary Downtown</option>
+                    <option value="Smile Dental Clinic - Ottawa Parliament">Ottawa Parliament</option>
+                    <option value="Smile Dental Clinic - Mississauga Medical">Mississauga Medical</option>
                   </select>
                 </div>
 
