@@ -55,7 +55,7 @@ export function Hero({ onOpenBooking }) {
   };
 
   return (
-    <section className="relative min-h-[700px] sm:min-h-[780px] pt-36 sm:pt-40 pb-28 sm:pb-36 border-b border-slate-200 overflow-hidden flex items-center justify-center bg-slate-950">
+    <section className="relative min-h-[700px] sm:min-h-[780px] pt-36 sm:pt-40 pb-28 sm:pb-36 overflow-hidden flex items-center justify-center bg-slate-950">
       
       {/* FULL-BLEED LOCAL HD DENTAL CLINIC BACKGROUND VIDEO */}
       <video
@@ -111,7 +111,7 @@ export function Hero({ onOpenBooking }) {
 
             <a
               href="#branches"
-              className="bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-full px-7 py-4 font-sans text-xs font-bold uppercase tracking-wider flex items-center space-x-2 transition-all hover:scale-105"
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-full px-7 py-4 font-sans text-xs font-bold uppercase tracking-wider flex items-center space-x-2 transition-all hover:scale-105 cursor-pointer"
             >
               <MapPin className="h-4 w-4 text-teal-300" />
               <span>Find Clinic Location</span>

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toast from "react-hot-toast";
-import { CheckCircle2, ShieldCheck } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useAppointments } from "@/hooks/useAppointments";
 
@@ -80,20 +80,14 @@ export function BookingModal({ isOpen, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleResetAndClose}>
-      <DialogContent className="max-w-xl bg-white p-0 border border-slate-200 shadow-2xl rounded-2xl overflow-hidden focus:outline-none">
+      <DialogContent className="max-w-xl bg-white p-0 border border-slate-200 shadow-2xl rounded-2xl overflow-hidden focus:outline-none outline-none">
         <div className="p-6 sm:p-8 max-h-[85vh] overflow-y-auto">
           
-          <DialogHeader className="pb-4 border-b border-slate-200">
-            <div className="inline-flex items-center space-x-2 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full text-xs mb-1 w-max">
-              <ShieldCheck className="h-3.5 w-3.5 text-[#0F766E]" />
-              <span className="font-mono font-bold uppercase tracking-widest text-[#0F766E]">
-                DIRECT ELECTRONIC BILLING PORTAL
-              </span>
-            </div>
+          <DialogHeader className="pb-4 border-b border-slate-100">
             <DialogTitle className="font-serif text-2xl font-bold text-slate-900">
               {step === 3 ? "Appointment Confirmation" : "Online Dental Booking"}
             </DialogTitle>
-            <DialogDescription className="font-sans text-xs text-slate-600">
+            <DialogDescription className="font-sans text-xs text-slate-500">
               SmileCare Dental Practice Network • Provincial Fee Guide Compliant
             </DialogDescription>
           </DialogHeader>
@@ -111,7 +105,7 @@ export function BookingModal({ isOpen, onClose }) {
               </div>
               <button
                 onClick={handleResetAndClose}
-                className="btn-primary rounded-full px-6 py-3 font-sans text-xs font-bold uppercase tracking-wider"
+                className="bg-[#0F766E] hover:bg-[#0D9488] text-white rounded-full px-6 py-3 font-sans text-xs font-bold uppercase tracking-wider shadow-md transition-all cursor-pointer"
               >
                 Return to Website
               </button>
@@ -120,12 +114,12 @@ export function BookingModal({ isOpen, onClose }) {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 pt-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
-                    CLINIC BRANCH
+                  <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                    Clinic Branch
                   </label>
                   <select
                     {...register("branch")}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all cursor-pointer"
                   >
                     <option value="SmileCare Toronto Central">Toronto Central</option>
                     <option value="SmileCare Vancouver West">Vancouver West</option>
@@ -136,12 +130,12 @@ export function BookingModal({ isOpen, onClose }) {
                 </div>
 
                 <div>
-                  <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
-                    SERVICE SPECIALTY
+                  <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                    Service Specialty
                   </label>
                   <select
                     {...register("service")}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all cursor-pointer"
                   >
                     <option value="Preventative & General Dentistry">Preventative & General</option>
                     <option value="3D Digital Implant Surgery">3D Implant Surgery</option>
@@ -154,48 +148,48 @@ export function BookingModal({ isOpen, onClose }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
-                    PATIENT NAME
+                  <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                    Patient Name
                   </label>
                   <input
                     {...register("patientName")}
                     placeholder="Full Name"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all"
                   />
                   {errors.patientName && (
-                    <span className="font-mono text-[10px] text-red-600 mt-0.5 block font-bold">
+                    <span className="font-poppins text-[10px] text-red-600 mt-0.5 block font-bold">
                       {errors.patientName.message}
                     </span>
                   )}
                 </div>
 
                 <div>
-                  <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
-                    EMAIL ADDRESS
+                  <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                    Email Address
                   </label>
                   <input
                     {...register("email")}
                     placeholder="name@domain.ca"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all"
                   />
                   {errors.email && (
-                    <span className="font-mono text-[10px] text-red-600 mt-0.5 block font-bold">
+                    <span className="font-poppins text-[10px] text-red-600 mt-0.5 block font-bold">
                       {errors.email.message}
                     </span>
                   )}
                 </div>
 
                 <div>
-                  <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
-                    PHONE NUMBER
+                  <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                    Phone Number
                   </label>
                   <input
                     {...register("phone")}
                     placeholder="(416) 000-0000"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all"
                   />
                   {errors.phone && (
-                    <span className="font-mono text-[10px] text-red-600 mt-0.5 block font-bold">
+                    <span className="font-poppins text-[10px] text-red-600 mt-0.5 block font-bold">
                       {errors.phone.message}
                     </span>
                   )}
@@ -203,12 +197,12 @@ export function BookingModal({ isOpen, onClose }) {
               </div>
 
               <div>
-                <label className="font-mono text-[11px] font-bold uppercase text-slate-700 block mb-1">
-                  DIRECT INSURANCE PROVIDER
+                <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                  Direct Insurance Provider
                 </label>
                 <select
                   {...register("insurance")}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 font-sans text-xs font-semibold text-slate-900 focus:border-[#0F766E]"
+                  className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all cursor-pointer"
                 >
                   <option value="Sun Life Financial">Sun Life Financial</option>
                   <option value="Manulife">Manulife</option>
@@ -219,20 +213,20 @@ export function BookingModal({ isOpen, onClose }) {
                 </select>
               </div>
 
-              <div className="pt-4 border-t border-slate-200 flex justify-end space-x-3">
+              <div className="pt-4 border-t border-slate-100 flex justify-end items-center space-x-3">
                 <button
                   type="button"
                   onClick={handleResetAndClose}
-                  className="btn-secondary rounded-xl px-5 py-2.5 font-sans text-xs font-bold uppercase"
+                  className="px-5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-poppins text-xs font-bold uppercase transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn-primary rounded-xl px-6 py-2.5 font-sans text-xs font-bold uppercase tracking-wider"
+                  className="bg-[#0F766E] hover:bg-[#0D9488] text-white rounded-xl px-6 py-2.5 font-poppins text-xs font-bold uppercase tracking-wider shadow-sm transition-all cursor-pointer"
                 >
-                  {isSubmitting ? "Processing EMR..." : "Confirm Appointment"}
+                  {isSubmitting ? "Processing..." : "Confirm Appointment"}
                 </button>
               </div>
             </form>

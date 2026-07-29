@@ -46,7 +46,7 @@ export function Services({ onOpenBooking }) {
   ];
 
   return (
-    <section id="services" className="relative bg-slate-50 py-20 border-b border-slate-200 overflow-hidden">
+    <section id="services" className="relative bg-slate-50 py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -103,7 +103,7 @@ export function Services({ onOpenBooking }) {
                 <div className="p-6 pt-0">
                   <button
                     onClick={onOpenBooking}
-                    className="w-full btn-secondary rounded-xl py-2.5 font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2"
+                    className="w-full btn-secondary rounded-xl py-2.5 font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer"
                   >
                     <span>Book Service</span>
                     <ArrowRight className="h-3.5 w-3.5" />

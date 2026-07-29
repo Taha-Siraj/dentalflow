@@ -40,7 +40,7 @@ export function SmileTransformations({ onOpenBooking }) {
   const fallbackAfter = "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80";
 
   return (
-    <section id="transformations" className="relative bg-white py-12 border-b border-[#E5E7EB] overflow-hidden">
+    <section id="transformations" className="relative bg-white py-12 overflow-hidden">
       <SectionWaveTop fill="#F8FAFC" className="absolute top-0 left-0 right-0 z-10" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 py-6">
@@ -66,7 +66,7 @@ export function SmileTransformations({ onOpenBooking }) {
             <div className="flex items-center justify-between sm:hidden bg-[#F8FAFC] p-1 rounded-xl border border-[#E5E7EB]">
               <button
                 onClick={() => { setActiveMobileView("before"); setSliderPosition(100); }}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   activeMobileView === "before" ? "bg-[#111827] text-white" : "text-[#6B7280]"
                 }`}
               >
@@ -74,7 +74,7 @@ export function SmileTransformations({ onOpenBooking }) {
               </button>
               <button
                 onClick={() => { setActiveMobileView("compare"); setSliderPosition(50); }}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   activeMobileView === "compare" ? "bg-[#0F766E] text-white" : "text-[#6B7280]"
                 }`}
               >
@@ -82,7 +82,7 @@ export function SmileTransformations({ onOpenBooking }) {
               </button>
               <button
                 onClick={() => { setActiveMobileView("after"); setSliderPosition(0); }}
-                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   activeMobileView === "after" ? "bg-[#0F766E] text-white" : "text-[#6B7280]"
                 }`}
               >
