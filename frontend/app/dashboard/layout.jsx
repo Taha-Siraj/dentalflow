@@ -20,12 +20,22 @@ import {
   Menu,
   X,
   Lock,
+  Clock,
+  Activity,
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 const ROLE_NAV_ITEMS = {
   patient: [
-    { label: "My Appointments & EMR", href: "/dashboard/patient", icon: User },
+    { label: "Dashboard Overview", href: "/dashboard/patient", icon: LayoutDashboard },
+    { label: "Appointments & Schedule", href: "/dashboard/patient/appointments", icon: Calendar },
+    { label: "Medical Records (EMR)", href: "/dashboard/patient/medical-records", icon: Activity },
+    { label: "Digital Prescriptions", href: "/dashboard/patient/prescriptions", icon: FileText },
+    { label: "Billing & Invoices", href: "/dashboard/patient/billing", icon: CreditCard },
+    { label: "Treatment Timeline", href: "/dashboard/patient/timeline", icon: Clock },
+    { label: "Notification Center", href: "/dashboard/patient/notifications", icon: Bell },
+    { label: "Profile Management", href: "/dashboard/patient/profile", icon: User },
+    { label: "Security & Settings", href: "/dashboard/patient/settings", icon: Lock },
   ],
   doctor: [
     { label: "Clinical Schedule & Rx", href: "/dashboard/doctor", icon: Stethoscope },
@@ -43,7 +53,17 @@ const ROLE_NAV_ITEMS = {
 };
 
 const ALLOWED_ROUTES_BY_ROLE = {
-  patient: ["/dashboard/patient"],
+  patient: [
+    "/dashboard/patient",
+    "/dashboard/patient/appointments",
+    "/dashboard/patient/medical-records",
+    "/dashboard/patient/prescriptions",
+    "/dashboard/patient/billing",
+    "/dashboard/patient/timeline",
+    "/dashboard/patient/notifications",
+    "/dashboard/patient/profile",
+    "/dashboard/patient/settings",
+  ],
   doctor: ["/dashboard/doctor"],
   receptionist: ["/dashboard/reception"],
   admin: ["/dashboard", "/dashboard/admin", "/dashboard/patient", "/dashboard/doctor", "/dashboard/reception"],
@@ -58,7 +78,7 @@ export default function DashboardLayout({ children }) {
   const isAccessAllowed = () => {
     if (!user) return false;
     const allowed = ALLOWED_ROUTES_BY_ROLE[user.role] || [];
-    return allowed.includes(pathname);
+    return allowed.some((route) => pathname === route || pathname.startsWith(route + "/"));
   };
 
   if (loading) {
@@ -170,7 +190,7 @@ export default function DashboardLayout({ children }) {
         </div>
       </aside>
 
-      {/* Main Right Body - EXECUTIVE SHADCN WHITE THEME */}
+      {/* Main Right Body */}
       <div className="flex-1 flex flex-col min-h-screen min-w-0">
         {/* Top Header Bar */}
         <header className="h-14 bg-white border-b border-slate-200 px-4 md:px-6 flex items-center justify-between shrink-0 z-20 sticky top-0 shadow-2xs">
