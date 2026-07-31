@@ -22,7 +22,7 @@ export function Navbar({ onOpenBooking }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle ESC key and Body Scroll Lock for Mobile Drawer
+  // Handle ESC key and Body Scroll Lock for Drawer
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
@@ -65,21 +65,23 @@ export function Navbar({ onOpenBooking }) {
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           
           {/* Executive Brand Logo */}
-          <Logo isWhiteText={!isScrolled} />
+          <div className="shrink-0">
+            <Logo isWhiteText={!isScrolled} />
+          </div>
 
-          {/* Desktop Nav Links (xl: 1280px and up for clean fit) */}
+          {/* Desktop Nav Links (Visible only on 2xl / 1440px+ to ensure zero overflow) */}
           <nav
             aria-label="Public Navigation Menu"
-            className="hidden xl:flex items-center space-x-4 xl:space-x-6 font-poppins text-xs font-semibold"
+            className="hidden 2xl:flex items-center space-x-3 3xl:space-x-5 font-poppins text-[11px] xl:text-xs font-semibold"
           >
             {navLinks.map((link, idx) => (
               <Link
                 key={idx}
                 href={link.href}
-                className={`transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1B5C63] focus:ring-offset-2 rounded-md px-1 py-0.5 ${
+                className={`transition-colors whitespace-nowrap focus:outline-none rounded-md px-1 py-0.5 ${
                   isScrolled
                     ? "text-slate-700 hover:text-[#1B5C63]"
                     : "text-slate-200 hover:text-white"
@@ -90,47 +92,51 @@ export function Navbar({ onOpenBooking }) {
             ))}
           </nav>
 
-          {/* Desktop Action Buttons */}
-          <div className="hidden lg:flex items-center space-x-3">
+          {/* Action Buttons & Hamburger trigger */}
+          <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+            
+            {/* Portal Login Button - Hidden on small mobile, visible on sm and up */}
             <Link
               href="/login"
-              className={`rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 border transition-all cursor-pointer whitespace-nowrap focus:outline-none ${
+              className={`hidden sm:inline-flex rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-wider items-center space-x-1.5 border transition-all cursor-pointer whitespace-nowrap focus:outline-none ${
                 isScrolled
                   ? "bg-teal-50/80 border-teal-200 text-[#1B5C63] hover:bg-teal-100"
                   : "bg-white/10 border-white/30 text-white hover:bg-white/20"
               }`}
             >
-              <UserCheck className="h-4 w-4 text-teal-400 flex-shrink-0" />
+              <UserCheck className="h-3.5 w-3.5 text-teal-400 shrink-0" />
               <span>Portal Login</span>
             </Link>
 
+            {/* Book Appointment CTA Button */}
             <button
               onClick={onOpenBooking}
-              className="bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shadow-md hover:scale-105 transition-all cursor-pointer whitespace-nowrap focus:outline-none"
+              className="bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-full px-4 sm:px-5 py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 shadow-md hover:scale-105 transition-all cursor-pointer whitespace-nowrap focus:outline-none"
             >
-              <Calendar className="h-4 w-4 flex-shrink-0" />
+              <Calendar className="h-3.5 w-3.5 shrink-0" />
               <span>Book Appointment</span>
             </button>
-          </div>
 
-          {/* Mobile & Tablet Hamburger Button */}
-          <button
-            onClick={() => setIsMobileOpen(!isMobileOpen)}
-            aria-expanded={isMobileOpen}
-            aria-label="Toggle Public Navigation Menu"
-            className={`xl:hidden p-2 rounded-xl focus:outline-none transition-colors cursor-pointer ${
-              isScrolled ? "text-slate-800 hover:bg-slate-100" : "text-white hover:bg-white/10"
-            }`}
-          >
-            {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+            {/* Hamburger Button (Visible on screens < 1440px / 2xl) */}
+            <button
+              onClick={() => setIsMobileOpen(!isMobileOpen)}
+              aria-expanded={isMobileOpen}
+              aria-label="Toggle Public Navigation Menu"
+              className={`2xl:hidden p-2 rounded-xl focus:outline-none transition-colors cursor-pointer ${
+                isScrolled ? "text-slate-800 hover:bg-slate-100" : "text-white hover:bg-white/10"
+              }`}
+            >
+              {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+
+          </div>
 
         </div>
       </div>
 
-      {/* Mobile & Tablet Premium Slide-Out Drawer Overlay */}
+      {/* Slide-Out Drawer Overlay (For all screens < 1440px) */}
       {isMobileOpen && (
-        <div className="xl:hidden fixed inset-0 z-50 flex justify-end">
+        <div className="2xl:hidden fixed inset-0 z-50 flex justify-end">
           {/* Backdrop Blur Overlay */}
           <div
             className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300"
@@ -152,7 +158,7 @@ export function Navbar({ onOpenBooking }) {
               </div>
 
               {/* Navigation Links */}
-              <nav className="space-y-1">
+              <nav className="space-y-1" aria-label="Mobile Navigation Menu">
                 {navLinks.map((link, idx) => (
                   <Link
                     key={idx}
