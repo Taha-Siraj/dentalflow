@@ -5,3 +5,5 @@ export { Patient } from "./patient.model.js";
 export { Appointment } from "./appointment.model.js";
 export { Prescription } from "./prescription.model.js";
 export { Invoice } from "./invoice.model.js";
+export { Notification } from "./notification.model.js";
+export { Treatment } from "./treatment.model.js";

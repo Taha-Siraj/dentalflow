@@ -20,6 +20,7 @@ export async function apiClient(endpoint, options = {}) {
 
   try {
     const response = await fetch(url, {
+      credentials: "include",
       ...options,
       headers,
     });
