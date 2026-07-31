@@ -53,7 +53,7 @@ export function Navbar({ onOpenBooking }) {
                 href={link.href}
                 className={`transition-colors whitespace-nowrap ${
                   isScrolled
-                    ? "text-slate-700 hover:text-[#0F766E]"
+                    ? "text-slate-700 hover:text-[#1B5C63]"
                     : "text-slate-200 hover:text-white"
                 }`}
               >
@@ -68,7 +68,7 @@ export function Navbar({ onOpenBooking }) {
               href="/login"
               className={`rounded-full px-4.5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 border transition-all cursor-pointer whitespace-nowrap ${
                 isScrolled
-                  ? "bg-teal-50 border-teal-200 text-[#0F766E] hover:bg-teal-100"
+                  ? "bg-teal-50 border-teal-200 text-[#1B5C63] hover:bg-teal-100"
                   : "bg-white/10 border-white/30 text-white hover:bg-white/20"
               }`}
             >
@@ -78,14 +78,14 @@ export function Navbar({ onOpenBooking }) {
 
             <button
               onClick={onOpenBooking}
-              className="bg-[#0F766E] hover:bg-[#0D9488] text-white rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shadow-md hover:scale-105 transition-all cursor-pointer whitespace-nowrap"
+              className="bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shadow-md hover:scale-105 transition-all cursor-pointer whitespace-nowrap"
             >
               <Calendar className="h-3.5 w-3.5" />
               <span>Book Appointment</span>
             </button>
           </div>
 
-          {/* Mobile & Tablet Hamburger Button (visible on screens below lg: 1024px) */}
+          {/* Mobile & Tablet Hamburger Button */}
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
             aria-label="Toggle Menu"
@@ -107,7 +107,7 @@ export function Navbar({ onOpenBooking }) {
               <Link
                 key={idx}
                 href={link.href}
-                className="flex items-center justify-between py-2.5 px-3 rounded-xl font-semibold text-slate-800 hover:text-[#0F766E] hover:bg-teal-50/60 transition-colors"
+                className="flex items-center justify-between py-2.5 px-3 rounded-xl font-semibold text-slate-800 hover:text-[#1B5C63] hover:bg-teal-50/60 transition-colors"
                 onClick={() => setIsMobileOpen(false)}
               >
                 <span>{link.name}</span>
@@ -122,7 +122,7 @@ export function Navbar({ onOpenBooking }) {
               className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200 rounded-xl py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all cursor-pointer"
               onClick={() => setIsMobileOpen(false)}
             >
-              <UserCheck className="h-4 w-4 text-[#0F766E]" />
+              <UserCheck className="h-4 w-4 text-[#1B5C63]" />
               <span>Portal Login</span>
             </Link>
 
@@ -131,7 +131,7 @@ export function Navbar({ onOpenBooking }) {
                 setIsMobileOpen(false);
                 onOpenBooking();
               }}
-              className="flex-1 bg-[#0F766E] hover:bg-[#0D9488] text-white rounded-xl py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow-md transition-all cursor-pointer"
+              className="flex-1 bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-xl py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow-md transition-all cursor-pointer"
             >
               <Calendar className="h-4 w-4" />
               <span>Book Appointment</span>

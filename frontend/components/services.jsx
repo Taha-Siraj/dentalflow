@@ -46,35 +46,36 @@ export function Services({ onOpenBooking }) {
   ];
 
   return (
-    <section id="services" className="relative bg-slate-50 py-20 overflow-hidden">
+    <section id="services" className="relative bg-slate-50 py-16 sm:py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
+        {/* Balanced Consistent Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B5C63] tracking-tight">
             Comprehensive Dental Services
           </h2>
-          <p className="font-poppins text-slate-600 text-base leading-relaxed">
+          <p className="font-poppins text-slate-600 text-sm sm:text-base leading-relaxed">
             Adhering strictly to Canadian provincial fee guides (ODA, BCDA, ADA) with transparent pricing and zero hidden surcharges.
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {servicesList.map((service, idx) => {
             const IconComponent = service.icon;
             return (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{ duration: 0.5, delay: idx * 0.08 }}
-                className="bg-white rounded-2xl border border-slate-200 shadow-sm card-hover overflow-hidden flex flex-col justify-between group"
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
+                className="bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-[#1B5C63]/5 hover:shadow-xl hover:shadow-[#1B5C63]/10 overflow-hidden flex flex-col justify-between group transition-all duration-300"
               >
                 <div>
-                  {/* Photo Header */}
+                  {/* Photo Frame with Subtle Ambient Glow Effect */}
                   <div className="relative h-48 w-full overflow-hidden bg-slate-100">
+                    <div className="absolute inset-0 bg-[#1B5C63]/10 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none" />
                     <img
                       src={service.image}
                       alt={service.title}
@@ -83,17 +84,17 @@ export function Services({ onOpenBooking }) {
                       }}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md p-2.5 rounded-xl shadow-md text-[#0F766E]">
+                    <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md p-2.5 rounded-xl shadow-md text-[#1B5C63] z-20">
                       <IconComponent className="h-5 w-5" />
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 space-y-3">
-                    <h3 className="font-serif text-xl font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors">
+                  <div className="p-6 space-y-2.5">
+                    <h3 className="font-serif text-lg sm:text-xl font-bold text-slate-900 group-hover:text-[#1B5C63] transition-colors">
                       {service.title}
                     </h3>
-                    <p className="font-poppins text-sm text-slate-600 leading-relaxed">
+                    <p className="font-poppins text-xs sm:text-sm text-slate-600 leading-relaxed">
                       {service.description}
                     </p>
                   </div>
@@ -103,7 +104,7 @@ export function Services({ onOpenBooking }) {
                 <div className="p-6 pt-0">
                   <button
                     onClick={onOpenBooking}
-                    className="w-full btn-secondary rounded-xl py-2.5 font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer"
+                    className="w-full bg-slate-100 hover:bg-[#1B5C63] text-slate-800 hover:text-white rounded-xl py-2.5 font-poppins text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all cursor-pointer"
                   >
                     <span>Book Service</span>
                     <ArrowRight className="h-3.5 w-3.5" />

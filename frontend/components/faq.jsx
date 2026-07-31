@@ -15,7 +15,7 @@ export function FAQ() {
     },
     {
       question: "How does centralized EMR record syncing work across branches?",
-      answer: "When you register at any DentalFlow branch, your electronic medical record (EMR), high-resolution 3D CBCT scans, dental history, and treatment plans are stored in an encrypted Canadian cloud server. If you visit our Toronto, Vancouver, Calgary, Ottawa, or Mississauga clinic, any dentist can access your full record seamlessly.",
+      answer: "When you register at any Smile Dental Clinic branch, your electronic medical record (EMR), high-resolution 3D CBCT scans, dental history, and treatment plans are stored in an encrypted Canadian cloud server. If you visit our Toronto, Vancouver, Calgary, Ottawa, or Mississauga clinic, any dentist can access your full record seamlessly.",
     },
     {
       question: "Do you follow provincial dental fee guides?",
@@ -32,15 +32,15 @@ export function FAQ() {
   ];
 
   return (
-    <section id="faq" className="relative bg-slate-50 py-20 overflow-hidden">
+    <section id="faq" className="relative bg-slate-50 py-16 sm:py-20 overflow-hidden">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
+        {/* Balanced Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B5C63] tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="font-poppins text-slate-600 text-base">
+          <p className="font-poppins text-slate-600 text-sm sm:text-base">
             Everything you need to know about our practice, electronic billing, and appointment procedures.
           </p>
         </div>
@@ -52,17 +52,17 @@ export function FAQ() {
             return (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden transition-all"
+                className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden transition-all duration-200"
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? -1 : idx)}
                   className="w-full p-6 flex items-center justify-between text-left focus:outline-none cursor-pointer group"
                 >
-                  <span className="font-serif text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors pr-4">
+                  <span className="font-serif text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#1B5C63] transition-colors pr-4">
                     {faq.question}
                   </span>
 
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-50 text-[#0F766E] flex-shrink-0">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-50 text-[#1B5C63] flex-shrink-0">
                     {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                   </div>
                 </button>
@@ -73,10 +73,10 @@ export function FAQ() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      <div className="p-6 pt-0 font-poppins text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                      <div className="p-6 pt-0 font-poppins text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100">
                         {faq.answer}
                       </div>
                     </motion.div>

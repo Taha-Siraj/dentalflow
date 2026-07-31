@@ -50,33 +50,34 @@ export function Locations({ onOpenBooking }) {
   ];
 
   return (
-    <section id="branches" className="relative bg-slate-50 py-20 overflow-hidden">
+    <section id="branches" className="relative bg-slate-50 py-16 sm:py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
+        {/* Balanced Consistent Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B5C63] tracking-tight">
             5 Centralized Branch Locations
           </h2>
-          <p className="font-poppins text-slate-600 text-base leading-relaxed">
+          <p className="font-poppins text-slate-600 text-sm sm:text-base leading-relaxed">
             Your medical record, 3D scans, and treatment plan are instantly accessible at any Smile Dental Clinic.
           </p>
         </div>
 
         {/* Locations Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {branches.map((branch, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className="bg-white rounded-2xl border border-slate-200 shadow-sm card-hover overflow-hidden flex flex-col justify-between group"
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
+              className="bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-[#1B5C63]/5 hover:shadow-xl hover:shadow-[#1B5C63]/10 overflow-hidden flex flex-col justify-between group transition-all duration-300"
             >
               <div>
-                {/* Clinic Photo */}
+                {/* Clinic Photo Frame with Subtle Background Glow Effect */}
                 <div className="relative h-48 w-full overflow-hidden bg-slate-100">
+                  <div className="absolute inset-0 bg-[#1B5C63]/10 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none" />
                   <img
                     src={branch.image}
                     alt={branch.name}
@@ -85,10 +86,10 @@ export function Locations({ onOpenBooking }) {
                     }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-3 left-3 bg-[#0F766E] text-white font-poppins font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
+                  <div className="absolute top-3 left-3 bg-[#1B5C63] text-white font-poppins font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider shadow-md z-20">
                     {branch.city}
                   </div>
-                  <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-poppins font-bold text-[#0F766E] flex items-center space-x-1 shadow-md">
+                  <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-poppins font-bold text-[#1B5C63] flex items-center space-x-1 shadow-md z-20">
                     <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
                     <span>EMR Online</span>
                   </div>
@@ -96,25 +97,25 @@ export function Locations({ onOpenBooking }) {
 
                 {/* Details */}
                 <div className="p-6 space-y-3">
-                  <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors">
+                  <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#1B5C63] transition-colors">
                     {branch.name}
                   </h3>
 
                   <div className="space-y-2 text-xs text-slate-600 font-poppins">
                     <p className="flex items-start space-x-2">
-                      <MapPin className="h-4 w-4 text-[#0F766E] flex-shrink-0 mt-0.5" />
+                      <MapPin className="h-4 w-4 text-[#1B5C63] flex-shrink-0 mt-0.5" />
                       <span>{branch.address}</span>
                     </p>
 
                     <p className="flex items-center space-x-2">
-                      <Phone className="h-4 w-4 text-[#0F766E] flex-shrink-0" />
-                      <a href={`tel:${branch.phone}`} className="font-poppins font-bold text-slate-800 hover:text-[#0F766E]">
+                      <Phone className="h-4 w-4 text-[#1B5C63] flex-shrink-0" />
+                      <a href={`tel:${branch.phone}`} className="font-poppins font-bold text-slate-800 hover:text-[#1B5C63]">
                         {branch.phone}
                       </a>
                     </p>
 
                     <p className="flex items-center space-x-2">
-                      <Clock className="h-4 w-4 text-[#0F766E] flex-shrink-0" />
+                      <Clock className="h-4 w-4 text-[#1B5C63] flex-shrink-0" />
                       <span>{branch.hours}</span>
                     </p>
                   </div>
@@ -125,7 +126,7 @@ export function Locations({ onOpenBooking }) {
               <div className="p-6 pt-0">
                 <button
                   onClick={onOpenBooking}
-                  className="w-full btn-primary rounded-xl py-3 font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer"
+                  className="w-full bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-xl py-3 font-poppins text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow-sm transition-all cursor-pointer"
                 >
                   <span>Book at {branch.city}</span>
                   <ArrowRight className="h-4 w-4" />

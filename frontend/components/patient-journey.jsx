@@ -34,34 +34,34 @@ export function PatientJourney() {
   ];
 
   return (
-    <section className="relative bg-white py-20 overflow-hidden">
+    <section className="relative bg-white py-16 sm:py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
+        {/* Balanced Consistent Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B5C63] tracking-tight">
             The 4-Step Patient Journey
           </h2>
-          <p className="font-poppins text-slate-600 text-base leading-relaxed">
+          <p className="font-poppins text-slate-600 text-sm sm:text-base leading-relaxed">
             Designed for total convenience, zero billing surprises, and maximum clinical comfort.
           </p>
         </div>
 
         {/* Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {steps.map((item, idx) => {
             const Icon = item.icon;
             return (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{ duration: 0.5, delay: idx * 0.08 }}
-                className="rounded-2xl border border-slate-200 bg-slate-50 p-6 card-hover flex flex-col justify-between space-y-4 relative"
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
+                className="rounded-2xl border border-slate-200/80 bg-slate-50 p-6 shadow-sm hover:shadow-md hover:shadow-[#1B5C63]/5 flex flex-col justify-between space-y-4 relative transition-all duration-300"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-100 text-[#0F766E] font-bold">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-100/80 text-[#1B5C63] font-bold">
                     <Icon className="h-6 w-6" />
                   </div>
                   <span className="font-poppins text-xl font-bold text-slate-300">
@@ -70,11 +70,11 @@ export function PatientJourney() {
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="font-serif text-lg font-bold text-slate-900">{item.title}</h3>
+                  <h3 className="font-serif text-base sm:text-lg font-bold text-slate-900">{item.title}</h3>
                   <p className="font-poppins text-xs sm:text-sm text-slate-600 leading-relaxed">{item.description}</p>
                 </div>
 
-                <div className="pt-2 font-poppins text-[11px] font-bold text-[#0F766E] uppercase tracking-wider flex items-center space-x-1">
+                <div className="pt-2 font-poppins text-[11px] font-bold text-[#1B5C63] uppercase tracking-wider flex items-center space-x-1">
                   <ShieldCheck className="h-4 w-4" />
                   <span>Automated EMR Protocol</span>
                 </div>

@@ -9,7 +9,7 @@ import { SectionWaveTop, SectionWaveBottom } from "@/components/ui/section-wave"
 export function SmileTransformations({ onOpenBooking }) {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
-  const [activeMobileView, setActiveMobileView] = useState("compare"); // 'compare' | 'before' | 'after'
+  const [activeMobileView, setActiveMobileView] = useState("compare");
 
   const containerRef = useRef(null);
 
@@ -40,34 +40,38 @@ export function SmileTransformations({ onOpenBooking }) {
   const fallbackAfter = "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80";
 
   return (
-    <section id="transformations" className="relative bg-white py-12 overflow-hidden">
+    <section id="transformations" className="relative bg-white py-14 sm:py-16 overflow-hidden">
       <SectionWaveTop fill="#F8FAFC" className="absolute top-0 left-0 right-0 z-10" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 py-6">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-2 mb-8">
-          <Badge variant="outline" className="border-[#0F766E]/30 text-[#0F766E] bg-[#0F766E]/5 px-3 py-0.5 font-bold text-xs rounded-full inline-flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5 text-[#0F766E]" />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 py-4 sm:py-6">
+        {/* Balanced Section Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-2.5 mb-8 sm:mb-12">
+          <Badge variant="outline" className="border-[#1B5C63]/30 text-[#1B5C63] bg-[#1B5C63]/5 px-3.5 py-1 font-bold text-xs rounded-full inline-flex items-center gap-1.5">
+            <Sparkles className="h-3.5 w-3.5 text-[#1B5C63]" />
             Clinical Smile Transformation
           </Badge>
-          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#111827]">
-            Before & After <span className="text-[#0F766E]">Porcelain Veneers Result</span>
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B5C63] tracking-tight">
+            Before & After Porcelain Veneers
           </h2>
-          <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed">
-            Drag the interactive handle horizontally to see real clinical results achieved by Dr. Sarah Jenkins at DentalFlow Toronto.
+          <p className="font-poppins text-slate-600 text-xs sm:text-sm leading-relaxed">
+            Drag the interactive handle horizontally to see real clinical results achieved by Dr. Sarah Jenkins at Smile Dental Clinic.
           </p>
         </div>
 
         {/* Transformation Showcase Container */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-6xl mx-auto">
-          {/* Left Column: Interactive Comparison Container */}
-          <div className="lg:col-span-7 space-y-3">
+          {/* Left Column: Interactive Comparison Container with Soft Background Glow */}
+          <div className="lg:col-span-7 space-y-3 relative">
+            
+            {/* Ambient Background Glow Layer */}
+            <div className="absolute -inset-2 bg-gradient-to-r from-[#1B5C63]/15 to-teal-300/20 rounded-3xl blur-xl opacity-70 pointer-events-none" />
+
             {/* Quick Click View Buttons for Mobile Devices */}
-            <div className="flex items-center justify-between sm:hidden bg-[#F8FAFC] p-1 rounded-xl border border-[#E5E7EB]">
+            <div className="relative z-10 flex items-center justify-between sm:hidden bg-[#F8FAFC] p-1 rounded-xl border border-slate-200">
               <button
                 onClick={() => { setActiveMobileView("before"); setSliderPosition(100); }}
                 className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  activeMobileView === "before" ? "bg-[#111827] text-white" : "text-[#6B7280]"
+                  activeMobileView === "before" ? "bg-slate-900 text-white" : "text-slate-600"
                 }`}
               >
                 BEFORE
@@ -75,7 +79,7 @@ export function SmileTransformations({ onOpenBooking }) {
               <button
                 onClick={() => { setActiveMobileView("compare"); setSliderPosition(50); }}
                 className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  activeMobileView === "compare" ? "bg-[#0F766E] text-white" : "text-[#6B7280]"
+                  activeMobileView === "compare" ? "bg-[#1B5C63] text-white" : "text-slate-600"
                 }`}
               >
                 SLIDER
@@ -83,7 +87,7 @@ export function SmileTransformations({ onOpenBooking }) {
               <button
                 onClick={() => { setActiveMobileView("after"); setSliderPosition(0); }}
                 className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  activeMobileView === "after" ? "bg-[#0F766E] text-white" : "text-[#6B7280]"
+                  activeMobileView === "after" ? "bg-[#1B5C63] text-white" : "text-slate-600"
                 }`}
               >
                 AFTER
@@ -100,7 +104,7 @@ export function SmileTransformations({ onOpenBooking }) {
               onTouchStart={() => setIsDragging(true)}
               onTouchEnd={() => setIsDragging(false)}
               onTouchMove={handleTouchMove}
-              className="relative h-[320px] sm:h-[420px] w-full rounded-2xl overflow-hidden border border-[#E5E7EB] bg-[#F8FAFC] shadow-sm select-none touch-none cursor-ew-resize group"
+              className="relative h-[320px] sm:h-[420px] w-full rounded-2xl overflow-hidden border border-slate-200 bg-[#F8FAFC] shadow-xl shadow-[#1B5C63]/10 select-none touch-none cursor-ew-resize group z-10"
             >
               {/* After Image (Base Layer) */}
               <img
@@ -131,10 +135,10 @@ export function SmileTransformations({ onOpenBooking }) {
               </div>
 
               {/* Badges Overlay */}
-              <div className="absolute top-3 left-3 bg-[#111827] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-xs uppercase tracking-wider">
+              <div className="absolute top-3 left-3 bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md uppercase tracking-wider">
                 BEFORE
               </div>
-              <div className="absolute top-3 right-3 bg-[#0F766E] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-xs uppercase tracking-wider">
+              <div className="absolute top-3 right-3 bg-[#1B5C63] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-md uppercase tracking-wider">
                 AFTER
               </div>
 
@@ -143,13 +147,13 @@ export function SmileTransformations({ onOpenBooking }) {
                 className="absolute top-0 bottom-0 w-1 bg-white shadow-md pointer-events-none"
                 style={{ left: `${sliderPosition}%` }}
               >
-                <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-[#0F766E] text-white border-2 border-white shadow-md">
+                <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-[#1B5C63] text-white border-2 border-white shadow-md">
                   <SlidersHorizontal className="h-4 w-4" />
                 </div>
               </div>
 
               {/* Drag Instruction Floating Banner */}
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-[#111827]/80 backdrop-blur-sm text-white text-[11px] font-semibold px-3 py-1 rounded-full border border-white/20 flex items-center gap-1.5">
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold px-3.5 py-1 rounded-full border border-white/20 flex items-center gap-1.5 shadow-md">
                 <ChevronLeft className="h-3.5 w-3.5" />
                 <span>Drag to Compare</span>
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -159,38 +163,38 @@ export function SmileTransformations({ onOpenBooking }) {
 
           {/* Right Column: Clinical Case Details */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="rounded-2xl border border-[#E5E7EB] bg-[#F8FAFC] p-6 space-y-4">
+            <div className="rounded-2xl border border-slate-200 bg-[#F8FAFC] p-6 space-y-4 shadow-sm">
               <div className="flex items-center justify-between">
-                <Badge className="bg-[#0F766E] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                <Badge className="bg-[#1B5C63] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">
                   Porcelain Veneers
                 </Badge>
-                <span className="text-xs font-mono font-bold text-[#0F766E]">2 Visits (14 Days)</span>
+                <span className="text-xs font-poppins font-bold text-[#1B5C63]">2 Visits (14 Days)</span>
               </div>
 
               <div>
-                <h3 className="font-heading text-xl font-bold text-[#111827]">Full Arch Porcelain Smile Makeover</h3>
-                <p className="text-xs text-[#6B7280] leading-relaxed mt-1">
+                <h3 className="font-serif text-xl font-bold text-slate-900">Full Arch Porcelain Makeover</h3>
+                <p className="text-xs text-slate-600 leading-relaxed mt-1.5 font-poppins">
                   Handcrafted ultrathin porcelain veneers designed to correct teeth misalignment, close gaps, and restore a brilliant, natural-looking Canadian smile.
                 </p>
               </div>
 
-              <div className="space-y-2 pt-3 border-t border-[#E5E7EB] text-xs text-[#111827]">
+              <div className="space-y-2 pt-3 border-t border-slate-200 text-xs text-slate-900 font-poppins">
                 <div className="flex items-center justify-between">
-                  <span className="text-[#6B7280]">Attending Specialist:</span>
-                  <span className="font-bold text-[#0F766E]">Dr. Sarah Jenkins, DDS</span>
+                  <span className="text-slate-500">Attending Specialist:</span>
+                  <span className="font-bold text-[#1B5C63]">Dr. Sarah Jenkins, DDS</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[#6B7280]">Branch Location:</span>
+                  <span className="text-slate-500">Branch Location:</span>
                   <span className="font-bold">Toronto Downtown Clinic</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[#6B7280]">Insurance Billing:</span>
-                  <span className="font-bold text-[#16A34A]">Direct Electronic Claim Submitted</span>
+                  <span className="text-slate-500">Insurance Billing:</span>
+                  <span className="font-bold text-emerald-600">Direct Electronic Claim Submitted</span>
                 </div>
               </div>
 
               <div className="pt-1">
-                <div className="flex items-center gap-2 text-xs text-[#16A34A] font-semibold bg-green-50 p-3 rounded-xl border border-green-200">
+                <div className="flex items-center gap-2 text-xs text-emerald-700 font-semibold bg-emerald-50 p-3 rounded-xl border border-emerald-200">
                   <CheckCircle2 className="h-4 w-4 shrink-0" />
                   <span>100% Patient Satisfaction Guaranteed</span>
                 </div>
@@ -200,10 +204,10 @@ export function SmileTransformations({ onOpenBooking }) {
             {/* Book Transformation Button */}
             <Button
               onClick={onOpenBooking}
-              className="w-full bg-[#0F766E] hover:bg-[#0F766E]/90 text-white font-bold text-xs h-11 rounded-xl gap-2 shadow-sm focus:outline-none cursor-pointer"
+              className="w-full bg-[#1B5C63] hover:bg-[#15494F] text-white font-bold text-xs h-12 rounded-xl gap-2 shadow-md focus:outline-none cursor-pointer uppercase tracking-wider"
             >
               <Calendar className="h-4 w-4" />
-              Book Your Smile Transformation
+              Book Smile Transformation
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>

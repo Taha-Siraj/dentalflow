@@ -42,33 +42,34 @@ export function Dentists({ onOpenBooking }) {
   ];
 
   return (
-    <section id="doctors" className="relative bg-slate-50 py-20 overflow-hidden">
+    <section id="doctors" className="relative bg-slate-50 py-16 sm:py-20 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
+        {/* Balanced Consistent Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B5C63] tracking-tight">
             Board-Certified Dentists & Specialists
           </h2>
-          <p className="font-poppins text-slate-600 text-base leading-relaxed">
+          <p className="font-poppins text-slate-600 text-sm sm:text-base leading-relaxed">
             Licensed by RCDSO, CDSBC, and CDCA. Committed to gentle, high-precision clinical care.
           </p>
         </div>
 
         {/* Doctors Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {doctors.map((doc, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className="bg-white rounded-2xl border border-slate-200 shadow-sm card-hover overflow-hidden flex flex-col justify-between group"
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
+              className="bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-[#1B5C63]/5 hover:shadow-xl hover:shadow-[#1B5C63]/10 overflow-hidden flex flex-col justify-between group transition-all duration-300"
             >
               <div>
-                {/* Photo Frame */}
+                {/* Photo Frame with Subtle Background Glow Effect */}
                 <div className="relative h-64 w-full overflow-hidden bg-slate-100">
+                  <div className="absolute inset-0 bg-[#1B5C63]/10 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none" />
                   <img
                     src={doc.image}
                     alt={doc.name}
@@ -77,18 +78,18 @@ export function Dentists({ onOpenBooking }) {
                     }}
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md text-xs font-semibold text-[#0F766E] flex items-center space-x-1">
-                    <MapPin className="h-3 w-3 text-[#0F766E]" />
+                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md text-xs font-semibold text-[#1B5C63] flex items-center space-x-1 z-20">
+                    <MapPin className="h-3 w-3 text-[#1B5C63]" />
                     <span>{doc.branch}</span>
                   </div>
                 </div>
 
                 {/* Details */}
                 <div className="p-5 space-y-2">
-                  <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors">
+                  <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#1B5C63] transition-colors">
                     {doc.name}
                   </h3>
-                  <p className="font-poppins text-xs font-bold text-[#0F766E]">{doc.credentials}</p>
+                  <p className="font-poppins text-xs font-bold text-[#1B5C63]">{doc.credentials}</p>
                   <p className="font-poppins text-xs text-slate-600 leading-relaxed pt-1">
                     {doc.specialty}
                   </p>
@@ -99,7 +100,7 @@ export function Dentists({ onOpenBooking }) {
               <div className="p-5 pt-0">
                 <button
                   onClick={onOpenBooking}
-                  className="w-full btn-primary rounded-xl py-2.5 font-sans text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer"
+                  className="w-full bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-xl py-2.5 font-poppins text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow-sm transition-all cursor-pointer"
                 >
                   <span>Book Specialist</span>
                   <ArrowRight className="h-3.5 w-3.5" />
