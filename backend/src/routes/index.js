@@ -17,6 +17,22 @@ import {
   getPatientTimeline,
   updatePatientSettings,
 } from "../controllers/patient.controller.js";
+import {
+  getDoctorDashboard,
+  getDoctorAppointments,
+  getDoctorPatients,
+  getDoctorPatientById,
+  getDoctorPrescriptions,
+  createDoctorPrescription,
+  createConsultationNote,
+  createFollowUp,
+  getDoctorSchedule,
+  updateDoctorSchedule,
+  getDoctorNotifications,
+  getDoctorProfile,
+  updateDoctorProfile,
+  updateDoctorSettings,
+} from "../controllers/doctor.controller.js";
 import { authenticateJWT, authorizeRoles } from "../middleware/auth.js";
 
 const router = Router();
@@ -68,6 +84,22 @@ router.get("/patient/notifications", getPatientNotifications);
 router.get("/patient/medical-records", getPatientMedicalRecords);
 router.get("/patient/timeline", getPatientTimeline);
 router.patch("/patient/settings", updatePatientSettings);
+
+// Doctor API Routes
+router.get("/doctor/dashboard", getDoctorDashboard);
+router.get("/doctor/appointments", getDoctorAppointments);
+router.get("/doctor/patients", getDoctorPatients);
+router.get("/doctor/patient/:id", getDoctorPatientById);
+router.get("/doctor/prescriptions", getDoctorPrescriptions);
+router.post("/doctor/prescriptions", createDoctorPrescription);
+router.post("/doctor/consultation-notes", createConsultationNote);
+router.post("/doctor/follow-ups", createFollowUp);
+router.get("/doctor/schedule", getDoctorSchedule);
+router.put("/doctor/schedule", updateDoctorSchedule);
+router.get("/doctor/notifications", getDoctorNotifications);
+router.get("/doctor/profile", getDoctorProfile);
+router.put("/doctor/profile", updateDoctorProfile);
+router.patch("/doctor/settings", updateDoctorSettings);
 
 // Admin Executive Analytics Route
 router.get("/admin/analytics", getAdminAnalytics);

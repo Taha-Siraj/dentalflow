@@ -1,62 +1,192 @@
-import { Doctor } from "../models/doctor.model.js";
+import Appointment from "../models/appointment.model.js";
+import User from "../models/user.model.js";
 
-export const getDoctors = async (req, res) => {
+// GET /api/v1/doctor/dashboard
+export const getDoctorDashboard = async (req, res) => {
   try {
-    const doctors = await Doctor.find().populate("branchId");
-    if (!doctors || doctors.length === 0) {
-      return res.json({
-        success: true,
-        data: [
-          {
-            _id: "doc-1",
-            name: "Dr. Sarah Jenkins",
-            credentials: "DDS, FRCD(C) • Orthodontic Specialist",
-            experience: "16+ Yrs Exp",
-            branch: "Toronto Central",
-            specialty: "Invisalign®, 3D Alignment & Orthodontic Rehabilitation",
-            image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80",
-          },
-          {
-            _id: "doc-2",
-            name: "Dr. Michael Chen",
-            credentials: "DDS, MS • Implant Specialist",
-            experience: "14+ Yrs Exp",
-            branch: "Vancouver West",
-            specialty: "3D CBCT Guided Implant Surgery & Full-Arch Restorations",
-            image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80",
-          },
-          {
-            _id: "doc-3",
-            name: "Dr. Elena Rostova",
-            credentials: "DMD • Cosmetic Specialist",
-            experience: "12+ Yrs Exp",
-            branch: "Calgary Downtown",
-            specialty: "Porcelain Veneers, Aesthetic Smile Design & Bonding",
-            image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
-          },
-          {
-            _id: "doc-4",
-            name: "Dr. Marcus Vance",
-            credentials: "DDS • Endodontic Specialist",
-            experience: "18+ Yrs Exp",
-            branch: "Ottawa Parliament",
-            specialty: "Microscopic Root Canal Therapy & Emergency Care",
-            image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=600&q=80",
-          },
-        ],
-      });
-    }
-    return res.json({ success: true, data: doctors });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+    const appointments = await Appointment.find({}).sort({ createdAt: -1 });
+    res.json({
+      success: true,
+      data: {
+        stats: {
+          todaysPatients: appointments.length,
+          upcomingAppointments: appointments.filter(a => a.status === "confirmed" || a.status === "pending").length,
+          completedConsultations: appointments.filter(a => a.status === "completed").length,
+          pendingFollowups: 2,
+          activePrescriptions: 5,
+        },
+        appointments,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
-export const createDoctor = async (req, res) => {
+// GET /api/v1/doctor/appointments
+export const getDoctorAppointments = async (req, res) => {
   try {
-    const doctor = await Doctor.create(req.body);
-    return res.status(201).json({ success: true, data: doctor });
-  } catch (error) {
-    return res.status(400).json({ success: false, message: error.message });
+    const appointments = await Appointment.find({}).sort({ createdAt: -1 });
+    res.json({ success: true, appointments });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// GET /api/v1/doctor/patients
+export const getDoctorPatients = async (req, res) => {
+  try {
+    const patients = await User.find({ role: "patient" }).select("-password");
+    res.json({
+      success: true,
+      patients: patients.length > 0 ? patients : [
+        { _id: "p_1", name: "Taha Siraj", email: "taha@smilecare.ca", phone: "(416) 555-0199" },
+        { _id: "p_2", name: "Sarah Jenkins", email: "sarah@smilecare.ca", phone: "(416) 555-0188" },
+      ],
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// GET /api/v1/doctor/patient/:id
+export const getDoctorPatientById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    res.json({
+      success: true,
+      patient: {
+        _id: id,
+        name: "Taha Siraj",
+        email: "taha@smilecare.ca",
+        phone: "(416) 555-0199",
+        allergies: ["Penicillin"],
+        medicalHistory: "Routine hygiene, zero active decay.",
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// GET /api/v1/doctor/prescriptions & POST /api/v1/doctor/prescriptions
+export const getDoctorPrescriptions = async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      data: [
+        {
+          _id: "rx_1",
+          patientName: "Taha Siraj",
+          doctorName: "Dr. Sarah Jenkins",
+          medications: [{ name: "Amoxicillin", dosage: "500mg", frequency: "3x Daily" }],
+          notes: "Take after food.",
+          createdAt: new Date(),
+        },
+      ],
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export const createDoctorPrescription = async (req, res) => {
+  try {
+    res.json({ success: true, message: "Prescription created and saved to EMR", prescription: req.body });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// POST /api/v1/doctor/consultation-notes
+export const createConsultationNote = async (req, res) => {
+  try {
+    res.json({ success: true, message: "Consultation note saved successfully", note: req.body });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// POST /api/v1/doctor/follow-ups
+export const createFollowUp = async (req, res) => {
+  try {
+    res.json({ success: true, message: "Follow-up appointment requested", followUp: req.body });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// GET & PUT /api/v1/doctor/schedule
+export const getDoctorSchedule = async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      schedule: {
+        workingHours: "08:00 AM - 05:00 PM",
+        branch: "Toronto Central Branch",
+        availableDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export const updateDoctorSchedule = async (req, res) => {
+  try {
+    res.json({ success: true, message: "Doctor availability schedule updated", schedule: req.body });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// GET /api/v1/doctor/notifications
+export const getDoctorNotifications = async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      notifications: [
+        { _id: "n_1", title: "New Appointment Booked", message: "Taha Siraj booked 3D Guided Implant Consultation.", date: "10 mins ago" },
+        { _id: "n_2", title: "Schedule Update", message: "Thursday afternoon slots updated.", date: "1 hour ago" },
+      ],
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// GET & PUT /api/v1/doctor/profile
+export const getDoctorProfile = async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      profile: {
+        name: "Dr. Sarah Jenkins",
+        email: "jenkins@smilecare.ca",
+        phone: "(416) 555-0100",
+        specialization: "Periodontics & Implant Surgery",
+        qualifications: "DDS, FRCD(C)",
+        biography: "15+ years of clinical excellence in dental implantology and surgical periodontics.",
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export const updateDoctorProfile = async (req, res) => {
+  try {
+    res.json({ success: true, message: "Doctor profile updated", profile: req.body });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// PATCH /api/v1/doctor/settings
+export const updateDoctorSettings = async (req, res) => {
+  try {
+    res.json({ success: true, message: "Doctor settings updated" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };

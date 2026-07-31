@@ -26,6 +26,9 @@ import {
   Receipt,
   CalendarDays,
   FileSpreadsheet,
+  CalendarCheck,
+  ClipboardList,
+  CalendarDays as ScheduleIcon,
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 
@@ -42,7 +45,16 @@ const ROLE_NAV_ITEMS = {
     { label: "Security & Settings", href: "/dashboard/patient/settings", icon: Lock },
   ],
   doctor: [
-    { label: "Clinical Schedule & Rx", href: "/dashboard/doctor", icon: Stethoscope },
+    { label: "Clinical Overview", href: "/dashboard/doctor", icon: LayoutDashboard },
+    { label: "Daily Clinical Schedule", href: "/dashboard/doctor/schedule", icon: Clock },
+    { label: "Patient Directory & EMR", href: "/dashboard/doctor/patients", icon: Users },
+    { label: "Consultation Notes", href: "/dashboard/doctor/consultations", icon: ClipboardList },
+    { label: "Digital Rx Generator", href: "/dashboard/doctor/prescriptions", icon: FileText },
+    { label: "Follow-Up Module", href: "/dashboard/doctor/followups", icon: CalendarCheck },
+    { label: "Schedule Management", href: "/dashboard/doctor/schedule-management", icon: ScheduleIcon },
+    { label: "Doctor Notifications", href: "/dashboard/doctor/notifications", icon: Bell },
+    { label: "Profile & Credentials", href: "/dashboard/doctor/profile", icon: User },
+    { label: "Security & Settings", href: "/dashboard/doctor/settings", icon: Lock },
   ],
   receptionist: [
     { label: "Reception Overview", href: "/dashboard/reception", icon: LayoutDashboard },
@@ -75,7 +87,18 @@ const ALLOWED_ROUTES_BY_ROLE = {
     "/dashboard/patient/profile",
     "/dashboard/patient/settings",
   ],
-  doctor: ["/dashboard/doctor"],
+  doctor: [
+    "/dashboard/doctor",
+    "/dashboard/doctor/schedule",
+    "/dashboard/doctor/patients",
+    "/dashboard/doctor/consultations",
+    "/dashboard/doctor/prescriptions",
+    "/dashboard/doctor/followups",
+    "/dashboard/doctor/schedule-management",
+    "/dashboard/doctor/notifications",
+    "/dashboard/doctor/profile",
+    "/dashboard/doctor/settings",
+  ],
   receptionist: [
     "/dashboard/reception",
     "/dashboard/reception/queue",
