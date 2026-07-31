@@ -22,6 +22,10 @@ import {
   Lock,
   Clock,
   Activity,
+  UserPlus,
+  Receipt,
+  CalendarDays,
+  FileSpreadsheet,
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 
@@ -41,7 +45,14 @@ const ROLE_NAV_ITEMS = {
     { label: "Clinical Schedule & Rx", href: "/dashboard/doctor", icon: Stethoscope },
   ],
   receptionist: [
-    { label: "Reception Queue & Billing", href: "/dashboard/reception", icon: Users },
+    { label: "Reception Overview", href: "/dashboard/reception", icon: LayoutDashboard },
+    { label: "Live Queue Management", href: "/dashboard/reception/queue", icon: Users },
+    { label: "Patient Registration", href: "/dashboard/reception/patients", icon: UserPlus },
+    { label: "Appointments & Schedule", href: "/dashboard/reception/appointments", icon: Calendar },
+    { label: "Appointment Calendar", href: "/dashboard/reception/calendar", icon: CalendarDays },
+    { label: "Counter Billing", href: "/dashboard/reception/billing", icon: CreditCard },
+    { label: "Walk-In Express Intake", href: "/dashboard/reception/walkin", icon: UserPlus },
+    { label: "Reception Analytics", href: "/dashboard/reception/reports", icon: BarChart3 },
   ],
   admin: [
     { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -65,7 +76,16 @@ const ALLOWED_ROUTES_BY_ROLE = {
     "/dashboard/patient/settings",
   ],
   doctor: ["/dashboard/doctor"],
-  receptionist: ["/dashboard/reception"],
+  receptionist: [
+    "/dashboard/reception",
+    "/dashboard/reception/queue",
+    "/dashboard/reception/patients",
+    "/dashboard/reception/appointments",
+    "/dashboard/reception/calendar",
+    "/dashboard/reception/billing",
+    "/dashboard/reception/walkin",
+    "/dashboard/reception/reports",
+  ],
   admin: ["/dashboard", "/dashboard/admin", "/dashboard/patient", "/dashboard/doctor", "/dashboard/reception"],
 };
 
@@ -129,7 +149,7 @@ export default function DashboardLayout({ children }) {
         </button>
       </div>
 
-      {/* Sidebar - EXECUTIVE LIGHT WHITE THEME */}
+      {/* Sidebar */}
       <aside
         className={`fixed md:sticky top-0 inset-y-0 left-0 z-40 w-64 h-screen bg-white text-slate-700 flex flex-col justify-between border-r border-slate-200 transition-transform duration-200 ease-in-out md:translate-x-0 shrink-0 ${
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
