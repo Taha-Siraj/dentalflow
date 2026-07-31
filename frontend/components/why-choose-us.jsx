@@ -40,8 +40,8 @@ export function WhyChooseUs() {
   ];
 
   return (
-    <section id="why-us" className="relative bg-white py-16 sm:py-20 overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="why-dentalflow" className="scroll-mt-20 relative bg-white py-16 sm:py-20 overflow-hidden">
+      <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           
           {/* Left Column Text & Executive Statement */}

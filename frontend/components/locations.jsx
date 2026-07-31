@@ -50,8 +50,8 @@ export function Locations({ onOpenBooking }) {
   ];
 
   return (
-    <section id="branches" className="relative bg-slate-50 py-16 sm:py-20 overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="locations" className="scroll-mt-20 relative bg-slate-50 py-16 sm:py-20 overflow-hidden">
+      <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-10">
         
         {/* Balanced Consistent Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">

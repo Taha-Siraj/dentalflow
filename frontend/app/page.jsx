@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
-import { Stats } from "@/components/stats";
+import { AboutSection } from "@/components/about-section";
 import { Services } from "@/components/services";
 import { SmileTransformations } from "@/components/smile-transformations";
 import { WhyChooseUs } from "@/components/why-choose-us";
@@ -12,6 +12,7 @@ import { PatientJourney } from "@/components/patient-journey";
 import { Locations } from "@/components/locations";
 import { Testimonials } from "@/components/testimonials";
 import { FAQ } from "@/components/faq";
+import { ContactSection } from "@/components/contact-section";
 import { CTABanner } from "@/components/cta-banner";
 import { Footer } from "@/components/footer";
 import { BookingModal } from "@/components/booking-modal";
@@ -30,24 +31,54 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] font-poppins overflow-x-hidden selection:bg-teal-700 selection:text-white">
+      {/* Shared Navbar */}
       <Navbar onOpenBooking={handleOpenBooking} />
       
+      {/* 13 One-Page SaaS Sections In Order */}
       <main className="overflow-x-hidden">
-        <Hero onOpenBooking={handleOpenBooking} />
-        <Stats />
+        {/* 1. Hero */}
+        <section id="hero">
+          <Hero onOpenBooking={handleOpenBooking} />
+        </section>
+
+        {/* 2. About */}
+        <AboutSection />
+
+        {/* 3. Services */}
         <Services onOpenBooking={handleOpenBooking} />
+
+        {/* 4. Smile Transformations */}
         <SmileTransformations onOpenBooking={handleOpenBooking} />
+
+        {/* 5. Why DentalFlow */}
         <WhyChooseUs />
+
+        {/* 6. Doctors */}
         <Dentists onOpenBooking={handleOpenBooking} />
+
+        {/* 7. Patient Journey */}
         <PatientJourney />
+
+        {/* 8. Branch Locations */}
         <Locations onOpenBooking={handleOpenBooking} />
+
+        {/* 9. Testimonials */}
         <Testimonials />
+
+        {/* 10. FAQ */}
         <FAQ />
+
+        {/* 11. Contact */}
+        <ContactSection />
+
+        {/* 12. Final CTA Banner */}
         <CTABanner onOpenBooking={handleOpenBooking} />
       </main>
 
+      {/* 13. Shared Footer */}
       <Footer />
 
+      {/* Modals & Floating Tools */}
       <BookingModal isOpen={isBookingOpen} onClose={handleCloseBooking} />
       <AIAssistant />
     </div>
