@@ -17,6 +17,7 @@ import { CTABanner } from "@/components/cta-banner";
 import { Footer } from "@/components/footer";
 import { BookingModal } from "@/components/booking-modal";
 import { AIAssistant } from "@/components/ai-assistant";
+import { SectionDivider } from "@/components/section-divider";
 
 export default function Home() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -34,42 +35,54 @@ export default function Home() {
       {/* Shared Navbar */}
       <Navbar onOpenBooking={handleOpenBooking} />
       
-      {/* 13 One-Page SaaS Sections In Order */}
+      {/* Main Homepage Sections */}
       <main className="overflow-x-hidden">
         {/* 1. Hero */}
         <section id="hero">
           <Hero onOpenBooking={handleOpenBooking} />
         </section>
 
+        {/* 🌊 Wave Transition 1: Hero -> About */}
+        <SectionDivider color="#FFFFFF" />
+
         {/* 2. About */}
         <AboutSection />
 
-        {/* 3. Services */}
+        {/* 3. Services (No Wave) */}
         <Services onOpenBooking={handleOpenBooking} />
 
         {/* 4. Smile Transformations */}
         <SmileTransformations onOpenBooking={handleOpenBooking} />
 
+        {/* 🌊 Wave Transition 2: Transformations -> Why DentalFlow */}
+        <SectionDivider color="#FFFFFF" />
+
         {/* 5. Why DentalFlow */}
         <WhyChooseUs />
 
-        {/* 6. Doctors */}
+        {/* 6. Doctors (No Wave) */}
         <Dentists onOpenBooking={handleOpenBooking} />
 
         {/* 7. Patient Journey */}
         <PatientJourney />
 
+        {/* 🌊 Wave Transition 3: Patient Journey -> Branch Locations */}
+        <SectionDivider color="#F8FAFC" />
+
         {/* 8. Branch Locations */}
         <Locations onOpenBooking={handleOpenBooking} />
 
-        {/* 9. Testimonials */}
+        {/* 9. Testimonials (No Wave) */}
         <Testimonials />
 
-        {/* 10. FAQ */}
+        {/* 10. FAQ (No Wave) */}
         <FAQ />
 
         {/* 11. Contact */}
         <ContactSection />
+
+        {/* 🌊 Wave Transition 4: Contact -> Final CTA */}
+        <SectionDivider color="#0F172A" />
 
         {/* 12. Final CTA Banner */}
         <CTABanner onOpenBooking={handleOpenBooking} />
