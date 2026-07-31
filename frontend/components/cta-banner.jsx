@@ -5,32 +5,23 @@ import { ArrowRight, Phone } from "lucide-react";
 
 export function CTABanner({ onOpenBooking }) {
   return (
-    <section className="relative py-20 sm:py-24 text-white overflow-hidden bg-[#1B5C63]">
-      
-      {/* Background High-Resolution Dental Clinic Image with Blur/Glow */}
-      <img
-        src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1600&q=80"
-        alt="Smile Dental Clinic Background"
-        className="absolute inset-0 w-full h-full object-cover object-center opacity-25"
-      />
-
-      {/* Dark Teal Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#1B5C63]/95 via-[#15494F]/90 to-[#1B5C63]/95 backdrop-blur-[2px]" />
-
+    <section className="relative py-16 sm:py-20 bg-slate-50 text-slate-900 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6 sm:space-y-8">
         
-        <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold max-w-4xl mx-auto leading-tight text-white tracking-tight">
+        {/* Balanced Consistent #1B5C63 Heading */}
+        <h2 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-bold max-w-4xl mx-auto leading-tight text-[#1B5C63] tracking-tight">
           Ready for Painless, World-Class Dental Care?
         </h2>
 
-        <p className="font-poppins text-sm sm:text-base text-teal-50 max-w-2xl mx-auto leading-relaxed">
+        <p className="font-poppins text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
           Book your appointment online in 60 seconds across Toronto, Vancouver, Calgary, Ottawa, or Mississauga with Smile Dental Clinic.
         </p>
 
+        {/* Clean Action Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
           <button
             onClick={onOpenBooking}
-            className="bg-white text-[#1B5C63] hover:bg-teal-50 rounded-full px-8 py-4 font-poppins text-xs font-bold uppercase tracking-wider flex items-center space-x-3 shadow-xl transition-all hover:scale-105 cursor-pointer"
+            className="bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-full px-8 py-4 font-poppins text-xs font-bold uppercase tracking-wider flex items-center space-x-3 shadow-lg hover:shadow-xl hover:shadow-[#1B5C63]/10 transition-all hover:scale-105 cursor-pointer"
           >
             <span>Book Online Appointment</span>
             <ArrowRight className="h-4 w-4" />
@@ -38,14 +29,15 @@ export function CTABanner({ onOpenBooking }) {
 
           <a
             href="tel:1800336825"
-            className="bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-full px-7 py-4 font-poppins text-xs font-bold uppercase tracking-wider flex items-center space-x-2 transition-all hover:scale-105 cursor-pointer"
+            className="bg-white hover:bg-slate-100 text-[#1B5C63] border border-slate-200/80 rounded-full px-7 py-4 font-poppins text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shadow-xs transition-all hover:scale-105 cursor-pointer"
           >
-            <Phone className="h-4 w-4 text-teal-200" />
+            <Phone className="h-4 w-4 text-[#1B5C63]" />
             <span>Call 1-800-DENTAL-CARE</span>
           </a>
         </div>
 
-        <div className="pt-6 border-t border-white/20 flex flex-wrap items-center justify-center gap-6 sm:gap-8 font-poppins text-xs font-semibold tracking-wider text-teal-100">
+        {/* Trust Points */}
+        <div className="pt-6 border-t border-slate-200/80 flex flex-wrap items-center justify-center gap-6 sm:gap-8 font-poppins text-xs font-semibold tracking-wider text-slate-600">
           <span>✓ 0 Hidden Surcharges</span>
           <span>✓ Provincial Fee Guide Compliant</span>
           <span>✓ 100% EMR Synced</span>
