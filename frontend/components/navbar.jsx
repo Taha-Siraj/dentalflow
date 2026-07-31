@@ -35,8 +35,8 @@ export function Navbar({ onOpenBooking }) {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/95 backdrop-blur-md border-b border-slate-200/80 text-slate-900 shadow-md py-3"
-          : "bg-slate-950/50 backdrop-blur-md border-b border-white/10 text-white py-4"
+          ? "bg-white/95 backdrop-blur-md text-slate-900 shadow-md py-3"
+          : "bg-transparent text-white py-4 sm:py-5"
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -45,8 +45,8 @@ export function Navbar({ onOpenBooking }) {
           {/* Brand Executive Logo */}
           <Logo isWhiteText={!isScrolled} />
 
-          {/* Desktop & Laptop Nav Links (lg: 1024px and up) */}
-          <nav className="hidden lg:flex items-center space-x-5 xl:space-x-7 font-poppins text-xs font-semibold">
+          {/* Desktop Nav Links (xl: 1280px and up for max spacing) */}
+          <nav className="hidden xl:flex items-center space-x-6 xl:space-x-8 font-poppins text-xs font-semibold">
             {navLinks.map((link, idx) => (
               <Link
                 key={idx}
@@ -62,25 +62,25 @@ export function Navbar({ onOpenBooking }) {
             ))}
           </nav>
 
-          {/* Desktop Right Action Bar (lg: 1024px and up) */}
-          <div className="hidden lg:flex items-center space-x-3">
+          {/* Desktop Right Action Bar */}
+          <div className="hidden lg:flex items-center space-x-3 sm:space-x-4">
             <Link
               href="/login"
-              className={`rounded-full px-4.5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 border transition-all cursor-pointer whitespace-nowrap ${
+              className={`rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 border transition-all cursor-pointer whitespace-nowrap ${
                 isScrolled
-                  ? "bg-teal-50 border-teal-200 text-[#1B5C63] hover:bg-teal-100"
+                  ? "bg-teal-50/80 border-teal-200 text-[#1B5C63] hover:bg-teal-100"
                   : "bg-white/10 border-white/30 text-white hover:bg-white/20"
               }`}
             >
-              <UserCheck className="h-3.5 w-3.5 text-teal-400" />
-              <span>Portal Login</span>
+              <UserCheck className="h-4 w-4 text-teal-400 flex-shrink-0" />
+              <span className="px-0.5">Portal Login</span>
             </Link>
 
             <button
               onClick={onOpenBooking}
-              className="bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shadow-md hover:scale-105 transition-all cursor-pointer whitespace-nowrap"
+              className="bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shadow-md hover:scale-105 transition-all cursor-pointer whitespace-nowrap"
             >
-              <Calendar className="h-3.5 w-3.5" />
+              <Calendar className="h-4 w-4 flex-shrink-0" />
               <span>Book Appointment</span>
             </button>
           </div>
@@ -101,7 +101,7 @@ export function Navbar({ onOpenBooking }) {
 
       {/* Mobile & Tablet Full Navigation Drawer */}
       {isMobileOpen && (
-        <div className="lg:hidden border-t border-slate-200 bg-white text-slate-900 px-4 sm:px-6 pt-4 pb-6 space-y-4 font-poppins text-sm shadow-2xl animate-in slide-in-from-top-2 duration-200 max-h-[85vh] overflow-y-auto">
+        <div className="lg:hidden bg-white text-slate-900 px-4 sm:px-6 pt-4 pb-6 space-y-4 font-poppins text-sm shadow-2xl animate-in slide-in-from-top-2 duration-200 max-h-[85vh] overflow-y-auto">
           <div className="space-y-1">
             {navLinks.map((link, idx) => (
               <Link

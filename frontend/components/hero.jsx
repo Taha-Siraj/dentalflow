@@ -24,26 +24,26 @@ export function Hero({ onOpenBooking }) {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.12,
-        delayChildren: 0.08,
+        staggerChildren: 0.1,
+        delayChildren: 0.05,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 25 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.65,
+        duration: 0.5,
         ease: [0.16, 1, 0.3, 1],
       },
     },
   };
 
   return (
-    <section className="relative min-h-[700px] sm:min-h-[780px] pt-36 sm:pt-40 pb-28 sm:pb-36 overflow-hidden flex items-center justify-center bg-slate-950">
+    <section className="relative min-h-[680px] sm:min-h-[760px] pt-32 sm:pt-40 pb-24 sm:pb-32 overflow-hidden flex items-center justify-center bg-slate-950">
       
       {/* FULL-BLEED LOCAL HD DENTAL CLINIC BACKGROUND VIDEO */}
       <video
@@ -57,7 +57,7 @@ export function Hero({ onOpenBooking }) {
         <source src="/hero-video.mp4" type="video/mp4" />
       </video>
 
-      {/* EXECUTIVE DARK SLATE & SOFT BLUR OVERLAY */}
+      {/* EXECUTIVE DARK SLATE OVERLAY */}
       <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[1.5px] z-10 pointer-events-none" />
 
       {/* FOREGROUND CENTERED HERO CONTENT */}
@@ -66,23 +66,23 @@ export function Hero({ onOpenBooking }) {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-4xl space-y-8 text-center flex flex-col items-center justify-center"
+          className="max-w-4xl space-y-7 sm:space-y-8 text-center flex flex-col items-center justify-center"
         >
-          {/* Fraunces Serif Centered Headline */}
+          {/* Clean Executive Centered Headline */}
           <motion.h1
             variants={itemVariants}
-            className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.12] tracking-tight max-w-3xl"
+            className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.15] tracking-tight max-w-3xl"
           >
             World-Class Dental Care, <br />
-            <span className="text-teal-400 italic font-normal">
+            <span className="text-teal-300 font-normal">
               Painless & Synchronized.
             </span>
           </motion.h1>
 
-          {/* Poppins Centered Subtext */}
+          {/* Clean Subtext */}
           <motion.p
             variants={itemVariants}
-            className="font-poppins text-base sm:text-xl text-slate-200 max-w-2xl text-center leading-relaxed font-normal"
+            className="font-poppins text-sm sm:text-lg text-slate-200 max-w-2xl text-center leading-relaxed font-normal"
           >
             Visit any Smile Dental Clinic in Toronto, Vancouver, Calgary, Ottawa, or Mississauga. Your X-rays, medical records, and treatment plans sync instantly.
           </motion.p>
@@ -91,7 +91,7 @@ export function Hero({ onOpenBooking }) {
           <motion.div variants={itemVariants} className="flex flex-wrap items-center justify-center gap-4 pt-2">
             <button
               onClick={onOpenBooking}
-              className="bg-[#0F766E] hover:bg-[#0D9488] text-white rounded-full px-8 py-4 font-sans text-xs font-bold uppercase tracking-wider flex items-center space-x-3 shadow-xl transition-all hover:scale-105 cursor-pointer"
+              className="bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-full px-8 py-4 font-poppins text-xs font-bold uppercase tracking-wider flex items-center space-x-3 shadow-xl transition-all hover:scale-105 cursor-pointer"
             >
               <span>Book Appointment Online</span>
               <ArrowRight className="h-4 w-4" />
@@ -99,20 +99,20 @@ export function Hero({ onOpenBooking }) {
 
             <a
               href="#branches"
-              className="bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-full px-7 py-4 font-sans text-xs font-bold uppercase tracking-wider flex items-center space-x-2 transition-all hover:scale-105 cursor-pointer"
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/30 rounded-full px-7 py-4 font-poppins text-xs font-bold uppercase tracking-wider flex items-center space-x-2 transition-all hover:scale-105 cursor-pointer"
             >
               <MapPin className="h-4 w-4 text-teal-300" />
               <span>Find Clinic Location</span>
             </a>
           </motion.div>
 
-          {/* Hairline Border-Top Centered Stats Bar */}
+          {/* Seamless Borderless Stats Bar (No Lines, No Dashes) */}
           <motion.div
             variants={itemVariants}
-            className="pt-8 border-t border-slate-700/80 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl w-full"
+            className="pt-6 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl w-full"
           >
             <div className="flex items-center justify-center space-x-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/90 border border-slate-700/60 text-teal-400 font-bold">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/90 text-teal-300 font-bold">
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <div className="text-left">
@@ -122,7 +122,7 @@ export function Hero({ onOpenBooking }) {
             </div>
 
             <div className="flex items-center justify-center space-x-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/90 border border-slate-700/60 text-teal-400 font-bold">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/90 text-teal-300 font-bold">
                 <CheckCircle2 className="h-5 w-5" />
               </div>
               <div className="text-left">
@@ -132,7 +132,7 @@ export function Hero({ onOpenBooking }) {
             </div>
 
             <div className="flex items-center justify-center space-x-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/90 border border-slate-700/60 text-teal-400 font-bold">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/90 text-teal-300 font-bold">
                 <Calendar className="h-5 w-5" />
               </div>
               <div className="text-left">
