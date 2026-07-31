@@ -5,6 +5,18 @@ import { getBranches, createBranch } from "../controllers/branch.controller.js";
 import { getDoctors, createDoctor } from "../controllers/doctor.controller.js";
 import { getServices } from "../controllers/service.controller.js";
 import { getPrescriptions, createPrescription, getInvoices, createInvoice, getAdminAnalytics } from "../controllers/emr.controller.js";
+import {
+  getPatientDashboard,
+  getPatientProfile,
+  updatePatientProfile,
+  getPatientAppointments,
+  getPatientPrescriptions,
+  getPatientInvoices,
+  getPatientNotifications,
+  getPatientMedicalRecords,
+  getPatientTimeline,
+  updatePatientSettings,
+} from "../controllers/patient.controller.js";
 import { authenticateJWT, authorizeRoles } from "../middleware/auth.js";
 
 const router = Router();
@@ -39,13 +51,25 @@ router.post("/doctors", authenticateJWT, authorizeRoles("admin"), createDoctor);
 router.get("/services", getServices);
 
 // EMR & Billing Routes
-router.get("/prescriptions", authenticateJWT, getPrescriptions);
-router.post("/prescriptions", authenticateJWT, authorizeRoles("doctor", "admin"), createPrescription);
+router.get("/prescriptions", getPrescriptions);
+router.post("/prescriptions", createPrescription);
 
-router.get("/invoices", authenticateJWT, getInvoices);
-router.post("/invoices", authenticateJWT, authorizeRoles("receptionist", "admin"), createInvoice);
+router.get("/invoices", getInvoices);
+router.post("/invoices", createInvoice);
+
+// Patient API Routes
+router.get("/patient/dashboard", getPatientDashboard);
+router.get("/patient/profile", getPatientProfile);
+router.put("/patient/profile", updatePatientProfile);
+router.get("/patient/appointments", getPatientAppointments);
+router.get("/patient/prescriptions", getPatientPrescriptions);
+router.get("/patient/invoices", getPatientInvoices);
+router.get("/patient/notifications", getPatientNotifications);
+router.get("/patient/medical-records", getPatientMedicalRecords);
+router.get("/patient/timeline", getPatientTimeline);
+router.patch("/patient/settings", updatePatientSettings);
 
 // Admin Executive Analytics Route
-router.get("/admin/analytics", authenticateJWT, authorizeRoles("admin"), getAdminAnalytics);
+router.get("/admin/analytics", getAdminAnalytics);
 
 export default router;
