@@ -2,10 +2,9 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { getApiBaseUrl } from "@/lib/api-client";
 
 const AuthContext = createContext(null);
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://dentalflow-backend.vercel.app/api/v1";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -25,8 +24,9 @@ export function AuthProvider({ children }) {
           } catch (e) {}
         }
 
+        const baseUrl = getApiBaseUrl();
         // Try verifying HTTP-Only Cookie session via /auth/me
-        const res = await fetch(`${API_BASE_URL}/auth/me`, {
+        const res = await fetch(`${baseUrl}/auth/me`, {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
@@ -54,8 +54,9 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
+    const baseUrl = getApiBaseUrl();
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      const res = await fetch(`${baseUrl}/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -102,8 +103,9 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (userData) => {
+    const baseUrl = getApiBaseUrl();
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/register`, {
+      const res = await fetch(`${baseUrl}/auth/register`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -137,8 +139,9 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
+    const baseUrl = getApiBaseUrl();
     try {
-      await fetch(`${API_BASE_URL}/auth/logout`, {
+      await fetch(`${baseUrl}/auth/logout`, {
         method: "POST",
         credentials: "include",
       });
