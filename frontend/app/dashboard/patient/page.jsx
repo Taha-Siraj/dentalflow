@@ -195,7 +195,7 @@ export default function PatientDashboardPage() {
 
   return (
     <div className="space-y-6 font-poppins text-slate-800">
-      
+
       {/* Header Card */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
@@ -292,11 +292,10 @@ export default function PatientDashboardPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer ${
-                isActive
+              className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer ${isActive
                   ? "bg-[#0F766E] text-white shadow-xs font-bold"
                   : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200"
-              }`}
+                }`}
             >
               <Icon className="h-3.5 w-3.5" />
               <span>{tab.label}</span>
@@ -314,7 +313,7 @@ export default function PatientDashboardPage() {
                 <h2 className="font-serif text-sm font-semibold text-slate-900 flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-[#0F766E]" /> Live Appointments & History
                 </h2>
-                
+
                 {/* Search & Status Filter Controls */}
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <div className="relative flex-1 sm:flex-initial">
@@ -621,9 +620,8 @@ export default function PatientDashboardPage() {
             {notifications.map((n) => (
               <div
                 key={n.id}
-                className={`p-4 rounded-xl border flex items-start justify-between gap-3 ${
-                  n.isRead ? "bg-slate-50 border-slate-200" : "bg-teal-50/60 border-teal-200 font-semibold"
-                }`}
+                className={`p-4 rounded-xl border flex items-start justify-between gap-3 ${n.isRead ? "bg-slate-50 border-slate-200" : "bg-teal-50/60 border-teal-200 font-semibold"
+                  }`}
               >
                 <div className="space-y-1">
                   <h3 className="text-xs font-bold text-slate-900">{n.title}</h3>

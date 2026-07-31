@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
   html, body, h1, h2, h3, h4, h5, h6, input, button, select, textarea {
     font-family: var(--font-poppins), 'Poppins', sans-serif !important;
   }
@@ -11,13 +15,18 @@
     background-color: #F8FAFC;
     color: #1E293B;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  img, video {
+    content-visibility: auto;
   }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -30,22 +39,23 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0F766E;
+  background: #1B5C63;
 }
 
-/* Infinite Marquee Ticker Animation */
+/* Hardware-Accelerated Infinite Marquee Ticker */
 @keyframes marquee {
   0% {
-    transform: translateX(0%);
+    transform: translate3d(0%, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 .animate-marquee {
   display: flex;
   width: max-content;
+  will-change: transform;
   animation: marquee 25s linear infinite;
 }
 
