@@ -29,6 +29,9 @@ import {
   CalendarCheck,
   ClipboardList,
   CalendarDays as ScheduleIcon,
+  Shield,
+  History,
+  Settings as SettingsIcon,
 } from "lucide-react";
 import { Logo } from "@/components/logo";
 
@@ -67,11 +70,17 @@ const ROLE_NAV_ITEMS = {
     { label: "Reception Analytics", href: "/dashboard/reception/reports", icon: BarChart3 },
   ],
   admin: [
-    { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Corporate Analytics", href: "/dashboard/admin", icon: BarChart3 },
-    { label: "Patient Records", href: "/dashboard/patient", icon: User },
-    { label: "Doctor Schedules", href: "/dashboard/doctor", icon: Stethoscope },
-    { label: "Reception Desk", href: "/dashboard/reception", icon: Users },
+    { label: "Executive Overview", href: "/dashboard/admin", icon: LayoutDashboard },
+    { label: "Branch Management", href: "/dashboard/admin/branches", icon: Building2 },
+    { label: "Doctor Management", href: "/dashboard/admin/doctors", icon: Stethoscope },
+    { label: "Reception Staff", href: "/dashboard/admin/receptionists", icon: Users },
+    { label: "Patient Directory", href: "/dashboard/admin/patients", icon: User },
+    { label: "Billing & Invoices", href: "/dashboard/admin/billing", icon: CreditCard },
+    { label: "Corporate Analytics", href: "/dashboard/admin/analytics", icon: BarChart3 },
+    { label: "Executive Reports", href: "/dashboard/admin/reports", icon: FileSpreadsheet },
+    { label: "User Access & RBAC", href: "/dashboard/admin/users", icon: Shield },
+    { label: "System Audit Logs", href: "/dashboard/admin/audit-logs", icon: History },
+    { label: "Clinic System Settings", href: "/dashboard/admin/settings", icon: SettingsIcon },
   ],
 };
 
@@ -109,7 +118,23 @@ const ALLOWED_ROUTES_BY_ROLE = {
     "/dashboard/reception/walkin",
     "/dashboard/reception/reports",
   ],
-  admin: ["/dashboard", "/dashboard/admin", "/dashboard/patient", "/dashboard/doctor", "/dashboard/reception"],
+  admin: [
+    "/dashboard",
+    "/dashboard/admin",
+    "/dashboard/admin/branches",
+    "/dashboard/admin/doctors",
+    "/dashboard/admin/receptionists",
+    "/dashboard/admin/patients",
+    "/dashboard/admin/billing",
+    "/dashboard/admin/analytics",
+    "/dashboard/admin/reports",
+    "/dashboard/admin/users",
+    "/dashboard/admin/audit-logs",
+    "/dashboard/admin/settings",
+    "/dashboard/patient",
+    "/dashboard/doctor",
+    "/dashboard/reception",
+  ],
 };
 
 export default function DashboardLayout({ children }) {

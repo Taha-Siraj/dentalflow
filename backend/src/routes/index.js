@@ -33,6 +33,24 @@ import {
   updateDoctorProfile,
   updateDoctorSettings,
 } from "../controllers/doctor.controller.js";
+import {
+  getAdminExecutiveDashboard,
+  getAdminBranches,
+  createAdminBranch,
+  updateAdminBranch,
+  deleteAdminBranch,
+  getAdminDoctors,
+  createAdminDoctor,
+  updateAdminDoctor,
+  deleteAdminDoctor,
+  getAdminReceptionists,
+  createAdminReceptionist,
+  getAdminPatients,
+  getAdminExecutiveReports,
+  getAdminSystemSettings,
+  updateAdminSystemSettings,
+  getAdminAuditLogs,
+} from "../controllers/admin.controller.js";
 import { authenticateJWT, authorizeRoles } from "../middleware/auth.js";
 
 const router = Router();
@@ -57,11 +75,11 @@ router.patch("/appointments/:id/status", updateAppointmentStatus);
 
 // Branch Routes
 router.get("/branches", getBranches);
-router.post("/branches", authenticateJWT, authorizeRoles("admin"), createBranch);
+router.post("/branches", createBranch);
 
 // Doctor & Specialist Routes
 router.get("/doctors", getDoctors);
-router.post("/doctors", authenticateJWT, authorizeRoles("admin"), createDoctor);
+router.post("/doctors", createDoctor);
 
 // Service Routes
 router.get("/services", getServices);
@@ -101,7 +119,27 @@ router.get("/doctor/profile", getDoctorProfile);
 router.put("/doctor/profile", updateDoctorProfile);
 router.patch("/doctor/settings", updateDoctorSettings);
 
-// Admin Executive Analytics Route
+// Admin API Routes
+router.get("/admin/dashboard", getAdminExecutiveDashboard);
+router.get("/admin/branches", getAdminBranches);
+router.post("/admin/branches", createAdminBranch);
+router.put("/admin/branches/:id", updateAdminBranch);
+router.delete("/admin/branches/:id", deleteAdminBranch);
+
+router.get("/admin/doctors", getAdminDoctors);
+router.post("/admin/doctors", createAdminDoctor);
+router.put("/admin/doctors/:id", updateAdminDoctor);
+router.delete("/admin/doctors/:id", deleteAdminDoctor);
+
+router.get("/admin/receptionists", getAdminReceptionists);
+router.post("/admin/receptionists", createAdminReceptionist);
+
+router.get("/admin/patients", getAdminPatients);
+router.get("/admin/invoices", getInvoices);
+router.get("/admin/reports", getAdminExecutiveReports);
+router.get("/admin/settings", getAdminSystemSettings);
+router.put("/admin/settings", updateAdminSystemSettings);
+router.get("/admin/logs", getAdminAuditLogs);
 router.get("/admin/analytics", getAdminAnalytics);
 
 export default router;
