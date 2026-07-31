@@ -20,7 +20,7 @@ export function Navbar() {
       }
 
       // ScrollSpy logic for section highlighting
-      const sections = ["services", "transformations", "why-us", "doctors", "branches", "testimonials", "faq"];
+      const sections = ["services", "transformations", "doctors", "branches", "testimonials", "faq"];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -66,15 +66,14 @@ export function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "About", href: "/about" },
+    { name: "About", href: "/#about", id: "about" },
     { name: "Services", href: "/#services", id: "services" },
     { name: "Transformations", href: "/#transformations", id: "transformations" },
-    { name: "Why DentalFlow", href: "/#why-us", id: "why-us" },
     { name: "Doctors", href: "/#doctors", id: "doctors" },
     { name: "Branch Locations", href: "/#branches", id: "branches" },
     { name: "Testimonials", href: "/#testimonials", id: "testimonials" },
     { name: "FAQ", href: "/#faq", id: "faq" },
-    { name: "Contact", href: "/contact" },
+    { name: "Contact", href: "/#contact", id: "contact" },
   ];
 
   return (
