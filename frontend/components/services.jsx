@@ -23,13 +23,13 @@ export function Services({ onOpenBooking }) {
       icon: Sparkles,
       title: "Invisalign® & Orthodontics",
       description: "Discreet clear aligners, digital impression tracking, and bite correction designed for predictable, comfortable alignment.",
-      image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&w=600&q=80",
     },
     {
       icon: Smile,
       title: "Cosmetic & Veneers",
       description: "Custom porcelain veneers, laser teeth whitening, and aesthetic smile makeovers executed with artistic shading precision.",
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.unsplash.com/photo-1571772996211-2f02c9727629?auto=format&fit=crop&w=600&q=80",
     },
     {
       icon: HeartPulse,
@@ -73,7 +73,7 @@ export function Services({ onOpenBooking }) {
                 className="bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-[#1B5C63]/5 hover:shadow-xl hover:shadow-[#1B5C63]/10 overflow-hidden flex flex-col justify-between group transition-all duration-300"
               >
                 <div>
-                  {/* Photo Frame with Subtle Ambient Glow Effect */}
+                  {/* Photo Frame */}
                   <div className="relative h-48 w-full overflow-hidden bg-slate-100">
                     <div className="absolute inset-0 bg-[#1B5C63]/10 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none" />
                     <img

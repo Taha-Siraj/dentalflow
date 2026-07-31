@@ -13,7 +13,7 @@ export function Locations({ onOpenBooking }) {
       address: "100 King Street West, Suite 1200, Toronto, ON M5X 1A9",
       phone: "(416) 555-0192",
       hours: "Mon-Sat: 7:00 AM - 8:00 PM",
-      image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&w=600&q=80",
     },
     {
       city: "Vancouver West",
@@ -29,7 +29,7 @@ export function Locations({ onOpenBooking }) {
       address: "400 3rd Avenue SW, Suite 800, Calgary, AB T2P 4H2",
       phone: "(403) 555-0178",
       hours: "Mon-Sat: 8:00 AM - 6:00 PM",
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=600&q=80",
     },
     {
       city: "Ottawa Parliament",
@@ -37,7 +37,7 @@ export function Locations({ onOpenBooking }) {
       address: "150 Elgin Street, Suite 300, Ottawa, ON K2P 1L4",
       phone: "(613) 555-0123",
       hours: "Mon-Fri: 8:00 AM - 6:00 PM",
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=600&q=80",
     },
     {
       city: "Mississauga Medical",
@@ -45,7 +45,7 @@ export function Locations({ onOpenBooking }) {
       address: "100 City Centre Drive, Suite 500, Mississauga, ON L5B 2C9",
       phone: "(905) 555-0189",
       hours: "Mon-Sun: 8:00 AM - 8:00 PM",
-      image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.unsplash.com/photo-1504813184591-01572f98c85f?auto=format&fit=crop&w=600&q=80",
     },
   ];
 
@@ -75,14 +75,14 @@ export function Locations({ onOpenBooking }) {
               className="bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-[#1B5C63]/5 hover:shadow-xl hover:shadow-[#1B5C63]/10 overflow-hidden flex flex-col justify-between group transition-all duration-300"
             >
               <div>
-                {/* Clinic Photo Frame with Subtle Background Glow Effect */}
+                {/* Clinic Photo Frame */}
                 <div className="relative h-48 w-full overflow-hidden bg-slate-100">
                   <div className="absolute inset-0 bg-[#1B5C63]/10 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none" />
                   <img
                     src={branch.image}
                     alt={branch.name}
                     onError={(e) => {
-                      e.currentTarget.src = "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80";
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&w=600&q=80";
                     }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
