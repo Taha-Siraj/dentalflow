@@ -17,12 +17,10 @@ export function getApiBaseUrl() {
 }
 
 export async function apiClient(endpoint, options = {}) {
-  const token = typeof window !== "undefined" ? localStorage.getItem("dentalflow_token") : null;
   const baseUrl = getApiBaseUrl();
 
   const headers = {
     "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
   };
 

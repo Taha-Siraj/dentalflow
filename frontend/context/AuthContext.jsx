@@ -11,20 +11,10 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Verify HTTP-Only Cookie Session on mount & restore user profile (Client-side execution only)
+  // Verify HTTP-Only Cookie Session on mount via GET /auth/me (Strict Zero LocalStorage Auth Architecture)
   useEffect(() => {
     let isMounted = true;
 
-    // 1. Read cached profile on client mount
-    try {
-      const cached = localStorage.getItem("dentalflow_user_profile");
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (isMounted) setUser(parsed);
-      }
-    } catch (e) {}
-
-    // 2. Verify with backend session
     async function checkAuthSession() {
       try {
         const baseUrl = getApiBaseUrl();
@@ -38,18 +28,16 @@ export function AuthProvider({ children }) {
           if (isMounted) {
             if (data && data.success && data.user) {
               setUser(data.user);
-              localStorage.setItem("dentalflow_user_profile", JSON.stringify(data.user));
             } else {
               setUser(null);
-              localStorage.removeItem("dentalflow_user_profile");
             }
           }
-        } else if (res.status === 401 && isMounted) {
+        } else if (isMounted) {
           setUser(null);
-          localStorage.removeItem("dentalflow_user_profile");
         }
       } catch (err) {
         console.warn("Auth session check warning:", err.message);
+        if (isMounted) setUser(null);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -64,6 +52,7 @@ export function AuthProvider({ children }) {
 
   /**
    * Real Production Login against MongoDB Atlas
+   * JWT is saved exclusively in HTTP-Only Cookie by Backend
    */
   const login = useCallback(
     async (email, password) => {
@@ -85,8 +74,8 @@ export function AuthProvider({ children }) {
           return { success: false, message: data.message || "Invalid email address or password." };
         }
 
+        // Memory-only React State (No LocalStorage)
         setUser(data.user);
-        localStorage.setItem("dentalflow_user_profile", JSON.stringify(data.user));
 
         if (data.user.role === "admin") router.push("/dashboard/admin");
         else if (data.user.role === "doctor") router.push("/dashboard/doctor");
@@ -127,6 +116,7 @@ export function AuthProvider({ children }) {
 
   /**
    * Real Email OTP Verification
+   * Stores session exclusively in HTTP-Only Cookie
    */
   const verifyOtp = useCallback(
     async (email, otp) => {
@@ -144,8 +134,8 @@ export function AuthProvider({ children }) {
           return { success: false, message: data.message || "Invalid verification code" };
         }
 
+        // Memory-only React State (No LocalStorage)
         setUser(data.user);
-        localStorage.setItem("dentalflow_user_profile", JSON.stringify(data.user));
 
         if (data.user.role === "admin") router.push("/dashboard/admin");
         else if (data.user.role === "doctor") router.push("/dashboard/doctor");
@@ -180,7 +170,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   /**
-   * Real Logout
+   * Real Logout (Clears HTTP-Only Cookie on Backend)
    */
   const logout = useCallback(async () => {
     const baseUrl = getApiBaseUrl();
@@ -192,7 +182,6 @@ export function AuthProvider({ children }) {
     } catch (e) {}
 
     setUser(null);
-    localStorage.removeItem("dentalflow_user_profile");
     router.push("/login");
   }, [router]);
 
