@@ -13,35 +13,17 @@ export default function ReceptionQueuePage() {
     try {
       setLoading(true);
       const baseUrl = getApiBaseUrl();
-      const res = await fetch(`${baseUrl}/appointments`, { credentials: "include" });
+      const res = await fetch(`${baseUrl}/reception/queue`, { credentials: "include" });
       const json = await res.json().catch(() => ({}));
 
       if (json.success && Array.isArray(json.appointments)) {
         setQueue(json.appointments);
       } else {
-        setQueue([
-          {
-            _id: "apt_1",
-            patientName: "Taha Siraj",
-            appointmentTime: "10:30 AM",
-            treatment: "3D Guided Implant Consultation",
-            doctorName: "Dr. Sarah Jenkins",
-            status: "QUEUED",
-            waitingTime: "12 mins",
-          },
-          {
-            _id: "apt_2",
-            patientName: "Sarah Jenkins",
-            appointmentTime: "11:15 AM",
-            treatment: "Routine Scaling & Fluoride Cleaning",
-            doctorName: "Dr. Michael Chen",
-            status: "CHECKED-IN",
-            waitingTime: "5 mins",
-          },
-        ]);
+        setQueue([]);
       }
     } catch (err) {
       console.log("Queue fetch error:", err);
+      setQueue([]);
     } finally {
       setLoading(false);
     }
@@ -51,9 +33,26 @@ export default function ReceptionQueuePage() {
     fetchQueue();
   }, []);
 
-  const handleStatusChange = (id, newStatus, patientName) => {
-    setQueue(queue.map((item) => (item._id === id ? { ...item, status: newStatus } : item)));
-    toast.success(`Updated ${patientName} status to ${newStatus}`);
+  const handleStatusChange = async (id, newStatus, patientName) => {
+    try {
+      const baseUrl = getApiBaseUrl();
+      const res = await fetch(`${baseUrl}/reception/appointments/${id}/status`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus.toLowerCase() }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (data.success) {
+        toast.success(`Updated ${patientName || "Patient"} status to ${newStatus.toUpperCase()}`);
+        fetchQueue(); // Re-fetch from MongoDB to update UI immediately
+      } else {
+        toast.error(data.message || "Failed to update appointment status");
+      }
+    } catch (err) {
+      toast.error(err.message || "Network request failed");
+    }
   };
 
   return (
@@ -64,25 +63,27 @@ export default function ReceptionQueuePage() {
             Queue Management Module
           </span>
           <h1 className="font-serif text-xl font-bold text-slate-900">Live Waiting Room Queue</h1>
-          <p className="text-xs text-slate-500 font-normal">Call next patient, manage waiting times, and track appointment statuses.</p>
+          <p className="text-xs text-slate-500 font-normal font-sans">Call next patient, manage waiting times, and track appointment statuses in MongoDB Atlas.</p>
         </div>
 
         <button
           onClick={fetchQueue}
+          disabled={loading}
           className="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 cursor-pointer"
         >
           <RefreshCw className={`h-3.5 w-3.5 text-[#0F766E] ${loading ? "animate-spin" : ""}`} />
-          <span>Refresh</span>
+          <span>Refresh Queue</span>
         </button>
       </div>
 
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
         {loading ? (
-          <div className="p-8 text-center text-xs text-slate-500 font-mono">Fetching Queue...</div>
+          <div className="p-8 text-center text-xs text-slate-500 font-mono">Fetching Queue from MongoDB Atlas...</div>
         ) : queue.length === 0 ? (
           <div className="p-8 text-center space-y-2 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
             <UserX className="w-8 h-8 text-slate-300 mx-auto" />
             <p className="text-xs font-semibold text-slate-700">Waiting Room Empty</p>
+            <p className="text-[11px] text-slate-400 font-normal">There are no active patients queued in the waiting room.</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -94,22 +95,22 @@ export default function ReceptionQueuePage() {
                       {item.appointmentTime || "10:30 AM"}
                     </span>
                     <span className="text-[10px] font-semibold text-slate-500 flex items-center gap-1">
-                      <Clock className="h-3 w-3 text-amber-500" /> Wait Time: {item.waitingTime || "8 mins"}
+                      <Clock className="h-3 w-3 text-amber-500" /> Status: {(item.status || "PENDING").toUpperCase()}
                     </span>
                   </div>
                   <h3 className="font-bold text-sm text-slate-900">{item.patientName || "Valued Patient"}</h3>
-                  <p className="text-xs text-slate-500">{item.treatment} • Assigned Specialist: {item.doctorName || "Dr. Sarah Jenkins"}</p>
+                  <p className="text-xs text-slate-500">{item.treatment} • Assigned Dentist: {item.doctorName || "Dr. Sarah Jenkins"}</p>
                 </div>
 
                 <div className="flex items-center space-x-2">
                   <button
-                    onClick={() => handleStatusChange(item._id, "IN-PROGRESS", item.patientName)}
+                    onClick={() => handleStatusChange(item._id, "in-progress", item.patientName)}
                     className="bg-[#0F766E] hover:bg-[#0D9488] text-white text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer shadow-xs"
                   >
                     <ArrowRight className="h-3.5 w-3.5" /> Call Next
                   </button>
                   <button
-                    onClick={() => handleStatusChange(item._id, "COMPLETED", item.patientName)}
+                    onClick={() => handleStatusChange(item._id, "completed", item.patientName)}
                     className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer shadow-xs"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" /> Complete

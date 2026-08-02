@@ -10,12 +10,15 @@ export default function ReceptionAppointmentsPage() {
   const [loading, setLoading] = useState(true);
   const [newApt, setNewApt] = useState({
     patientName: "",
-    appointmentDate: "2026-08-05",
+    patientEmail: "",
+    patientPhone: "",
+    appointmentDate: new Date().toISOString().split("T")[0],
     appointmentTime: "10:30 AM",
     treatment: "3D Guided Implant Consultation",
     doctorName: "Dr. Sarah Jenkins",
-    branchName: "Toronto Central Branch",
+    branchName: "SmileCare Toronto Central",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchAppointments = async () => {
     try {
@@ -27,21 +30,11 @@ export default function ReceptionAppointmentsPage() {
       if (json.success && Array.isArray(json.appointments)) {
         setAppointments(json.appointments);
       } else {
-        setAppointments([
-          {
-            _id: "apt_1",
-            patientName: "Taha Siraj",
-            appointmentDate: "2026-08-05",
-            appointmentTime: "10:30 AM",
-            treatment: "3D Guided Implant Consultation",
-            doctorName: "Dr. Sarah Jenkins",
-            branchName: "Toronto Central",
-            status: "CONFIRMED",
-          },
-        ]);
+        setAppointments([]);
       }
     } catch (err) {
       console.log("Fetch error:", err);
+      setAppointments([]);
     } finally {
       setLoading(false);
     }
@@ -51,13 +44,46 @@ export default function ReceptionAppointmentsPage() {
     fetchAppointments();
   }, []);
 
-  const handleSchedule = (e) => {
+  const handleSchedule = async (e) => {
     e.preventDefault();
-    if (!newApt.patientName) return;
-    const item = { _id: `apt_${Date.now()}`, ...newApt, status: "CONFIRMED" };
-    setAppointments([item, ...appointments]);
-    toast.success(`Scheduled appointment for ${newApt.patientName}!`);
-    setNewApt({ ...newApt, patientName: "" });
+    if (!newApt.patientName || !newApt.patientEmail) {
+      toast.error("Patient Name and Email address are required.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const baseUrl = getApiBaseUrl();
+      const res = await fetch(`${baseUrl}/appointments`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newApt),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (data.success) {
+        toast.success(`Scheduled appointment for ${newApt.patientName}!`);
+        setNewApt({
+          patientName: "",
+          patientEmail: "",
+          patientPhone: "",
+          appointmentDate: new Date().toISOString().split("T")[0],
+          appointmentTime: "10:30 AM",
+          treatment: "3D Guided Implant Consultation",
+          doctorName: "Dr. Sarah Jenkins",
+          branchName: "SmileCare Toronto Central",
+        });
+        fetchAppointments(); // Immediately re-fetch from MongoDB Atlas
+      } else {
+        toast.error(data.message || "Failed to schedule appointment");
+      }
+    } catch (err) {
+      toast.error(err.message || "Server connection error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -68,11 +94,12 @@ export default function ReceptionAppointmentsPage() {
             Appointments Module
           </span>
           <h1 className="font-serif text-xl font-bold text-slate-900">Schedule & Appointment Management</h1>
-          <p className="text-xs text-slate-500 font-normal">Book, reschedule, or cancel patient appointments across all clinic branches.</p>
+          <p className="text-xs text-slate-500 font-normal">Book, reschedule, or manage patient appointments directly in MongoDB Atlas.</p>
         </div>
 
         <button
           onClick={fetchAppointments}
+          disabled={loading}
           className="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 cursor-pointer"
         >
           <RefreshCw className={`h-3.5 w-3.5 text-[#0F766E] ${loading ? "animate-spin" : ""}`} />
@@ -96,6 +123,18 @@ export default function ReceptionAppointmentsPage() {
                 placeholder="e.g. Taha Siraj"
                 value={newApt.patientName}
                 onChange={(e) => setNewApt({ ...newApt, patientName: e.target.value })}
+                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0F766E]"
+              />
+            </div>
+
+            <div>
+              <label className="font-bold text-slate-700 block mb-1">Patient Email</label>
+              <input
+                type="email"
+                required
+                placeholder="patient@domain.com"
+                value={newApt.patientEmail}
+                onChange={(e) => setNewApt({ ...newApt, patientEmail: e.target.value })}
                 className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0F766E]"
               />
             </div>
@@ -125,9 +164,10 @@ export default function ReceptionAppointmentsPage() {
 
             <button
               type="submit"
-              className="w-full bg-[#0F766E] hover:bg-[#0D9488] text-white py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow-xs cursor-pointer"
+              disabled={isSubmitting}
+              className="w-full bg-[#0F766E] hover:bg-[#0D9488] text-white py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider shadow-xs cursor-pointer disabled:opacity-50 transition-all"
             >
-              Confirm Appointment
+              {isSubmitting ? "Saving..." : "Confirm Appointment"}
             </button>
           </form>
         </div>
@@ -138,23 +178,29 @@ export default function ReceptionAppointmentsPage() {
             Scheduled Appointments ({appointments.length})
           </h2>
 
-          <div className="space-y-3">
-            {appointments.map((apt) => (
-              <div key={apt._id} className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                <div>
-                  <span className="text-[11px] font-mono font-bold text-[#0F766E] bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
-                    {apt.appointmentDate} • {apt.appointmentTime}
-                  </span>
-                  <h3 className="font-bold text-xs text-slate-900 pt-1">{apt.patientName || "Patient"}</h3>
-                  <p className="text-xs text-slate-500">{apt.treatment} • {apt.doctorName}</p>
-                </div>
+          {loading ? (
+            <div className="p-8 text-center text-xs text-slate-500 font-mono">Loading Appointments...</div>
+          ) : appointments.length === 0 ? (
+            <div className="p-8 text-center text-xs text-slate-400">No appointments scheduled in MongoDB.</div>
+          ) : (
+            <div className="space-y-3">
+              {appointments.map((apt) => (
+                <div key={apt._id} className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <div>
+                    <span className="text-[11px] font-mono font-bold text-[#0F766E] bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                      {apt.appointmentDate} • {apt.appointmentTime}
+                    </span>
+                    <h3 className="font-bold text-xs text-slate-900 pt-1">{apt.patientName || "Patient"}</h3>
+                    <p className="text-xs text-slate-500">{apt.treatment} • {apt.doctorName}</p>
+                  </div>
 
-                <span className="text-[10px] px-2.5 py-1 rounded-full uppercase border font-bold bg-emerald-50 text-emerald-800 border-emerald-300">
-                  {apt.status || "CONFIRMED"}
-                </span>
-              </div>
-            ))}
-          </div>
+                  <span className="text-[10px] px-2.5 py-1 rounded-full uppercase border font-bold bg-emerald-50 text-emerald-800 border-emerald-300">
+                    {apt.status || "CONFIRMED"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
