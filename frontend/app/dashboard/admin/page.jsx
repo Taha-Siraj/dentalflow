@@ -95,61 +95,61 @@ export default function AdminOverviewPage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
         <Link href="/dashboard/admin/patients" className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Patients</span>
-          <p className="text-xl font-bold text-slate-900 font-mono">{stats?.totalPatients || 24}</p>
+          <p className="text-xl font-bold text-slate-900 font-mono">{stats?.totalPatients ?? 0}</p>
           <p className="text-[10px] text-slate-500">Registered Accounts</p>
         </Link>
 
         <Link href="/dashboard/admin/doctors" className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Doctors</span>
-          <p className="text-xl font-bold text-slate-900 font-mono">{stats?.totalDoctors || 15}</p>
+          <p className="text-xl font-bold text-slate-900 font-mono">{stats?.totalDoctors ?? 0}</p>
           <p className="text-[10px] text-slate-500">Active DDS Specialists</p>
         </Link>
 
         <Link href="/dashboard/admin/receptionists" className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Receptionists</span>
-          <p className="text-xl font-bold text-slate-900 font-mono">{stats?.totalReceptionists || 8}</p>
+          <p className="text-xl font-bold text-slate-900 font-mono">{stats?.totalReceptionists ?? 0}</p>
           <p className="text-[10px] text-slate-500">Intake Desk Staff</p>
         </Link>
 
         <Link href="/dashboard/admin/branches" className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Branches</span>
-          <p className="text-xl font-bold text-slate-900 font-mono">{stats?.totalBranches || 5}</p>
+          <p className="text-xl font-bold text-slate-900 font-mono">{stats?.totalBranches ?? 0}</p>
           <p className="text-[10px] text-slate-500">Canadian Clinics</p>
         </Link>
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Today Revenue</span>
-          <p className="text-xl font-bold text-[#0F766E] font-mono">${stats?.todayRevenue || 1850}</p>
+          <p className="text-xl font-bold text-[#0F766E] font-mono">${stats?.todayRevenue ?? 0}</p>
           <p className="text-[10px] text-slate-500">CAD Billed</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Monthly Revenue</span>
-          <p className="text-xl font-bold text-[#0F766E] font-mono">${stats?.monthlyRevenue || 48500}</p>
+          <p className="text-xl font-bold text-[#0F766E] font-mono">${stats?.monthlyRevenue ?? 0}</p>
           <p className="text-[10px] text-slate-500">CAD Month To Date</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Appts Today</span>
-          <p className="text-xl font-bold text-slate-900 font-mono">{stats?.appointmentsToday || 12}</p>
+          <p className="text-xl font-bold text-slate-900 font-mono">{stats?.appointmentsToday ?? 0}</p>
           <p className="text-[10px] text-slate-500">Booked Visits</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Pending Appts</span>
-          <p className="text-xl font-bold text-amber-600 font-mono">{stats?.pendingAppointments || 3}</p>
+          <p className="text-xl font-bold text-amber-600 font-mono">{stats?.pendingAppointments ?? 0}</p>
           <p className="text-[10px] text-slate-500">Awaiting Intake</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Completed</span>
-          <p className="text-xl font-bold text-emerald-600 font-mono">{stats?.completedTreatments || 9}</p>
+          <p className="text-xl font-bold text-emerald-600 font-mono">{stats?.completedTreatments ?? 0}</p>
           <p className="text-[10px] text-slate-500">Finished Today</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-1">
           <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Pending Pay</span>
-          <p className="text-xl font-bold text-rose-600 font-mono">${stats?.pendingPayments || 240}</p>
+          <p className="text-xl font-bold text-rose-600 font-mono">${stats?.pendingPayments ?? 0}</p>
           <p className="text-[10px] text-slate-500">Uncollected CAD</p>
         </div>
       </div>
