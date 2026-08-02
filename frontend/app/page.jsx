@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
-import { AboutSection } from "@/components/about-section";
+import { HeroMarquee } from "@/components/hero-marquee";
 import { Services } from "@/components/services";
 import { SmileTransformations } from "@/components/smile-transformations";
 import { WhyChooseUs } from "@/components/why-choose-us";
@@ -29,6 +29,14 @@ const AIAssistant = dynamic(() => import("@/components/ai-assistant").then((m) =
 export default function Home() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
+  // Auto-open Appointment Popup Modal on page reload / initial load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsBookingOpen(true);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleOpenBooking = useCallback(() => {
     setIsBookingOpen(true);
   }, []);
@@ -49,11 +57,8 @@ export default function Home() {
           <Hero onOpenBooking={handleOpenBooking} />
         </section>
 
-        {/* 🌊 Wave Transition 1: Hero -> About */}
-        <SectionDivider color="#FFFFFF" />
-
-        {/* 2. About */}
-        <AboutSection />
+        {/* 2. Hero Marquee (Real Icons & Image Badges directly below Hero) */}
+        <HeroMarquee />
 
         {/* 3. Services */}
         <Services onOpenBooking={handleOpenBooking} />
@@ -61,7 +66,7 @@ export default function Home() {
         {/* 4. Smile Transformations */}
         <SmileTransformations onOpenBooking={handleOpenBooking} />
 
-        {/* 🌊 Wave Transition 2: Transformations -> Why DentalFlow */}
+        {/* 🌊 Wave Transition 1: Transformations -> Why DentalFlow */}
         <SectionDivider color="#FFFFFF" />
 
         {/* 5. Why DentalFlow */}
@@ -73,7 +78,7 @@ export default function Home() {
         {/* 7. Patient Journey */}
         <PatientJourney />
 
-        {/* 🌊 Wave Transition 3: Patient Journey -> Branch Locations */}
+        {/* 🌊 Wave Transition 2: Patient Journey -> Branch Locations */}
         <SectionDivider color="#F8FAFC" />
 
         {/* 8. Branch Locations */}
