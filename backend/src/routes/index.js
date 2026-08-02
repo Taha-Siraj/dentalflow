@@ -11,7 +11,7 @@ import {
   resetPassword,
   createStaffAccount,
 } from "../controllers/auth.controller.js";
-import { createAppointment, getAppointments, updateAppointmentStatus } from "../controllers/appointment.controller.js";
+import { createAppointment, getAppointments, updateAppointmentStatus, getAvailableSlots } from "../controllers/appointment.controller.js";
 import { getBranches, createBranch } from "../controllers/branch.controller.js";
 import { getDoctors, createDoctor } from "../controllers/doctor.controller.js";
 import { getServices } from "../controllers/service.controller.js";
@@ -121,6 +121,7 @@ router.post("/auth/reset-password", resetPassword);
 router.post("/auth/create-staff", authenticateJWT, authorizeRoles("admin", "superadmin"), createStaffAccount);
 
 // Appointment Routes
+router.get("/appointments/available-slots", getAvailableSlots);
 router.post("/appointments", createAppointment);
 router.get("/appointments", getAppointments);
 router.patch("/appointments/:id/status", updateAppointmentStatus);
