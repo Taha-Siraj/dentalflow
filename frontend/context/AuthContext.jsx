@@ -7,26 +7,24 @@ import { getApiBaseUrl } from "@/lib/api-client";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  // Initialize user from cached profile if present for instant rendering on F5 refresh
-  const [user, setUser] = useState(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const cached = localStorage.getItem("dentalflow_user_profile");
-        return cached ? JSON.parse(cached) : null;
-      } catch (e) {
-        return null;
-      }
-    }
-    return null;
-  });
-
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Verify HTTP-Only Cookie Session on mount & restore user profile
+  // Verify HTTP-Only Cookie Session on mount & restore user profile (Client-side execution only)
   useEffect(() => {
     let isMounted = true;
 
+    // 1. Read cached profile on client mount
+    try {
+      const cached = localStorage.getItem("dentalflow_user_profile");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (isMounted) setUser(parsed);
+      }
+    } catch (e) {}
+
+    // 2. Verify with backend session
     async function checkAuthSession() {
       try {
         const baseUrl = getApiBaseUrl();
@@ -47,12 +45,10 @@ export function AuthProvider({ children }) {
             }
           }
         } else if (res.status === 401 && isMounted) {
-          // If server explicitly returns 401 (unauthorized / expired cookie), clear session
           setUser(null);
           localStorage.removeItem("dentalflow_user_profile");
         }
       } catch (err) {
-        // Network error - keep cached user profile if present to avoid logging user out on minor glitch
         console.warn("Auth session check warning:", err.message);
       } finally {
         if (isMounted) setLoading(false);

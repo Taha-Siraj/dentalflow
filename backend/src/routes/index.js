@@ -48,6 +48,13 @@ import {
   updateDoctorSettings,
 } from "../controllers/doctor.controller.js";
 import {
+  getReceptionQueue,
+  updateReceptionAppointmentStatus,
+  createWalkInPatient,
+  generateCounterInvoice,
+  recordCounterPayment,
+} from "../controllers/reception.controller.js";
+import {
   getAdminExecutiveDashboard,
   getAdminUsers,
   getAdminUserById,
@@ -147,6 +154,14 @@ router.get("/patient/notifications", authenticateJWT, getPatientNotifications);
 router.get("/patient/medical-records", authenticateJWT, getPatientMedicalRecords);
 router.get("/patient/timeline", authenticateJWT, getPatientTimeline);
 router.patch("/patient/settings", authenticateJWT, updatePatientSettings);
+
+// Receptionist API Routes
+router.get("/reception/dashboard", authenticateJWT, authorizeRoles("receptionist", "admin", "superadmin"), getReceptionQueue);
+router.get("/reception/queue", authenticateJWT, authorizeRoles("receptionist", "admin", "superadmin"), getReceptionQueue);
+router.patch("/reception/appointments/:id/status", authenticateJWT, authorizeRoles("receptionist", "admin", "superadmin"), updateReceptionAppointmentStatus);
+router.post("/reception/walkin", authenticateJWT, authorizeRoles("receptionist", "admin", "superadmin"), createWalkInPatient);
+router.post("/reception/invoices", authenticateJWT, authorizeRoles("receptionist", "admin", "superadmin"), generateCounterInvoice);
+router.post("/reception/invoices/:id/pay", authenticateJWT, authorizeRoles("receptionist", "admin", "superadmin"), recordCounterPayment);
 
 // Doctor API Routes
 router.get("/doctor/dashboard", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), getDoctorDashboard);
