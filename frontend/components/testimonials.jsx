@@ -177,7 +177,7 @@ export function Testimonials() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <p className="font-serif font-bold text-xs sm:text-sm text-slate-900 flex items-center space-x-1 truncate">
+                    <p className="font-serif font-bold text-xs sm:text-sm text-[#1B5C63] flex items-center space-x-1 truncate">
                       <span className="truncate">{rev.author}</span>
                       <CheckCircle2 className="h-3.5 w-3.5 text-[#1B5C63] shrink-0" />
                     </p>

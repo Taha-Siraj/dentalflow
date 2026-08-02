@@ -62,7 +62,7 @@ export function ContactSection() {
     <section id="contact" className="scroll-mt-20 py-20 bg-slate-50 font-poppins">
       <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-10 space-y-10">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1B5C63]">
             Contact SmileCare Dental Network
           </h2>
           <p className="text-sm text-slate-600 leading-relaxed font-normal">
@@ -72,7 +72,7 @@ export function ContactSection() {
 
         {/* Visually Balanced Centered Contact Form */}
         <div className="max-w-2xl mx-auto bg-white p-8 sm:p-10 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-          <h3 className="font-serif text-xl font-bold text-slate-900 text-center">Send Direct Inquiry</h3>
+          <h3 className="font-serif text-xl font-bold text-[#1B5C63] text-center">Send Direct Inquiry</h3>
           <form onSubmit={handleSubmit} className="space-y-4 text-xs font-poppins">
             <div>
               <label className="font-bold text-slate-700 block mb-1.5">Full Legal Name</label>

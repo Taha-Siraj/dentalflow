@@ -91,7 +91,7 @@ export function Services({ onOpenBooking }) {
 
                   {/* Content */}
                   <div className="p-6 space-y-2.5">
-                    <h3 className="font-serif text-lg sm:text-xl font-bold text-slate-900 group-hover:text-[#1B5C63] transition-colors">
+                    <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1B5C63] group-hover:text-[#1B5C63] transition-colors">
                       {service.title}
                     </h3>
                     <p className="font-poppins text-xs sm:text-sm text-slate-600 leading-relaxed">

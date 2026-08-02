@@ -36,7 +36,7 @@ export function FAQ() {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1B5C63]">
             Frequently Asked Questions
           </h2>
           <p className="font-sans text-slate-600 text-base">
@@ -57,7 +57,7 @@ export function FAQ() {
                   onClick={() => setOpenIndex(isOpen ? -1 : idx)}
                   className="w-full p-6 flex items-center justify-between text-left focus:outline-none group cursor-pointer"
                 >
-                  <span className="font-serif text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors pr-4">
+                  <span className="font-serif text-base sm:text-lg font-bold text-[#1B5C63] group-hover:text-[#0F766E] transition-colors pr-4">
                     {faq.question}
                   </span>
 

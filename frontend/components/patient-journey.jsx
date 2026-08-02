@@ -70,7 +70,7 @@ export function PatientJourney() {
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="font-serif text-base sm:text-lg font-bold text-slate-900">{item.title}</h3>
+                  <h3 className="font-serif text-base sm:text-lg font-bold text-[#1B5C63]">{item.title}</h3>
                   <p className="font-poppins text-xs sm:text-sm text-slate-600 leading-relaxed">{item.description}</p>
                 </div>
 

@@ -49,7 +49,7 @@ export function AboutSection() {
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-slate-200 max-w-xs">
-                <p className="font-serif text-sm font-bold text-slate-900">Hospital-Grade Accreditation</p>
+                <p className="font-serif text-sm font-bold text-[#1B5C63]">Hospital-Grade Accreditation</p>
                 <p className="font-poppins text-xs text-slate-600">Licensed by RCDSO, CDSBC, CDCA, and ODQ</p>
               </div>
             </div>
@@ -63,7 +63,7 @@ export function AboutSection() {
               <div className="h-11 w-11 rounded-xl bg-teal-50 flex items-center justify-center text-[#1B5C63] border border-teal-200">
                 <Cpu className="h-5 w-5" />
               </div>
-              <h3 className="font-serif text-base font-bold text-slate-900">3D Precision Tech</h3>
+              <h3 className="font-serif text-base font-bold text-[#1B5C63]">3D Precision Tech</h3>
               <p className="font-poppins text-xs text-slate-600 leading-relaxed">
                 Low-radiation 3D CBCT imaging and painless digital optical impressions.
               </p>
@@ -73,7 +73,7 @@ export function AboutSection() {
               <div className="h-11 w-11 rounded-xl bg-teal-50 flex items-center justify-center text-[#1B5C63] border border-teal-200">
                 <ShieldCheck className="h-5 w-5" />
               </div>
-              <h3 className="font-serif text-base font-bold text-slate-900">Direct Billing</h3>
+              <h3 className="font-serif text-base font-bold text-[#1B5C63]">Direct Billing</h3>
               <p className="font-poppins text-xs text-slate-600 leading-relaxed">
                 Instant electronic insurance claims processing before you leave the clinic.
               </p>
@@ -83,7 +83,7 @@ export function AboutSection() {
               <div className="h-11 w-11 rounded-xl bg-teal-50 flex items-center justify-center text-[#1B5C63] border border-teal-200">
                 <Award className="h-5 w-5" />
               </div>
-              <h3 className="font-serif text-base font-bold text-slate-900">DDS Specialists</h3>
+              <h3 className="font-serif text-base font-bold text-[#1B5C63]">DDS Specialists</h3>
               <p className="font-poppins text-xs text-slate-600 leading-relaxed">
                 Board-certified Canadian dentists with over 15+ years of specialized experience.
               </p>
@@ -93,7 +93,7 @@ export function AboutSection() {
               <div className="h-11 w-11 rounded-xl bg-teal-50 flex items-center justify-center text-[#1B5C63] border border-teal-200">
                 <Heart className="h-5 w-5" />
               </div>
-              <h3 className="font-serif text-base font-bold text-slate-900">Gentle Sedation</h3>
+              <h3 className="font-serif text-base font-bold text-[#1B5C63]">Gentle Sedation</h3>
               <p className="font-poppins text-xs text-slate-600 leading-relaxed">
                 Nitrous oxide and oral conscious sedation for painless, anxiety-free dentistry.
               </p>

@@ -86,7 +86,7 @@ export function Dentists({ onOpenBooking }) {
 
                 {/* Details */}
                 <div className="p-5 space-y-2">
-                  <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#1B5C63] transition-colors">
+                  <h3 className="font-serif text-lg font-bold text-[#1B5C63] group-hover:text-[#1B5C63] transition-colors">
                     {doc.name}
                   </h3>
                   <p className="font-poppins text-xs font-bold text-[#1B5C63]">{doc.credentials}</p>

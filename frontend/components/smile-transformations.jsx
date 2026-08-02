@@ -168,7 +168,7 @@ export function SmileTransformations({ onOpenBooking }) {
               </div>
 
               <div>
-                <h3 className="font-serif text-xl font-bold text-slate-900">Full Arch Porcelain Makeover</h3>
+                <h3 className="font-serif text-xl font-bold text-[#1B5C63]">Full Arch Porcelain Makeover</h3>
                 <p className="text-xs text-slate-600 leading-relaxed mt-1.5 font-poppins">
                   Handcrafted ultrathin porcelain veneers designed to correct teeth misalignment, close gaps, and restore a brilliant, natural-looking Canadian smile.
                 </p>

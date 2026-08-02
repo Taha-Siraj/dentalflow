@@ -62,7 +62,7 @@ export function BookingModal({ isOpen, onClose }) {
 
     toast.success(
       <div>
-        <p className="font-serif font-bold text-slate-900">Appointment Confirmed!</p>
+        <p className="font-serif font-bold text-[#1B5C63]">Appointment Confirmed!</p>
         <p className="font-sans text-xs text-slate-600 mt-0.5">
           Reserved for {data.patientName} on {formattedDate} at {selectedTimeSlot}.
         </p>

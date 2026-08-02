@@ -106,7 +106,7 @@ export function Locations({ onOpenBooking }) {
 
                 {/* Details */}
                 <div className="p-6 space-y-3">
-                  <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#1B5C63] transition-colors">
+                  <h3 className="font-serif text-lg font-bold text-[#1B5C63] group-hover:text-[#1B5C63] transition-colors">
                     {branch.name}
                   </h3>
 

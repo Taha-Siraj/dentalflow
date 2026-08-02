@@ -79,7 +79,7 @@ export function WhyChooseUs() {
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal-50 text-[#1B5C63]">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="font-serif text-base sm:text-lg font-bold text-slate-900">{pillar.title}</h3>
+                  <h3 className="font-serif text-base sm:text-lg font-bold text-[#1B5C63]">{pillar.title}</h3>
                   <p className="font-poppins text-xs sm:text-sm text-slate-600 leading-relaxed">{pillar.description}</p>
                 </motion.div>
               );
