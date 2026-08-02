@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { User } from "../models/user.model.js";
+import { Appointment } from "../models/appointment.model.js";
 import { ENV } from "../config/env.js";
 import { sendOtpEmail, sendPasswordResetEmail, sendStaffInvitationEmail } from "../utils/email.js";
 
@@ -16,7 +17,15 @@ function generateOtp() {
 /**
  * Helper to issue JWT tokens in HTTP-Only cookies with explicit path: "/" for global persistence
  */
-function sendTokenCookieResponse(user, statusCode, res, message = "Authentication successful") {
+async function sendTokenCookieResponse(user, statusCode, res, message = "Authentication successful") {
+  // Automatically link any appointments created with this patient email to user._id
+  await Appointment.updateMany(
+    {
+      patientEmail: user.email.toLowerCase().trim(),
+      $or: [{ patientId: { $exists: false } }, { patientId: null }],
+    },
+    { $set: { patientId: user._id } }
+  ).catch(() => {});
   const tokenPayload = {
     id: user._id,
     role: user.role,
@@ -157,7 +166,7 @@ export async function verifyOtp(req, res, next) {
     await user.save();
 
     // Log User In with Cookie
-    return sendTokenCookieResponse(user, 200, res, "Email verified successfully! Welcome to DentalFlow.");
+    return await sendTokenCookieResponse(user, 200, res, "Email verified successfully! Welcome to DentalFlow.");
   } catch (error) {
     next(error);
   }
@@ -231,7 +240,7 @@ export async function login(req, res, next) {
       });
     }
 
-    return sendTokenCookieResponse(user, 200, res, "Sign in successful!");
+    return await sendTokenCookieResponse(user, 200, res, "Sign in successful!");
   } catch (error) {
     next(error);
   }

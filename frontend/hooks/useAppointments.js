@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+import { getApiBaseUrl } from "@/lib/api-client";
 
 export function useAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -12,7 +11,8 @@ export function useAppointments() {
   const fetchAppointments = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URL}/appointments`);
+      const baseUrl = getApiBaseUrl();
+      const res = await fetch(`${baseUrl}/appointments`, { credentials: "include" });
       const data = await res.json();
       if (data.success) {
         setAppointments(data.appointments || []);
@@ -26,8 +26,10 @@ export function useAppointments() {
 
   const createAppointment = async (bookingData) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/appointments`, {
+      const baseUrl = getApiBaseUrl();
+      const res = await fetch(`${baseUrl}/appointments`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bookingData),
       });
