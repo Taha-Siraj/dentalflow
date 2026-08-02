@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
       </head>
       <body
-        className={`${poppins.className} font-poppins bg-[#F8FAFC] text-slate-800 antialiased selection:bg-[#0F766E] selection:text-white`}
+        className={`${poppins.className} font-poppins bg-[#F8FAFC] text-slate-800 antialiased selection:bg-[#0F766E] selection:text-white overflow-x-hidden w-full`}
         suppressHydrationWarning
       >
         <AuthProvider>

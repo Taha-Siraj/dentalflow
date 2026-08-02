@@ -76,89 +76,93 @@ export function Navbar() {
   ];
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-white/95 backdrop-blur-md text-slate-900 shadow-md py-3"
-          : "bg-transparent text-white py-3.5 sm:py-5"
-      }`}
-    >
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-2 sm:gap-4">
-          
-          {/* Executive Brand Logo */}
-          <div className="shrink-0">
-            <Logo isWhiteText={!isScrolled} />
-          </div>
-
-          {/* Desktop Navigation Links */}
-          <nav
-            aria-label="Public Navigation Menu"
-            className="hidden xl:flex items-center space-x-2.5 xl:space-x-3.5 2xl:space-x-5 font-poppins text-xs font-semibold"
-          >
-            {navLinks.map((link, idx) => {
-              const isActive = link.id && activeSection === link.id;
-              return (
-                <Link
-                  key={idx}
-                  href={link.href}
-                  className={`transition-colors whitespace-nowrap focus:outline-none rounded-md px-1 py-0.5 ${
-                    isActive
-                      ? "text-[#1B5C63] font-bold border-b-2 border-[#1B5C63]"
-                      : isScrolled
-                      ? "text-slate-700 hover:text-[#1B5C63]"
-                      : "text-slate-200 hover:text-white"
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Single Right CTA: Patient Login & Hamburger trigger */}
-          <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+          isScrolled
+            ? "bg-white/95 backdrop-blur-md text-slate-900 shadow-md py-3"
+            : "bg-transparent text-white py-3.5 sm:py-5"
+        }`}
+      >
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
             
-            {/* Responsive Patient Login Button: Collapses to Icon-Only on smaller viewports to prevent overflow */}
-            <Link
-              href="/login"
-              title="Patient Login"
-              className={`rounded-full p-2.5 xl:px-5 xl:py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 border transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1B5C63] focus:ring-offset-2 ${
-                isScrolled
-                  ? "bg-teal-50/90 border-teal-200 text-[#1B5C63] hover:bg-teal-100 shadow-xs"
-                  : "bg-white/10 border-white/30 text-white hover:bg-white/20 shadow-xs"
-              }`}
-            >
-              <UserCheck className="h-4 w-4 text-teal-400 shrink-0" />
-              <span className="hidden xl:inline">Patient Login</span>
-            </Link>
+            {/* Executive Brand Logo */}
+            <div className="shrink-0">
+              <Logo isWhiteText={!isScrolled} />
+            </div>
 
-            {/* Hamburger Button */}
-            <button
-              onClick={() => setIsMobileOpen(!isMobileOpen)}
-              aria-expanded={isMobileOpen}
-              aria-label="Toggle Navigation Drawer"
-              className={`xl:hidden p-2 rounded-xl focus:outline-none transition-colors cursor-pointer ${
-                isScrolled ? "text-slate-800 hover:bg-slate-100" : "text-white hover:bg-white/10"
-              }`}
+            {/* Desktop Navigation Links */}
+            <nav
+              aria-label="Public Navigation Menu"
+              className="hidden xl:flex items-center space-x-2.5 xl:space-x-3.5 2xl:space-x-5 font-poppins text-xs font-semibold"
             >
-              {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+              {navLinks.map((link, idx) => {
+                const isActive = link.id && activeSection === link.id;
+                return (
+                  <Link
+                    key={idx}
+                    href={link.href}
+                    className={`transition-colors whitespace-nowrap focus:outline-none rounded-md px-1 py-0.5 ${
+                      isActive
+                        ? "text-[#1B5C63] font-bold border-b-2 border-[#1B5C63]"
+                        : isScrolled
+                        ? "text-slate-700 hover:text-[#1B5C63]"
+                        : "text-slate-200 hover:text-white"
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Single Right CTA: Patient Login & Hamburger trigger */}
+            <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+              
+              {/* Responsive Patient Login Button */}
+              <Link
+                href="/login"
+                title="Patient Login"
+                className={`rounded-full p-2.5 xl:px-5 xl:py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 border transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1B5C63] focus:ring-offset-2 ${
+                  isScrolled
+                    ? "bg-teal-50/90 border-teal-200 text-[#1B5C63] hover:bg-teal-100 shadow-xs"
+                    : "bg-white/10 border-white/30 text-white hover:bg-white/20 shadow-xs"
+                }`}
+              >
+                <UserCheck className="h-4 w-4 text-teal-400 shrink-0" />
+                <span className="hidden xl:inline">Patient Login</span>
+              </Link>
+
+              {/* Hamburger Button */}
+              <button
+                onClick={() => setIsMobileOpen(!isMobileOpen)}
+                aria-expanded={isMobileOpen}
+                aria-label="Toggle Navigation Drawer"
+                className={`xl:hidden p-2 rounded-xl focus:outline-none transition-colors cursor-pointer ${
+                  isScrolled ? "text-slate-800 hover:bg-slate-100" : "text-white hover:bg-white/10"
+                }`}
+              >
+                {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+
+            </div>
 
           </div>
-
         </div>
-      </div>
+      </header>
 
-      {/* Slide-Out Drawer Overlay */}
+      {/* Standalone Slide-Out Mobile Navigation Drawer */}
       {isMobileOpen && (
-        <div className="xl:hidden fixed inset-0 z-50 flex justify-end">
+        <div className="xl:hidden fixed inset-0 z-[999] flex justify-end">
+          {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300"
+            className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs transition-opacity duration-300"
             onClick={() => setIsMobileOpen(false)}
           />
 
-          <div className="relative w-full max-w-sm bg-white text-slate-900 h-full shadow-2xl flex flex-col justify-between p-6 z-10 animate-in slide-in-from-right duration-300 overflow-y-auto font-poppins">
+          {/* Mobile Drawer Panel */}
+          <div className="relative w-[85vw] max-w-[320px] sm:max-w-sm bg-white text-slate-900 h-[100dvh] shadow-2xl flex flex-col justify-between p-5 sm:p-6 z-10 font-poppins overflow-y-auto">
             <div className="space-y-6">
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <Logo isWhiteText={false} />
@@ -186,8 +190,8 @@ export function Navbar() {
               </nav>
             </div>
 
-            {/* Mobile Drawer Single CTA Button */}
-            <div className="pt-6 border-t border-slate-100">
+            {/* Mobile Drawer CTA Button */}
+            <div className="pt-4 border-t border-slate-100 mt-6">
               <Link
                 href="/login"
                 onClick={() => setIsMobileOpen(false)}
@@ -200,6 +204,6 @@ export function Navbar() {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
