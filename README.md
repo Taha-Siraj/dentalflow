@@ -134,7 +134,7 @@ dentalflow/
 | **Patient** | Personal appointments, EMR, prescriptions, invoices, profile settings | `/dashboard/patient/*` |
 | **Doctor** | Assigned patients, clinical schedule, consultation notes, Rx generator | `/dashboard/doctor/*` |
 | **Receptionist** | Live clinic queue, walk-in intake, counter billing, appointment check-in | `/dashboard/reception/*` |
-| **Admin / SuperAdmin** | Full executive panel, user CRUD, role changes, branch/doctor config, audit logs | `/dashboard/admin/*` |
+| **Admin** | Full executive panel, user CRUD, role changes, branch/doctor config, audit logs | `/dashboard/admin/*` |
 
 ---
 

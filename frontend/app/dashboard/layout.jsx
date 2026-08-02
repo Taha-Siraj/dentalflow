@@ -131,9 +131,6 @@ const ALLOWED_ROUTES_BY_ROLE = {
     "/dashboard/admin/users",
     "/dashboard/admin/audit-logs",
     "/dashboard/admin/settings",
-    "/dashboard/patient",
-    "/dashboard/doctor",
-    "/dashboard/reception",
   ],
 };
 
@@ -150,7 +147,14 @@ export default function DashboardLayout({ children }) {
 
   const isAccessAllowed = () => {
     if (!user) return false;
-    const allowed = ALLOWED_ROUTES_BY_ROLE[user.role] || [];
+    const roleKey = (user.role || "").toLowerCase();
+
+    // Admins have full executive access to admin dashboards and workspace views
+    if (roleKey === "admin") {
+      return true;
+    }
+
+    const allowed = ALLOWED_ROUTES_BY_ROLE[roleKey] || ALLOWED_ROUTES_BY_ROLE.patient;
     return allowed.some((route) => pathname === route || pathname.startsWith(route + "/"));
   };
 
@@ -187,16 +191,17 @@ export default function DashboardLayout({ children }) {
     );
   }
 
-  const navItems = ROLE_NAV_ITEMS[user.role] || ROLE_NAV_ITEMS.patient;
+  const roleKey = (user.role || "").toLowerCase();
+  const navItems = ROLE_NAV_ITEMS[roleKey] || ROLE_NAV_ITEMS.patient;
 
   return (
     <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#F8FAFC] font-poppins text-slate-800">
       {/* Mobile Top Navigation */}
       <div className="md:hidden h-14 bg-white text-slate-900 px-4 flex items-center justify-between border-b border-slate-200 shrink-0 z-30 shadow-xs">
-        <Logo iconSize={32} textSize="text-lg" />
+        <Logo iconSize={28} textSize="text-base" />
         <button
           onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-          className="p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 focus:outline-none"
+          className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none cursor-pointer"
         >
           {mobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -309,12 +314,13 @@ export default function DashboardLayout({ children }) {
                 </p>
                 <button
                   onClick={() => {
-                    if (user.role === "admin") router.push("/dashboard/admin");
-                    else if (user.role === "doctor") router.push("/dashboard/doctor");
-                    else if (user.role === "receptionist") router.push("/dashboard/reception");
+                    const r = (user.role || "").toLowerCase();
+                    if (r === "admin") router.push("/dashboard/admin");
+                    else if (r === "doctor") router.push("/dashboard/doctor");
+                    else if (r === "receptionist") router.push("/dashboard/reception");
                     else router.push("/dashboard/patient");
                   }}
-                  className="px-4 py-2 bg-[#0F766E] hover:bg-[#0D9488] text-white text-xs font-semibold rounded-xl transition-colors focus:outline-none shadow-xs"
+                  className="px-4 py-2 bg-[#0F766E] hover:bg-[#0D9488] text-white text-xs font-semibold rounded-xl transition-colors focus:outline-none shadow-xs cursor-pointer"
                 >
                   Return to Authorized Dashboard
                 </button>

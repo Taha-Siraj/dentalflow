@@ -2,12 +2,19 @@ import User from "../models/user.model.js";
 
 /**
  * Seeds initial production users into MongoDB Atlas if they do not exist.
+ * Migrates any legacy superadmin roles directly to "admin".
  */
 export async function seedInitialUsers() {
   try {
+    // Migration: Update any existing superadmin roles or Super Administrator names to Admin
+    await User.updateMany(
+      { $or: [{ role: "superadmin" }, { name: "Super Administrator" }] },
+      { $set: { role: "admin", name: "Executive Admin" } }
+    ).catch(() => {});
+
     const defaultUsers = [
       {
-        name: "Super Administrator",
+        name: "Executive Admin",
         email: "admin@smilecare.ca",
         password: "admin123",
         role: "admin",
@@ -47,6 +54,10 @@ export async function seedInitialUsers() {
       if (!exists) {
         await User.create(u);
         console.log(`✅ Seeded DB user: ${u.email} (${u.role.toUpperCase()})`);
+      } else if (exists.name === "Super Administrator" || exists.role === "superadmin") {
+        exists.name = "Executive Admin";
+        exists.role = "admin";
+        await exists.save();
       }
     }
   } catch (err) {

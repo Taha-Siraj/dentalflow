@@ -2,6 +2,7 @@ import Appointment from "../models/appointment.model.js";
 import User from "../models/user.model.js";
 import Invoice from "../models/invoice.model.js";
 import Notification from "../models/notification.model.js";
+import AuditLog from "../models/auditLog.model.js";
 
 /**
  * GET /api/v1/reception/dashboard & GET /api/v1/reception/queue
@@ -26,7 +27,7 @@ export async function getReceptionQueue(req, res) {
         pending: appointments.filter((a) => a.status === "pending").length,
       },
       appointments,
-      queue: appointments.filter((a) => a.status === "checked-in" || a.status === "in-progress" || a.status === "pending"),
+      queue: appointments.filter((a) => a.status === "checked-in" || a.status === "in-progress" || a.status === "pending" || a.status === "confirmed"),
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -35,6 +36,7 @@ export async function getReceptionQueue(req, res) {
 
 /**
  * PATCH /api/v1/reception/appointments/:id/status
+ * REAL MongoDB status update, Audit Log creation, Doctor Notification, and Patient Notification.
  */
 export async function updateReceptionAppointmentStatus(req, res) {
   try {
@@ -55,7 +57,7 @@ export async function updateReceptionAppointmentStatus(req, res) {
       return res.status(404).json({ success: false, message: "Appointment not found" });
     }
 
-    // Send notification to patient
+    // 1. Create Patient Notification
     if (appointment.patientId || appointment.patientEmail) {
       await Notification.create({
         patientId: appointment.patientId || undefined,
@@ -65,6 +67,39 @@ export async function updateReceptionAppointmentStatus(req, res) {
         type: "appointment",
       }).catch(() => {});
     }
+
+    // 2. Create Doctor Notification
+    if (appointment.doctorId || appointment.doctorName) {
+      let doc = null;
+      if (appointment.doctorId) {
+        doc = await User.findById(appointment.doctorId);
+      }
+      if (!doc && appointment.doctorName) {
+        doc = await User.findOne({ role: "doctor", name: new RegExp(appointment.doctorName, "i") });
+      }
+      if (doc) {
+        await Notification.create({
+          patientId: doc._id,
+          recipientEmail: doc.email,
+          title: `Patient Checked-In: ${appointment.patientName}`,
+          message: `${appointment.patientName} has checked in for ${appointment.treatment} (${appointment.appointmentTime}).`,
+          type: "appointment",
+        }).catch(() => {});
+      }
+    }
+
+    // 3. Create System Audit Log
+    await AuditLog.create({
+      performerId: req.user?.id || req.user?._id,
+      performerName: req.user?.name || "Receptionist",
+      performerRole: req.user?.role || "receptionist",
+      action: status === "checked-in" ? "CHECK_IN_PATIENT" : "UPDATE_APPOINTMENT_STATUS",
+      targetUserId: appointment.patientId || undefined,
+      targetUserName: appointment.patientName,
+      targetUserEmail: appointment.patientEmail,
+      details: `Updated appointment status to ${status.toUpperCase()} for ${appointment.patientName} (${appointment.treatment})`,
+      ipAddress: req.ip || "127.0.0.1",
+    }).catch(() => {});
 
     res.json({ success: true, message: `Appointment status updated to ${status}`, appointment });
   } catch (err) {
@@ -115,6 +150,18 @@ export async function createWalkInPatient(req, res) {
       notes: notes || "Express Walk-In Intake",
     });
 
+    await AuditLog.create({
+      performerId: req.user?.id || req.user?._id,
+      performerName: req.user?.name || "Receptionist",
+      performerRole: req.user?.role || "receptionist",
+      action: "WALKIN_CHECK_IN",
+      targetUserId: patientUser._id,
+      targetUserName: patientName,
+      targetUserEmail: cleanEmail,
+      details: `Registered and checked-in walk-in patient ${patientName} for ${treatment}`,
+      ipAddress: req.ip || "127.0.0.1",
+    }).catch(() => {});
+
     res.status(201).json({
       success: true,
       message: "Walk-in patient registered and checked in to live queue!",
@@ -131,7 +178,7 @@ export async function createWalkInPatient(req, res) {
  */
 export async function generateCounterInvoice(req, res) {
   try {
-    const { patientId, patientEmail, patientName, items, totalAmount, branchName } = req.body;
+    const { patientId, patientEmail, patientName, items, totalAmount, branchName, treatment } = req.body;
 
     let targetPatientId = patientId;
     if (!targetPatientId && patientEmail) {
@@ -147,8 +194,11 @@ export async function generateCounterInvoice(req, res) {
       patientName: patientName || "Patient",
       patientEmail: (patientEmail || "").toLowerCase().trim(),
       branchName: branchName || req.user?.branch || "SmileCare Toronto Central",
-      items: items || [{ description: "Dental Service", amount: totalAmount || 150 }],
+      treatment: treatment || "Dental Service",
+      items: items || [{ description: treatment || "Dental Service", amount: totalAmount || 150 }],
       totalAmount: totalAmount || 150,
+      amount: totalAmount || 150,
+      patientPayable: totalAmount || 150,
       status: "unpaid",
       dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
     });

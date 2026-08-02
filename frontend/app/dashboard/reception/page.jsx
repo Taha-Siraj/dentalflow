@@ -23,8 +23,11 @@ import { getApiBaseUrl } from "@/lib/api-client";
 
 const getStatusBadgeClass = (status) => {
   const s = (status || "").toLowerCase();
-  if (s === "pending" || s === "scheduled" || s === "queued" || s === "in-progress") {
+  if (s === "pending" || s === "scheduled" || s === "queued") {
     return "bg-amber-50 text-amber-800 border-amber-300 font-semibold";
+  }
+  if (s === "checked-in" || s === "in-progress") {
+    return "bg-teal-50 text-[#0F766E] border-teal-300 font-bold";
   }
   if (s === "confirmed" || s === "completed" || s === "paid" || s === "active" || s === "success") {
     return "bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold";
@@ -47,7 +50,7 @@ export default function ReceptionDashboardOverview() {
       setLoading(true);
       const baseUrl = getApiBaseUrl();
       const [aptRes, invRes] = await Promise.all([
-        fetch(`${baseUrl}/appointments`, { credentials: "include" }),
+        fetch(`${baseUrl}/reception/queue`, { credentials: "include" }),
         fetch(`${baseUrl}/invoices`, { credentials: "include" }),
       ]);
 
@@ -57,41 +60,18 @@ export default function ReceptionDashboardOverview() {
       if (aptJson.success && Array.isArray(aptJson.appointments)) {
         setQueue(aptJson.appointments);
       } else {
-        setQueue([
-          {
-            _id: "apt_1",
-            patientName: "Taha Siraj",
-            appointmentTime: "10:30 AM",
-            treatment: "3D Guided Implant Consultation",
-            patientPhone: "(416) 555-0199",
-            status: "QUEUED",
-          },
-          {
-            _id: "apt_2",
-            patientName: "Sarah Jenkins",
-            appointmentTime: "11:15 AM",
-            treatment: "Routine Scaling & Fluoride Cleaning",
-            patientPhone: "(416) 555-0188",
-            status: "CHECKED-IN",
-          },
-        ]);
+        setQueue([]);
       }
 
       if (invJson.success && Array.isArray(invJson.invoices)) {
         setInvoices(invJson.invoices);
       } else {
-        setInvoices([
-          {
-            _id: "inv_1",
-            invoiceNumber: "INV-2026-8801",
-            patientName: "Taha Siraj",
-            amount: 220,
-            status: "PAID",
-          },
-        ]);
+        setInvoices([]);
       }
     } catch (err) {
       console.log("Fetch error:", err);
+      setQueue([]);
+      setInvoices([]);
     } finally {
       setLoading(false);
     }
@@ -101,6 +81,27 @@ export default function ReceptionDashboardOverview() {
     fetchReceptionData();
   }, []);
 
+  const handleCheckIn = async (appointmentId, patientName) => {
+    try {
+      const baseUrl = getApiBaseUrl();
+      const res = await fetch(`${baseUrl}/reception/appointments/${appointmentId}/status`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "checked-in" }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (data.success) {
+        toast.success(`Checked in ${patientName || "Patient"}!`);
+        fetchReceptionData(); // Re-fetch from MongoDB to update checked-in queue and stats
+      } else {
+        toast.error(data.message || "Failed to check in patient");
+      }
+    } catch (err) {
+      toast.error(err.message || "Network error");
+    }
+  };
+
   const handleCreateInvoice = async (e) => {
     e.preventDefault();
     if (!newInvoice.patientName) return;
@@ -109,36 +110,37 @@ export default function ReceptionDashboardOverview() {
       setIsCreating(true);
       const baseUrl = getApiBaseUrl();
       const invoiceData = {
-        invoiceNumber: `INV-${Date.now().toString().slice(-4)}`,
         patientName: newInvoice.patientName,
-        amount: Number(newInvoice.amount),
-        status: "PAID",
-        insuranceCoverage: Number(newInvoice.amount) * 0.8,
+        totalAmount: Number(newInvoice.amount),
+        treatment: "Dental Care Procedure",
       };
 
-      const res = await fetch(`${baseUrl}/invoices`, {
+      const res = await fetch(`${baseUrl}/reception/invoices`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(invoiceData),
       });
       const json = await res.json().catch(() => ({}));
-      toast.success(`Invoice created & claim processed for ${newInvoice.patientName}!`);
-      generateInvoicePDF(invoiceData);
-      setNewInvoice({ patientName: "", amount: 150 });
-      fetchReceptionData();
+
+      if (json.success && json.invoice) {
+        toast.success(`Invoice created for ${newInvoice.patientName}!`);
+        generateInvoicePDF(json.invoice);
+        setNewInvoice({ patientName: "", amount: 150 });
+        fetchReceptionData();
+      } else {
+        toast.error(json.message || "Failed to create invoice");
+      }
     } catch (err) {
-      const invoiceData = {
-        invoiceNumber: `INV-${Date.now().toString().slice(-4)}`,
-        patientName: newInvoice.patientName,
-        amount: Number(newInvoice.amount),
-      };
-      toast.success("Invoice created successfully!");
-      generateInvoicePDF(invoiceData);
+      toast.error(err.message || "Failed to generate invoice");
     } finally {
       setIsCreating(false);
     }
   };
+
+  const checkedInCount = queue.filter((q) => (q.status || "").toLowerCase() === "checked-in").length;
+  const pendingCount = queue.filter((q) => (q.status || "").toLowerCase() === "pending" || (q.status || "").toLowerCase() === "confirmed").length;
+  const completedCount = queue.filter((q) => (q.status || "").toLowerCase() === "completed").length;
 
   return (
     <div className="space-y-6 font-poppins text-slate-800">
@@ -150,7 +152,7 @@ export default function ReceptionDashboardOverview() {
             Reception Desk Operations
           </span>
           <h1 className="font-serif text-xl font-bold text-slate-900">Toronto Central Reception Desk</h1>
-          <p className="text-xs text-slate-500 font-normal">Patient Intake Queue • Counter Billing • Direct Insurance Claims</p>
+          <p className="text-xs text-slate-500 font-normal">Live Patient Intake Queue • Counter Billing • Check-In Verification</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -165,49 +167,41 @@ export default function ReceptionDashboardOverview() {
       </div>
 
       {/* Summary Statistics Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
         <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
-          <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Checked In</span>
-          <p className="text-lg font-bold text-slate-900 font-mono">
-            {queue.filter((q) => (q.status || "").toLowerCase() === "checked-in" || (q.status || "").toLowerCase() === "completed").length}
-          </p>
-          <p className="text-[9px] text-slate-500">Patients Today</p>
-        </div>
-
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
-          <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Walk-Ins</span>
-          <p className="text-lg font-bold text-slate-900 font-mono">4</p>
-          <p className="text-[9px] text-slate-500">Express Intake</p>
-        </div>
-
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
-          <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Scheduled</span>
-          <p className="text-lg font-bold text-slate-900 font-mono">{queue.length}</p>
-          <p className="text-[9px] text-slate-500">Appts Today</p>
-        </div>
-
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
-          <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Revenue Today</span>
-          <p className="text-lg font-bold text-[#0F766E] font-mono">$1,850</p>
-          <p className="text-[9px] text-slate-500">CAD Billed</p>
-        </div>
-
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
-          <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Pending</span>
-          <p className="text-lg font-bold text-amber-600 font-mono">$240</p>
-          <p className="text-[9px] text-slate-500">Unpaid Invoices</p>
-        </div>
-
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
-          <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Completed</span>
-          <p className="text-lg font-bold text-emerald-600 font-mono">{invoices.length}</p>
-          <p className="text-[9px] text-slate-500">Paid Claims</p>
-        </div>
-
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
-          <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Queue Length</span>
-          <p className="text-lg font-bold text-slate-900 font-mono">{queue.length}</p>
+          <span className="text-[9px] uppercase font-bold tracking-wider text-[#0F766E]">Checked In</span>
+          <p className="text-lg font-bold text-slate-900 font-mono">{checkedInCount}</p>
           <p className="text-[9px] text-slate-500">In Waiting Room</p>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+          <span className="text-[9px] uppercase font-bold tracking-wider text-amber-600">Pending Arrivals</span>
+          <p className="text-lg font-bold text-slate-900 font-mono">{pendingCount}</p>
+          <p className="text-[9px] text-slate-500">Awaiting Check-In</p>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+          <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Total Today</span>
+          <p className="text-lg font-bold text-slate-900 font-mono">{queue.length}</p>
+          <p className="text-[9px] text-slate-500">Appointments</p>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+          <span className="text-[9px] uppercase font-bold tracking-wider text-emerald-600">Completed</span>
+          <p className="text-lg font-bold text-emerald-600 font-mono">{completedCount}</p>
+          <p className="text-[9px] text-slate-500">Treatments Done</p>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+          <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Invoices Issued</span>
+          <p className="text-lg font-bold text-slate-900 font-mono">{invoices.length}</p>
+          <p className="text-[9px] text-slate-500">Counter Bills</p>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+          <span className="text-[9px] uppercase font-bold tracking-wider text-[#0F766E]">Active Branch</span>
+          <p className="text-xs font-bold text-slate-900 truncate mt-1">Toronto Central</p>
+          <p className="text-[9px] text-slate-500">Main Clinic</p>
         </div>
       </div>
 
@@ -224,38 +218,47 @@ export default function ReceptionDashboardOverview() {
           </div>
 
           {loading ? (
-            <div className="p-8 text-center text-xs text-slate-500 font-mono">Loading Reception Queue...</div>
+            <div className="p-8 text-center text-xs text-slate-500 font-mono">Loading Reception Queue from MongoDB Atlas...</div>
           ) : queue.length === 0 ? (
             <div className="p-8 text-center space-y-2 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
               <UserX className="w-8 h-8 text-slate-300 mx-auto" />
               <p className="text-xs font-semibold text-slate-700">Intake Queue Empty</p>
-              <p className="text-[11px] text-slate-400 font-normal">There are no patients currently waiting in the intake queue.</p>
+              <p className="text-[11px] text-slate-400 font-normal">There are no appointments scheduled for today.</p>
             </div>
           ) : (
             <div className="space-y-2.5">
-              {queue.map((item) => (
-                <div key={item._id} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                  <div>
-                    <span className="text-[11px] font-mono font-semibold text-[#0F766E] bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">
-                      {item.appointmentTime || "10:30 AM"}
-                    </span>
-                    <h3 className="font-semibold text-xs text-slate-900 pt-1">{item.patientName || "Valued Patient"}</h3>
-                    <p className="text-[11px] text-slate-500 font-normal">{item.treatment || "General Consultation"} • {item.patientPhone || "(416) 555-0199"}</p>
-                  </div>
+              {queue.map((item) => {
+                const isCheckedIn = (item.status || "").toLowerCase() === "checked-in";
+                return (
+                  <div key={item._id} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-mono font-semibold text-[#0F766E] bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">
+                          {item.appointmentTime || "10:30 AM"}
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-mono">{item.appointmentDate || "Today"}</span>
+                      </div>
+                      <h3 className="font-semibold text-xs text-slate-900 pt-1">{item.patientName || "Valued Patient"}</h3>
+                      <p className="text-[11px] text-slate-500 font-normal">{item.treatment || "General Consultation"} • {item.patientPhone || "(416) 555-0199"}</p>
+                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">Doctor: {item.doctorName || "Dr. Sarah Jenkins"}</p>
+                    </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase border ${getStatusBadgeClass(item.status)}`}>
-                      {item.status || "QUEUED"}
-                    </span>
-                    <button
-                      onClick={() => toast.success(`Checked in ${item.patientName || "Patient"}!`)}
-                      className="bg-[#0F766E] hover:bg-[#0D9488] text-white text-[11px] font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer transition-all shadow-xs"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5" /> Check-In
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase border ${getStatusBadgeClass(item.status)}`}>
+                        {item.status || "PENDING"}
+                      </span>
+                      {!isCheckedIn && item.status !== "completed" && item.status !== "cancelled" && (
+                        <button
+                          onClick={() => handleCheckIn(item._id, item.patientName)}
+                          className="bg-[#0F766E] hover:bg-[#0D9488] text-white text-[11px] font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer transition-all shadow-xs"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Check-In
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -321,7 +324,7 @@ export default function ReceptionDashboardOverview() {
                           {inv.status || "PAID"}
                         </span>
                       </div>
-                      <span className="font-mono text-[10px] text-slate-400">{inv.invoiceNumber} • ${inv.amount}</span>
+                      <span className="font-mono text-[10px] text-slate-400">{inv.invoiceNumber} • ${inv.totalAmount || inv.amount}</span>
                     </div>
                     <button
                       onClick={() => generateInvoicePDF(inv)}

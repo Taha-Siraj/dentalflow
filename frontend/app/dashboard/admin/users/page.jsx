@@ -305,7 +305,6 @@ export default function AdminUsersPage() {
                     <option value="doctor">DOCTOR</option>
                     <option value="receptionist">RECEPTIONIST</option>
                     <option value="admin">ADMIN</option>
-                    <option value="superadmin">SUPER ADMIN</option>
                   </select>
 
                   {/* Status Toggle */}

@@ -77,9 +77,10 @@ export function AuthProvider({ children }) {
         // Memory-only React State (No LocalStorage)
         setUser(data.user);
 
-        if (data.user.role === "admin") router.push("/dashboard/admin");
-        else if (data.user.role === "doctor") router.push("/dashboard/doctor");
-        else if (data.user.role === "receptionist") router.push("/dashboard/reception");
+        const r = (data.user.role || "").toLowerCase();
+        if (r === "admin") router.push("/dashboard/admin");
+        else if (r === "doctor") router.push("/dashboard/doctor");
+        else if (r === "receptionist") router.push("/dashboard/reception");
         else router.push("/dashboard/patient");
 
         return { success: true, user: data.user };
@@ -137,9 +138,10 @@ export function AuthProvider({ children }) {
         // Memory-only React State (No LocalStorage)
         setUser(data.user);
 
-        if (data.user.role === "admin") router.push("/dashboard/admin");
-        else if (data.user.role === "doctor") router.push("/dashboard/doctor");
-        else if (data.user.role === "receptionist") router.push("/dashboard/reception");
+        const r = (data.user.role || "").toLowerCase();
+        if (r === "admin") router.push("/dashboard/admin");
+        else if (r === "doctor") router.push("/dashboard/doctor");
+        else if (r === "receptionist") router.push("/dashboard/reception");
         else router.push("/dashboard/patient");
 
         return { success: true, user: data.user };
