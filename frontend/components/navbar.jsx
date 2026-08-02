@@ -19,8 +19,7 @@ export function Navbar() {
         setIsScrolled(false);
       }
 
-      // ScrollSpy logic for section highlighting
-      const sections = ["services", "transformations", "doctors", "branches", "testimonials", "faq"];
+      const sections = ["about", "services", "transformations", "doctors", "branches", "testimonials", "faq", "contact"];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -81,21 +80,21 @@ export function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "bg-white/95 backdrop-blur-md text-slate-900 shadow-md py-3"
-          : "bg-transparent text-white py-4 sm:py-5"
+          : "bg-transparent text-white py-3.5 sm:py-5"
       }`}
     >
-      <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-10">
-        <div className="flex items-center justify-between gap-4">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
           
           {/* Executive Brand Logo */}
-          <div className="shrink-0">
+          <div className="shrink-0 max-w-[65%] sm:max-w-none">
             <Logo isWhiteText={!isScrolled} />
           </div>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation Links (Only renders when 100% space is guaranteed to prevent clipping) */}
           <nav
             aria-label="Public Navigation Menu"
-            className="hidden xl:flex items-center space-x-3.5 xl:space-x-5 2xl:space-x-6 font-poppins text-xs font-semibold"
+            className="hidden 2xl:flex items-center space-x-4 font-poppins text-xs font-semibold"
           >
             {navLinks.map((link, idx) => {
               const isActive = link.id && activeSection === link.id;
@@ -103,7 +102,7 @@ export function Navbar() {
                 <Link
                   key={idx}
                   href={link.href}
-                  className={`transition-colors whitespace-nowrap focus:outline-none rounded-md px-1 py-0.5 ${
+                  className={`transition-colors whitespace-nowrap focus:outline-none rounded-md px-1.5 py-0.5 ${
                     isActive
                       ? "text-[#1B5C63] font-bold border-b-2 border-[#1B5C63]"
                       : isScrolled
@@ -118,27 +117,27 @@ export function Navbar() {
           </nav>
 
           {/* Single Right CTA: Patient Login & Hamburger trigger */}
-          <div className="flex items-center space-x-3 shrink-0">
+          <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
             
             {/* Single CTA: Patient Login Button */}
             <Link
               href="/login"
-              className={`rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 border transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1B5C63] focus:ring-offset-2 ${
+              className={`rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 sm:space-x-2 border transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1B5C63] focus:ring-offset-2 ${
                 isScrolled
                   ? "bg-teal-50/90 border-teal-200 text-[#1B5C63] hover:bg-teal-100 shadow-xs"
                   : "bg-white/10 border-white/30 text-white hover:bg-white/20 shadow-xs"
               }`}
             >
-              <UserCheck className="h-4 w-4 text-teal-400 shrink-0" />
+              <UserCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-400 shrink-0" />
               <span>Patient Login</span>
             </Link>
 
-            {/* Hamburger Button */}
+            {/* Hamburger Button (Triggers drawer on screens < 1536px to guarantee zero overflow) */}
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
               aria-expanded={isMobileOpen}
               aria-label="Toggle Navigation Drawer"
-              className={`xl:hidden p-2 rounded-xl focus:outline-none transition-colors cursor-pointer ${
+              className={`2xl:hidden p-1.5 sm:p-2 rounded-xl focus:outline-none transition-colors cursor-pointer ${
                 isScrolled ? "text-slate-800 hover:bg-slate-100" : "text-white hover:bg-white/10"
               }`}
             >
@@ -152,7 +151,7 @@ export function Navbar() {
 
       {/* Slide-Out Drawer Overlay */}
       {isMobileOpen && (
-        <div className="xl:hidden fixed inset-0 z-50 flex justify-end">
+        <div className="2xl:hidden fixed inset-0 z-50 flex justify-end">
           <div
             className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300"
             onClick={() => setIsMobileOpen(false)}
