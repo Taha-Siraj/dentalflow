@@ -40,16 +40,16 @@ export default function AdminOverviewPage() {
         setStats(adminJson.data.stats);
       } else {
         setStats({
-          totalPatients: 24,
-          totalDoctors: 15,
-          totalReceptionists: 8,
-          totalBranches: 5,
-          todayRevenue: 1850,
-          monthlyRevenue: 48500,
-          appointmentsToday: 12,
-          pendingAppointments: 3,
-          completedTreatments: 9,
-          pendingPayments: 240,
+          totalPatients: 0,
+          totalDoctors: 0,
+          totalReceptionists: 0,
+          totalBranches: 0,
+          todayRevenue: 0,
+          monthlyRevenue: 0,
+          appointmentsToday: 0,
+          pendingAppointments: 0,
+          completedTreatments: 0,
+          pendingPayments: 0,
         });
       }
 

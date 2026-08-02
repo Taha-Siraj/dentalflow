@@ -3,6 +3,7 @@ import Doctor from "../models/doctor.model.js";
 import User from "../models/user.model.js";
 import Appointment from "../models/appointment.model.js";
 import AuditLog from "../models/auditLog.model.js";
+import Invoice from "../models/invoice.model.js";
 import { sendStaffInvitationEmail, sendPasswordResetEmail } from "../utils/email.js";
 
 /**
