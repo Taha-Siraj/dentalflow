@@ -63,14 +63,13 @@ export function HeroMarquee() {
     },
   ];
 
-  // Quadruple items to guarantee infinite seamless marquee loop
   const displayItems = [...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems];
 
   return (
-    <div className="bg-slate-950 border-y border-slate-800 py-4 overflow-hidden relative select-none font-poppins z-20">
+    <div className="bg-white py-4 overflow-hidden relative select-none font-poppins z-20">
       {/* Edge Blur Fades */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
+      <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
       <div className="flex animate-marquee space-x-6 whitespace-nowrap">
         {displayItems.map((item, idx) => {
@@ -78,26 +77,26 @@ export function HeroMarquee() {
           return (
             <div
               key={idx}
-              className="inline-flex items-center space-x-3.5 bg-slate-900/90 border border-slate-800 hover:border-[#1B5C63] px-4 py-2.5 rounded-2xl shadow-md transition-all group shrink-0"
+              className="inline-flex items-center space-x-3.5 bg-slate-50 px-4 py-2.5 rounded-2xl transition-all group shrink-0"
             >
               {/* Image Badge */}
-              <div className="relative h-10 w-10 rounded-xl overflow-hidden shrink-0 border border-slate-700">
+              <div className="relative h-10 w-10 rounded-xl overflow-hidden shrink-0">
                 <img src={item.img} alt={item.title} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300" />
-                <div className="absolute inset-0 bg-[#1B5C63]/20" />
+                <div className="absolute inset-0 bg-[#1B5C63]/10" />
               </div>
 
               {/* Title & Badge */}
               <div className="flex flex-col">
                 <div className="flex items-center space-x-2">
-                  <IconComp className="h-3.5 w-3.5 text-teal-400 shrink-0" />
-                  <span className="font-serif font-bold text-xs text-white group-hover:text-teal-300 transition-colors">
+                  <IconComp className="h-3.5 w-3.5 text-[#1B5C63] shrink-0" />
+                  <span className="font-serif font-bold text-xs text-[#1B5C63] group-hover:text-[#0F766E] transition-colors">
                     {item.title}
                   </span>
-                  <span className="font-mono text-[9px] font-bold text-teal-300 bg-teal-950/80 px-2 py-0.5 rounded-md border border-teal-800">
+                  <span className="font-mono text-[9px] font-bold text-[#1B5C63] bg-teal-50 px-2 py-0.5 rounded-md">
                     {item.badge}
                   </span>
                 </div>
-                <span className="font-poppins text-[10px] text-slate-400">{item.subtitle}</span>
+                <span className="font-poppins text-[10px] text-slate-500">{item.subtitle}</span>
               </div>
             </div>
           );
