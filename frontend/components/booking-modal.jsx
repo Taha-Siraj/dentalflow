@@ -84,7 +84,7 @@ export function BookingModal({ isOpen, onClose }) {
         <div className="p-6 sm:p-8 max-h-[85vh] overflow-y-auto">
           
           <DialogHeader className="pb-4 border-b border-slate-100">
-            <DialogTitle className="font-serif text-2xl font-bold text-slate-900">
+            <DialogTitle className="font-serif text-2xl font-bold text-[#1B5C63]">
               {step === 3 ? "Appointment Confirmation" : "Online Dental Booking"}
             </DialogTitle>
             <DialogDescription className="font-sans text-xs text-slate-500">
@@ -98,7 +98,7 @@ export function BookingModal({ isOpen, onClose }) {
                 <CheckCircle2 className="h-8 w-8" />
               </div>
               <div className="space-y-2">
-                <h3 className="font-serif text-2xl font-bold text-slate-900">Appointment Confirmed!</h3>
+                <h3 className="font-serif text-2xl font-bold text-[#1B5C63]">Appointment Confirmed!</h3>
                 <p className="font-sans text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
                   Your appointment has been synchronized into the Smile Dental Clinic EMR system. A confirmation email and SMS reminder have been sent.
                 </p>
@@ -114,12 +114,12 @@ export function BookingModal({ isOpen, onClose }) {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 pt-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                  <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1.5">
                     Clinic Branch
                   </label>
                   <select
                     {...register("branch")}
-                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all cursor-pointer"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all cursor-pointer"
                   >
                     <option value="Smile Dental Clinic - Toronto Central">Toronto Central</option>
                     <option value="Smile Dental Clinic - Vancouver West">Vancouver West</option>
@@ -130,12 +130,12 @@ export function BookingModal({ isOpen, onClose }) {
                 </div>
 
                 <div>
-                  <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                  <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1.5">
                     Service Specialty
                   </label>
                   <select
                     {...register("service")}
-                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all cursor-pointer"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all cursor-pointer"
                   >
                     <option value="Preventative & General Dentistry">Preventative & General</option>
                     <option value="3D Digital Implant Surgery">3D Implant Surgery</option>
@@ -148,13 +148,13 @@ export function BookingModal({ isOpen, onClose }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                  <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1.5">
                     Patient Name
                   </label>
                   <input
                     {...register("patientName")}
                     placeholder="Full Name"
-                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all"
                   />
                   {errors.patientName && (
                     <span className="font-poppins text-[10px] text-red-600 mt-0.5 block font-bold">
@@ -164,13 +164,13 @@ export function BookingModal({ isOpen, onClose }) {
                 </div>
 
                 <div>
-                  <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                  <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1.5">
                     Email Address
                   </label>
                   <input
                     {...register("email")}
                     placeholder="name@domain.ca"
-                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all"
                   />
                   {errors.email && (
                     <span className="font-poppins text-[10px] text-red-600 mt-0.5 block font-bold">
@@ -180,13 +180,13 @@ export function BookingModal({ isOpen, onClose }) {
                 </div>
 
                 <div>
-                  <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                  <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1.5">
                     Phone Number
                   </label>
                   <input
                     {...register("phone")}
                     placeholder="(416) 000-0000"
-                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all"
                   />
                   {errors.phone && (
                     <span className="font-poppins text-[10px] text-red-600 mt-0.5 block font-bold">
@@ -197,12 +197,12 @@ export function BookingModal({ isOpen, onClose }) {
               </div>
 
               <div>
-                <label className="font-poppins text-xs font-semibold text-slate-700 block mb-1.5">
+                <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1.5">
                   Direct Insurance Provider
                 </label>
                 <select
                   {...register("insurance")}
-                  className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-slate-900 focus:bg-white focus:border-[#0F766E] focus:ring-1 focus:ring-[#0F766E] focus:outline-none transition-all cursor-pointer"
+                  className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all cursor-pointer"
                 >
                   <option value="Sun Life Financial">Sun Life Financial</option>
                   <option value="Manulife">Manulife</option>
