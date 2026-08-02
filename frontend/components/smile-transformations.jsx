@@ -46,10 +46,6 @@ export function SmileTransformations({ onOpenBooking }) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 py-4 sm:py-6">
         {/* Balanced Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-2.5 mb-8 sm:mb-12">
-          <Badge variant="outline" className="border-[#1B5C63]/30 text-[#1B5C63] bg-[#1B5C63]/5 px-3.5 py-1 font-bold text-xs rounded-full inline-flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5 text-[#1B5C63]" />
-            Clinical Smile Transformation
-          </Badge>
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B5C63] tracking-tight">
             Before & After Porcelain Veneers
           </h2>

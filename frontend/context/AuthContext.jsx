@@ -8,43 +8,31 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  // Verify HTTP-Only Cookie Session on mount
   useEffect(() => {
     async function checkAuthSession() {
       try {
-        const savedToken = typeof window !== "undefined" ? localStorage.getItem("dentalflow_token") : null;
-        const savedUser = typeof window !== "undefined" ? localStorage.getItem("dentalflow_user") : null;
-
-        if (savedUser) {
-          try {
-            setUser(JSON.parse(savedUser));
-          } catch (e) {}
-        }
-
         const baseUrl = getApiBaseUrl();
-        // Try verifying HTTP-Only Cookie session via /auth/me
         const res = await fetch(`${baseUrl}/auth/me`, {
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            ...(savedToken ? { Authorization: `Bearer ${savedToken}` } : {}),
-          },
+          headers: { "Content-Type": "application/json" },
         });
 
         if (res.ok) {
           const data = await res.json();
           if (data && data.success && data.user) {
             setUser(data.user);
-            if (typeof window !== "undefined") {
-              localStorage.setItem("dentalflow_user", JSON.stringify(data.user));
-            }
+          } else {
+            setUser(null);
           }
+        } else {
+          setUser(null);
         }
       } catch (err) {
-        console.log("Auth session check:", err.message);
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -53,6 +41,9 @@ export function AuthProvider({ children }) {
     checkAuthSession();
   }, []);
 
+  /**
+   * Real Production Login against MongoDB Atlas
+   */
   const login = async (email, password) => {
     const baseUrl = getApiBaseUrl();
     try {
@@ -64,44 +55,31 @@ export function AuthProvider({ children }) {
       });
 
       const data = await res.json();
+
       if (!res.ok || !data.success) {
-        throw new Error(data.message || "Invalid credentials");
+        if (data.requiresOtp) {
+          return { success: false, requiresOtp: true, email: data.email, message: data.message };
+        }
+        return { success: false, message: data.message || "Invalid email address or password." };
       }
 
-      setToken(data.token);
       setUser(data.user);
 
-      if (typeof window !== "undefined") {
-        localStorage.setItem("dentalflow_token", data.token);
-        localStorage.setItem("dentalflow_user", JSON.stringify(data.user));
-      }
-
+      // Redirect strictly based on Database-Assigned Role
       if (data.user.role === "admin") router.push("/dashboard/admin");
       else if (data.user.role === "doctor") router.push("/dashboard/doctor");
       else if (data.user.role === "receptionist") router.push("/dashboard/reception");
       else router.push("/dashboard/patient");
 
-      return { success: true };
+      return { success: true, user: data.user };
     } catch (err) {
-      console.warn("API Login Fallback Mode:", err.message);
-      
-      // Standalone Fallback for Demo Logins
-      const roleGuess = email.includes("admin") ? "admin" : email.includes("doctor") ? "doctor" : email.includes("recep") ? "receptionist" : "patient";
-      const demoUser = { id: `usr_${Date.now()}`, name: email.split("@")[0], email, role: roleGuess, phone: "" };
-      setUser(demoUser);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("dentalflow_user", JSON.stringify(demoUser));
-      }
-
-      if (demoUser.role === "admin") router.push("/dashboard/admin");
-      else if (demoUser.role === "doctor") router.push("/dashboard/doctor");
-      else if (demoUser.role === "receptionist") router.push("/dashboard/reception");
-      else router.push("/dashboard/patient");
-
-      return { success: true };
+      return { success: false, message: err.message || "Server connection error" };
     }
   };
 
+  /**
+   * Real Patient Registration (Sends Real OTP Email)
+   */
   const register = async (userData) => {
     const baseUrl = getApiBaseUrl();
     try {
@@ -114,30 +92,68 @@ export function AuthProvider({ children }) {
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.message || "Registration failed");
+        return { success: false, message: data.message || "Registration failed" };
       }
 
-      setToken(data.token);
-      setUser(data.user);
-
-      if (typeof window !== "undefined") {
-        localStorage.setItem("dentalflow_token", data.token);
-        localStorage.setItem("dentalflow_user", JSON.stringify(data.user));
-      }
-
-      router.push("/dashboard/patient");
-      return { success: true };
+      return { success: true, requiresOtp: true, email: data.email, message: data.message };
     } catch (err) {
-      const demoUser = { id: `usr_${Date.now()}`, name: userData.name || "Patient", email: userData.email, role: "patient", phone: userData.phone || "" };
-      setUser(demoUser);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("dentalflow_user", JSON.stringify(demoUser));
-      }
-      router.push("/dashboard/patient");
-      return { success: true };
+      return { success: false, message: err.message || "Server connection error" };
     }
   };
 
+  /**
+   * Real Email OTP Verification
+   */
+  const verifyOtp = async (email, otp) => {
+    const baseUrl = getApiBaseUrl();
+    try {
+      const res = await fetch(`${baseUrl}/auth/verify-otp`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, message: data.message || "Invalid verification code" };
+      }
+
+      setUser(data.user);
+
+      if (data.user.role === "admin") router.push("/dashboard/admin");
+      else if (data.user.role === "doctor") router.push("/dashboard/doctor");
+      else if (data.user.role === "receptionist") router.push("/dashboard/reception");
+      else router.push("/dashboard/patient");
+
+      return { success: true, user: data.user };
+    } catch (err) {
+      return { success: false, message: err.message || "Server connection error" };
+    }
+  };
+
+  /**
+   * Resend OTP Code
+   */
+  const resendOtp = async (email) => {
+    const baseUrl = getApiBaseUrl();
+    try {
+      const res = await fetch(`${baseUrl}/auth/resend-otp`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  };
+
+  /**
+   * Real Logout (Clears HTTP-Only Cookie)
+   */
   const logout = async () => {
     const baseUrl = getApiBaseUrl();
     try {
@@ -147,17 +163,12 @@ export function AuthProvider({ children }) {
       });
     } catch (e) {}
 
-    setToken(null);
     setUser(null);
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("dentalflow_token");
-      localStorage.removeItem("dentalflow_user");
-    }
     router.push("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, verifyOtp, resendOtp, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -168,10 +179,11 @@ export function useAuth() {
   if (!context) {
     return {
       user: null,
-      token: null,
       loading: true,
       login: async () => ({ success: false, message: "AuthProvider not mounted" }),
       register: async () => ({ success: false, message: "AuthProvider not mounted" }),
+      verifyOtp: async () => ({ success: false, message: "AuthProvider not mounted" }),
+      resendOtp: async () => ({ success: false, message: "AuthProvider not mounted" }),
       logout: () => {},
     };
   }

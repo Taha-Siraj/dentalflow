@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState(0);
@@ -15,11 +14,11 @@ export function FAQ() {
     },
     {
       question: "How does centralized EMR record syncing work across branches?",
-      answer: "When you register at any Smile Dental Clinic branch, your electronic medical record (EMR), high-resolution 3D CBCT scans, dental history, and treatment plans are stored in an encrypted Canadian cloud server. If you visit our Toronto, Vancouver, Calgary, Ottawa, or Mississauga clinic, any dentist can access your full record seamlessly.",
+      answer: "When you register at any DentalFlow branch, your electronic medical record (EMR), high-resolution 3D CBCT scans, dental history, and treatment plans are stored in an encrypted Canadian cloud server. If you visit our Toronto, Vancouver, Calgary, Ottawa, Mississauga, or Montreal clinic, any dentist can access your full record seamlessly.",
     },
     {
       question: "Do you follow provincial dental fee guides?",
-      answer: "Yes. All treatments adhere strictly to annual provincial dental association fee guides (including ODA in Ontario, BCDA in British Columbia, and ADA in Alberta). We provide upfront cost estimates with zero hidden clinic surcharges.",
+      answer: "Yes. All treatments adhere strictly to annual provincial dental association fee guides (including ODA in Ontario, BCDA in British Columbia, ADA in Alberta, and ACDQ in Quebec). We provide upfront cost estimates with zero hidden clinic surcharges.",
     },
     {
       question: "What sedation options are available for anxious patients?",
@@ -32,15 +31,15 @@ export function FAQ() {
   ];
 
   return (
-    <section id="faq" className="relative bg-slate-50 py-16 sm:py-20 overflow-hidden">
+    <section id="faq" className="bg-slate-50 py-20 border-b border-slate-200">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         
-        {/* Balanced Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B5C63] tracking-tight">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900">
             Frequently Asked Questions
           </h2>
-          <p className="font-poppins text-slate-600 text-sm sm:text-base">
+          <p className="font-sans text-slate-600 text-base">
             Everything you need to know about our practice, electronic billing, and appointment procedures.
           </p>
         </div>
@@ -52,17 +51,17 @@ export function FAQ() {
             return (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden transition-all duration-200"
+                className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden transition-all"
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? -1 : idx)}
-                  className="w-full p-6 flex items-center justify-between text-left focus:outline-none cursor-pointer group"
+                  className="w-full p-6 flex items-center justify-between text-left focus:outline-none group cursor-pointer"
                 >
-                  <span className="font-serif text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#1B5C63] transition-colors pr-4">
+                  <span className="font-serif text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors pr-4">
                     {faq.question}
                   </span>
 
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-50 text-[#1B5C63] flex-shrink-0">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-50 text-[#0F766E] flex-shrink-0">
                     {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                   </div>
                 </button>
@@ -73,10 +72,10 @@ export function FAQ() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <div className="p-6 pt-0 font-poppins text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                      <div className="p-6 pt-0 font-sans text-sm text-slate-600 leading-relaxed border-t border-slate-100">
                         {faq.answer}
                       </div>
                     </motion.div>
@@ -88,8 +87,6 @@ export function FAQ() {
         </div>
 
       </div>
-
-      <SectionWaveBottom fill="#0F172A" className="absolute bottom-0 left-0 right-0 z-10" />
     </section>
   );
 }

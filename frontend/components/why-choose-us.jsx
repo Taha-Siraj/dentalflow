@@ -1,41 +1,41 @@
 "use client";
 
 import React from "react";
-import { Database, CreditCard, Award, Cpu, Smile, FileText } from "lucide-react";
+import { Calendar, ShieldAlert, FileCheck, Clock, Stethoscope, Headphones } from "lucide-react";
 import { motion } from "framer-motion";
 import { SectionWaveBottom } from "@/components/ui/section-wave";
 
 export function WhyChooseUs() {
   const pillars = [
     {
-      icon: Database,
-      title: "100% Centralized EMR Records",
-      description: "Visit any Smile Dental Clinic branch in Toronto, Vancouver, Calgary, Ottawa, or Mississauga. Your X-rays, medical history, and treatment plans sync instantly.",
+      icon: Calendar,
+      title: "Cross-Branch Scheduling",
+      description: "Book and modify appointments seamlessly across all 6 metro branch clinics with real-time dentist availability.",
     },
     {
-      icon: CreditCard,
-      title: "Direct Electronic Insurance Billing",
-      description: "We submit claims directly to Sun Life, Manulife, Canada Life, Desjardins, Blue Cross, and provincial dental plans to eliminate out-of-pocket stress.",
+      icon: ShieldAlert,
+      title: "Encrypted EMR Cloud Sync",
+      description: "HIPAA and PIPEDA compliant cloud architecture ensuring your 3D CBCT scans and medical history are instantly accessible at any clinic.",
     },
     {
-      icon: Award,
-      title: "Board-Certified Canadian Dentists",
-      description: "Our dental team consists of DDS and FRCD(C) licensed specialists with over 15+ years of clinical experience in Canadian healthcare standards.",
+      icon: FileCheck,
+      title: "Fee Guide Transparency",
+      description: "Strict adherence to annual provincial fee guides (ODA, BCDA, ADA, ACDQ) with itemized cost estimates before treatment begins.",
     },
     {
-      icon: Cpu,
-      title: "3D Low-Radiation Digital Tech",
-      description: "We utilize 3D CBCT imaging, iTero® intraoral digital scanners, and painless digital impression technology for pinpoint diagnostic precision.",
+      icon: Clock,
+      title: "Emergency Priority Queue",
+      description: "Dedicated daily emergency slots reserved at every location for acute toothaches, chipped teeth, and urgent clinical care.",
     },
     {
-      icon: Smile,
-      title: "Gentle Care & Sedation Options",
-      description: "From anxious patients to kids, we offer nitrous oxide, oral sedation, and gentle painless numbing techniques to guarantee total patient comfort.",
+      icon: Stethoscope,
+      title: "Multi-Specialty Clinical Hub",
+      description: "In-house specialists spanning orthodontics, implantology, endodontics, and pediatric care under one unified network.",
     },
     {
-      icon: FileText,
-      title: "Provincial Fee Guide Compliance",
-      description: "Complete fee transparency adhering to provincial dental association fee guides (ODA, BCDA, ADA) with zero hidden clinic charges.",
+      icon: Headphones,
+      title: "24/7 Patient Concierge",
+      description: "Direct assistance with electronic insurance pre-authorizations, flexible payment arrangements, and post-op care support.",
     },
   ];
 

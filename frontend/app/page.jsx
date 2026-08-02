@@ -81,9 +81,6 @@ export default function Home() {
         {/* 11. Contact */}
         <ContactSection />
 
-        {/* 🌊 Wave Transition 4: Contact -> Final CTA */}
-        <SectionDivider color="#0F172A" />
-
         {/* 12. Final CTA Banner */}
         <CTABanner onOpenBooking={handleOpenBooking} />
       </main>

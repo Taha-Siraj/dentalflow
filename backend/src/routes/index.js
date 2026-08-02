@@ -1,10 +1,24 @@
 import { Router } from "express";
-import { register, login, logout, getProfile, forgotPassword, resetPassword } from "../controllers/auth.controller.js";
+import {
+  register,
+  verifyOtp,
+  resendOtp,
+  login,
+  logout,
+  getProfile,
+  forgotPassword,
+  verifyResetOtp,
+  resetPassword,
+  createStaffAccount,
+} from "../controllers/auth.controller.js";
 import { createAppointment, getAppointments, updateAppointmentStatus } from "../controllers/appointment.controller.js";
 import { getBranches, createBranch } from "../controllers/branch.controller.js";
 import { getDoctors, createDoctor } from "../controllers/doctor.controller.js";
 import { getServices } from "../controllers/service.controller.js";
 import { getPrescriptions, createPrescription, getInvoices, createInvoice, getAdminAnalytics } from "../controllers/emr.controller.js";
+import { handleAIChat } from "../controllers/ai.controller.js";
+import { sendContactEmail } from "../controllers/contact.controller.js";
+import { createCheckoutSession, verifyPaymentSession, handleStripeWebhook, getPaymentHistory } from "../controllers/payment.controller.js";
 import {
   getPatientDashboard,
   getPatientProfile,
@@ -60,13 +74,34 @@ router.get("/health", (req, res) => {
   res.json({ status: "healthy", service: "DentalFlow API Server", timestamp: new Date() });
 });
 
+// Production AI Dental Assistant Endpoint
+router.post("/ai/chat", handleAIChat);
+
+// Production Nodemailer Contact Email Endpoint
+router.post("/contact", sendContactEmail);
+
+// Real Stripe Payment Endpoints
+router.post("/payments/create-checkout-session", createCheckoutSession);
+router.get("/payments/verify-session", verifyPaymentSession);
+router.post("/payments/webhook", handleStripeWebhook);
+router.get("/payments/history", getPaymentHistory);
+
+// Legacy/Compatibility Billing Endpoints
+router.post("/billing/create-checkout-session", createCheckoutSession);
+router.post("/billing/confirm-payment", verifyPaymentSession);
+router.post("/billing/webhook", handleStripeWebhook);
+
 // Authentication Routes
 router.post("/auth/register", register);
+router.post("/auth/verify-otp", verifyOtp);
+router.post("/auth/resend-otp", resendOtp);
 router.post("/auth/login", login);
 router.post("/auth/logout", logout);
 router.get("/auth/me", authenticateJWT, getProfile);
 router.post("/auth/forgot-password", forgotPassword);
+router.post("/auth/verify-reset-otp", verifyResetOtp);
 router.post("/auth/reset-password", resetPassword);
+router.post("/auth/create-staff", authenticateJWT, authorizeRoles("admin"), createStaffAccount);
 
 // Appointment Routes
 router.post("/appointments", createAppointment);

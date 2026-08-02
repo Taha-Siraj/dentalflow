@@ -74,9 +74,13 @@ export function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-normal gap-4">
           <p suppressHydrationWarning>© {new Date().getFullYear()} Smile Dental Clinic Network. All rights reserved.</p>
           <div className="flex space-x-6 text-xs text-slate-400">
-            <span>Privacy Policy</span>
-            <span>Terms of Service</span>
-            <span>HIPAA/PIPEDA Compliance</span>
+            <Link href="/privacy" className="hover:text-teal-300 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-teal-300 transition-colors">
+              Terms of Service
+            </Link>
+            <span className="text-slate-500 font-mono">HIPAA/PIPEDA Compliant</span>
           </div>
         </div>
       </div>

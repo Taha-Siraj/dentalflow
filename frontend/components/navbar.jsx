@@ -2,44 +2,54 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, UserCheck, ChevronRight } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 export function Navbar() {
+  const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
-  // Handle scroll header background & active section highlight (ScrollSpy)
+  // Handle scroll header background & active section highlight with 60fps GPU throttling
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          setIsScrolled(scrollY > 20);
 
-      // ScrollSpy logic for section highlighting
-      const sections = ["services", "transformations", "doctors", "branches", "testimonials", "faq"];
-      const scrollPosition = window.scrollY + 100;
+          // ScrollSpy logic for section highlighting
+          const sections = ["about", "services", "transformations", "doctors", "branches", "testimonials", "faq", "contact"];
+          const scrollPosition = scrollY + 120;
 
-      for (const section of sections) {
-        const el = document.getElementById(section);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section);
-            return;
+          for (const section of sections) {
+            const el = document.getElementById(section);
+            if (el) {
+              const top = el.offsetTop;
+              const height = el.offsetHeight;
+              if (scrollPosition >= top && scrollPosition < top + height) {
+                setActiveSection(section);
+                ticking = false;
+                return;
+              }
+            }
           }
-        }
-      }
-      if (window.scrollY < 300) {
-        setActiveSection("");
+
+          if (scrollY < 300) {
+            setActiveSection("");
+          }
+          ticking = false;
+        });
+
+        ticking = true;
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -65,7 +75,7 @@ export function Navbar() {
   }, [isMobileOpen]);
 
   const navLinks = [
-    { name: "Home", href: "/" },
+    { name: "Home", href: "/", id: "home" },
     { name: "About", href: "/#about", id: "about" },
     { name: "Services", href: "/#services", id: "services" },
     { name: "Transformations", href: "/#transformations", id: "transformations" },
@@ -92,13 +102,22 @@ export function Navbar() {
             <Logo isWhiteText={!isScrolled} />
           </div>
 
-          {/* Desktop Navigation Links (Visible on 1280px+ / xl with zero overflow) */}
+          {/* Desktop Navigation Links */}
           <nav
             aria-label="Public Navigation Menu"
             className="hidden xl:flex items-center space-x-3.5 xl:space-x-5 2xl:space-x-6 font-poppins text-xs font-semibold"
           >
             {navLinks.map((link, idx) => {
-              const isActive = link.id && activeSection === link.id;
+              const isSectionActive = link.id && activeSection === link.id;
+              const isPathActive =
+                (pathname === "/contact" && link.id === "contact") ||
+                (pathname === "/about" && link.id === "about") ||
+                (pathname === "/branches" && link.id === "branches") ||
+                (pathname === "/doctors" && link.id === "doctors") ||
+                (pathname === "/services" && link.id === "services");
+
+              const isActive = isSectionActive || isPathActive;
+
               return (
                 <Link
                   key={idx}
@@ -119,8 +138,6 @@ export function Navbar() {
 
           {/* Single Right CTA: Portal Login & Hamburger trigger */}
           <div className="flex items-center space-x-3 shrink-0">
-            
-            {/* Single CTA: Portal Login Button */}
             <Link
               href="/login"
               className={`rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 border transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1B5C63] focus:ring-offset-2 ${
@@ -133,7 +150,6 @@ export function Navbar() {
               <span>Portal Login</span>
             </Link>
 
-            {/* Hamburger Button (Visible on screens < 1280px / xl) */}
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
               aria-expanded={isMobileOpen}
@@ -144,22 +160,19 @@ export function Navbar() {
             >
               {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
-
           </div>
 
         </div>
       </div>
 
-      {/* Slide-Out Drawer Overlay (For screens < 1280px) */}
+      {/* Slide-Out Drawer Overlay */}
       {isMobileOpen && (
         <div className="xl:hidden fixed inset-0 z-50 flex justify-end">
-          {/* Backdrop Blur Overlay */}
           <div
             className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300"
             onClick={() => setIsMobileOpen(false)}
           />
 
-          {/* Drawer Body */}
           <div className="relative w-full max-w-sm bg-white text-slate-900 h-full shadow-2xl flex flex-col justify-between p-6 z-10 animate-in slide-in-from-right duration-300 overflow-y-auto font-poppins">
             <div className="space-y-6">
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -173,7 +186,6 @@ export function Navbar() {
                 </button>
               </div>
 
-              {/* Navigation Links */}
               <nav className="space-y-1" aria-label="Mobile Navigation Menu">
                 {navLinks.map((link, idx) => (
                   <Link
@@ -189,7 +201,6 @@ export function Navbar() {
               </nav>
             </div>
 
-            {/* Mobile Drawer Single CTA Button */}
             <div className="pt-6 border-t border-slate-100">
               <Link
                 href="/login"

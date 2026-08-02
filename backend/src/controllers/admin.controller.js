@@ -2,6 +2,7 @@ import Branch from "../models/branch.model.js";
 import Doctor from "../models/doctor.model.js";
 import User from "../models/user.model.js";
 import Appointment from "../models/appointment.model.js";
+import { sendStaffInvitationEmail } from "../utils/email.js";
 
 // GET /api/v1/admin/dashboard
 export const getAdminExecutiveDashboard = async (req, res) => {
@@ -87,7 +88,27 @@ export const getAdminDoctors = async (req, res) => {
 export const createAdminDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.create(req.body);
-    res.json({ success: true, message: "Doctor created successfully", doctor });
+    
+    // Also create Doctor User login account if email provided
+    if (req.body.email) {
+      const lowercaseEmail = req.body.email.toLowerCase().trim();
+      const userExists = await User.findOne({ email: lowercaseEmail });
+      if (!userExists) {
+        const tempPassword = `Doctor${Math.floor(100000 + Math.random() * 900000)}`;
+        await User.create({
+          name: req.body.name,
+          email: lowercaseEmail,
+          password: tempPassword,
+          phone: req.body.phone || "",
+          role: "doctor",
+          department: req.body.specialization || "",
+          emailVerified: true,
+        });
+        await sendStaffInvitationEmail(lowercaseEmail, req.body.name, "doctor", tempPassword);
+      }
+    }
+
+    res.json({ success: true, message: "Doctor created and login account provisioned successfully", doctor });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -125,8 +146,15 @@ export const getAdminReceptionists = async (req, res) => {
 
 export const createAdminReceptionist = async (req, res) => {
   try {
-    const user = await User.create({ ...req.body, role: "receptionist" });
-    res.json({ success: true, message: "Receptionist staff created", user });
+    const tempPassword = `Recep${Math.floor(100000 + Math.random() * 900000)}`;
+    const user = await User.create({
+      ...req.body,
+      password: req.body.password || tempPassword,
+      role: "receptionist",
+      emailVerified: true,
+    });
+    await sendStaffInvitationEmail(user.email, user.name, "receptionist", tempPassword);
+    res.json({ success: true, message: "Receptionist staff created and invitation sent", user });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

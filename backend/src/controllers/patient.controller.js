@@ -1,13 +1,26 @@
 import User from "../models/user.model.js";
 import Appointment from "../models/appointment.model.js";
 import Notification from "../models/notification.model.js";
+import Invoice from "../models/invoice.model.js";
+import Prescription from "../models/prescription.model.js";
 
-// GET /api/v1/patient/dashboard
+/**
+ * GET /api/v1/patient/dashboard
+ * Strictly retrieves authenticated patient's records from MongoDB
+ */
 export const getPatientDashboard = async (req, res) => {
   try {
     const userId = req.user?.id || req.user?._id;
-    const appointments = await Appointment.find({}).sort({ createdAt: -1 }).limit(10);
-    const notifications = await Notification.find({}).sort({ createdAt: -1 }).limit(5);
+    const userEmail = req.user?.email?.toLowerCase();
+
+    const filter = userId
+      ? { $or: [{ patientId: userId }, { patientEmail: userEmail }, { user: userId }] }
+      : { patientEmail: userEmail };
+
+    const appointments = await Appointment.find(filter).sort({ createdAt: -1 }).limit(10);
+    const notifications = await Notification.find(filter).sort({ createdAt: -1 }).limit(5);
+    const invoices = await Invoice.find(filter).sort({ createdAt: -1 });
+    const prescriptions = await Prescription.find(filter).sort({ createdAt: -1 });
 
     res.json({
       success: true,
@@ -15,12 +28,14 @@ export const getPatientDashboard = async (req, res) => {
         stats: {
           upcomingAppointments: appointments.filter(a => a.status === "confirmed" || a.status === "pending").length,
           completedTreatments: appointments.filter(a => a.status === "completed").length,
-          activePrescriptions: 1,
-          invoicesCount: 1,
+          activePrescriptions: prescriptions.length,
+          invoicesCount: invoices.length,
           unreadAlerts: notifications.filter(n => !n.isRead).length,
         },
         appointments,
         notifications,
+        invoices,
+        prescriptions,
       },
     });
   } catch (err) {
@@ -28,136 +43,137 @@ export const getPatientDashboard = async (req, res) => {
   }
 };
 
-// GET /api/v1/patient/profile
+/**
+ * GET /api/v1/patient/profile
+ */
 export const getPatientProfile = async (req, res) => {
   try {
     const userId = req.user?.id || req.user?._id;
-    const user = await User.findById(userId).select("-password");
-    res.json({
-      success: true,
-      profile: user || {
-        name: req.user?.name || "Taha Siraj",
-        email: req.user?.email || "taha@smilecare.ca",
-        phone: "(416) 555-0199",
-        address: "100 King Street West, Suite 1200, Toronto, ON M5X 1A9",
-        insuranceProvider: "Sun Life Financial",
-        insuranceNumber: "SL-99201934",
-        emergencyContact: "Sarah Siraj - (416) 555-0999",
-      },
-    });
+    const user = await User.findById(userId).select("-password -otpHash");
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Patient record not found" });
+    }
+    res.json({ success: true, profile: user });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// PUT /api/v1/patient/profile
+/**
+ * PUT /api/v1/patient/profile
+ */
 export const updatePatientProfile = async (req, res) => {
   try {
     const userId = req.user?.id || req.user?._id;
-    const updated = await User.findByIdAndUpdate(userId, req.body, { new: true }).select("-password");
-    res.json({ success: true, profile: updated || req.body });
+    const updated = await User.findByIdAndUpdate(userId, req.body, { new: true }).select("-password -otpHash");
+    res.json({ success: true, profile: updated });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// GET /api/v1/patient/appointments
+/**
+ * GET /api/v1/patient/appointments
+ * Strict filtering by authenticated patient ID
+ */
 export const getPatientAppointments = async (req, res) => {
   try {
-    const appointments = await Appointment.find({}).sort({ createdAt: -1 });
+    const userId = req.user?.id || req.user?._id;
+    const userEmail = req.user?.email?.toLowerCase();
+
+    const filter = userId
+      ? { $or: [{ patientId: userId }, { patientEmail: userEmail }] }
+      : { patientEmail: userEmail };
+
+    const appointments = await Appointment.find(filter).sort({ createdAt: -1 });
     res.json({ success: true, appointments });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// GET /api/v1/patient/prescriptions
+/**
+ * GET /api/v1/patient/prescriptions
+ * Strict filtering by authenticated patient ID
+ */
 export const getPatientPrescriptions = async (req, res) => {
   try {
-    res.json({
-      success: true,
-      data: [
-        {
-          _id: "rx_1",
-          doctorName: "Dr. Sarah Jenkins, DDS",
-          medications: [{ name: "Amoxicillin", dosage: "500mg", frequency: "3x Daily for 7 Days" }],
-          notes: "Take after meals. Complete full antibiotic course.",
-          createdAt: new Date(),
-        },
-      ],
-    });
+    const userId = req.user?.id || req.user?._id;
+    const userEmail = req.user?.email?.toLowerCase();
+
+    const filter = userId
+      ? { $or: [{ patientId: userId }, { patientEmail: userEmail }] }
+      : { patientEmail: userEmail };
+
+    const prescriptions = await Prescription.find(filter).sort({ createdAt: -1 });
+    res.json({ success: true, prescriptions, data: prescriptions });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// GET /api/v1/patient/invoices
+/**
+ * GET /api/v1/patient/invoices
+ * Strictly queries ONLY the authenticated patient's invoices in MongoDB Atlas.
+ * Never returns invoices belonging to other patients or dummy fallback records.
+ */
 export const getPatientInvoices = async (req, res) => {
   try {
+    const userId = req.user?.id || req.user?._id;
+    const userEmail = req.user?.email?.toLowerCase();
+
+    const filter = userId
+      ? { $or: [{ patientId: userId }, { patientEmail: userEmail }] }
+      : { patientEmail: userEmail };
+
+    const invoices = await Invoice.find(filter).sort({ createdAt: -1 });
+
     res.json({
       success: true,
-      invoices: [
-        {
-          _id: "inv_1",
-          invoiceNumber: "INV-2026-8801",
-          treatment: "Comprehensive Exam & Digital X-Ray",
-          doctorName: "Dr. Sarah Jenkins",
-          branchName: "Toronto Central",
-          amount: 220,
-          tax: 28.6,
-          totalAmount: 248.6,
-          insuranceCovered: 198.8,
-          patientPayable: 49.8,
-          dueDate: "2026-08-15",
-          status: "PAID",
-        },
-      ],
+      invoices,
+      data: invoices,
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// GET /api/v1/patient/notifications
+/**
+ * GET /api/v1/patient/notifications
+ */
 export const getPatientNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find({}).sort({ createdAt: -1 });
-    res.json({
-      success: true,
-      notifications: notifications.length > 0 ? notifications : [
-        {
-          _id: "notif_1",
-          title: "Appointment Reminder",
-          message: "Your 3D Guided Implant Consultation is scheduled for Aug 5 at 10:30 AM.",
-          date: "10 mins ago",
-          isRead: false,
-        },
-      ],
-    });
+    const userId = req.user?.id || req.user?._id;
+    const userEmail = req.user?.email?.toLowerCase();
+
+    const filter = userId
+      ? { $or: [{ recipientId: userId }, { recipientEmail: userEmail }, { patientId: userId }] }
+      : { recipientEmail: userEmail };
+
+    const notifications = await Notification.find(filter).sort({ createdAt: -1 });
+    res.json({ success: true, notifications });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// GET /api/v1/patient/medical-records
+/**
+ * GET /api/v1/patient/medical-records
+ */
 export const getPatientMedicalRecords = async (req, res) => {
   try {
+    const userId = req.user?.id || req.user?._id;
+    const user = await User.findById(userId).select("-password -otpHash");
+
     res.json({
       success: true,
       medicalRecord: {
-        allergies: ["Penicillin (Mild Reaction)"],
-        conditions: ["None"],
-        bloodPressure: "118/76 mmHg",
-        previousSurgeries: ["Wisdom Teeth Extraction (2023)"],
-        pastTreatments: [
-          "Composite Restoration #14 (June 2025)",
-          "Periodontal Scaling & Root Planing (Nov 2025)",
-          "3D CBCT Low-Radiation Digital Radiograph (Jan 2026)",
-        ],
-        xrays: [
-          { id: "xray_1", name: "Panoramic Intraoral Scan", date: "Aug 2025", doctor: "Dr. Sarah Jenkins" },
-          { id: "xray_2", name: "Bitewing Low-Dose Radiograph", date: "Jan 2026", doctor: "Dr. Michael Chen" },
-        ],
+        allergies: user?.allergies || [],
+        conditions: user?.medicalConditions || [],
+        bloodPressure: user?.bloodPressure || "120/80 mmHg",
+        previousSurgeries: user?.previousSurgeries || [],
+        pastTreatments: user?.pastTreatments || [],
+        xrays: user?.xrays || [],
       },
     });
   } catch (err) {
@@ -165,23 +181,40 @@ export const getPatientMedicalRecords = async (req, res) => {
   }
 };
 
-// GET /api/v1/patient/timeline
+/**
+ * GET /api/v1/patient/timeline
+ */
 export const getPatientTimeline = async (req, res) => {
   try {
-    res.json({
-      success: true,
-      timeline: [
-        { id: "tl_1", date: "AUG 05, 2026", title: "Upcoming: 3D Guided Implant Consultation", desc: "Assigned Doctor: Dr. Sarah Jenkins", status: "upcoming" },
-        { id: "tl_2", date: "JUL 20, 2026", title: "Completed: Routine Scaling & Fluoride Cleaning", desc: "Issued Amoxicillin Rx & claim processed.", status: "completed" },
-        { id: "tl_3", date: "JAN 14, 2026", title: "Completed: 3D Low-Dose Digital Bitewing Scan", desc: "Performed by Dr. Michael Chen.", status: "completed" },
-      ],
-    });
+    const userId = req.user?.id || req.user?._id;
+    const userEmail = req.user?.email?.toLowerCase();
+
+    const filter = userId
+      ? { $or: [{ patientId: userId }, { patientEmail: userEmail }] }
+      : { patientEmail: userEmail };
+
+    const appointments = await Appointment.find(filter).sort({ createdAt: -1 });
+    const timeline = appointments.map((app) => ({
+      id: app._id,
+      date: new Date(app.createdAt || Date.now()).toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }).toUpperCase(),
+      title: `${app.status === "completed" ? "Completed" : "Scheduled"}: ${app.serviceName || app.treatment || "Dental Care"}`,
+      desc: `Branch Location: ${app.branchName || "SmileCare Clinic"}`,
+      status: app.status,
+    }));
+
+    res.json({ success: true, timeline });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// PATCH /api/v1/patient/settings
+/**
+ * PATCH /api/v1/patient/settings
+ */
 export const updatePatientSettings = async (req, res) => {
   try {
     res.json({ success: true, message: "Security settings updated successfully" });

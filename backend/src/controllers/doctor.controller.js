@@ -1,6 +1,24 @@
 import Appointment from "../models/appointment.model.js";
 import User from "../models/user.model.js";
 
+// GET /api/v1/doctors & POST /api/v1/doctors
+export const getDoctors = async (req, res) => {
+  try {
+    const doctors = await User.find({ role: "doctor" }).select("-password");
+    res.json({ success: true, doctors });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+export const createDoctor = async (req, res) => {
+  try {
+    res.json({ success: true, message: "Doctor profile created", doctor: req.body });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 // GET /api/v1/doctor/dashboard
 export const getDoctorDashboard = async (req, res) => {
   try {

@@ -47,16 +47,25 @@ export function Locations({ onOpenBooking }) {
       hours: "Mon-Sun: 8:00 AM - 8:00 PM",
       image: "https://images.unsplash.com/photo-1504813184591-01572f98c85f?auto=format&fit=crop&w=600&q=80",
     },
+    {
+      city: "Montreal Downtown",
+      name: "Smile Dental Clinic - Montreal Golden Square Mile",
+      address: "1250 René-Lévesque Blvd W, Suite 400, Montreal, QC H3B 4W8",
+      phone: "(514) 555-0166",
+      hours: "Mon-Fri: 8:00 AM - 7:00 PM",
+      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&q=80",
+    },
   ];
 
   return (
-    <section id="locations" className="scroll-mt-20 relative bg-slate-50 py-16 sm:py-20 overflow-hidden">
+    <section id="branches" className="scroll-mt-20 relative bg-slate-50 py-16 sm:py-20 overflow-hidden">
+      <div id="locations" className="scroll-mt-20" />
       <div className="mx-auto max-w-[1440px] px-6 sm:px-8 lg:px-10">
         
         {/* Balanced Consistent Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B5C63] tracking-tight">
-            5 Centralized Branch Locations
+            6 Centralized Branch Locations
           </h2>
           <p className="font-poppins text-slate-600 text-sm sm:text-base leading-relaxed">
             Your medical record, 3D scans, and treatment plan are instantly accessible at any Smile Dental Clinic.
@@ -101,7 +110,7 @@ export function Locations({ onOpenBooking }) {
                     {branch.name}
                   </h3>
 
-                  <div className="space-y-2 text-xs text-slate-600 font-poppins">
+                  <div className="space-y-2 text-xs text-[#475569] font-poppins font-medium">
                     <p className="flex items-start space-x-2">
                       <MapPin className="h-4 w-4 text-[#1B5C63] flex-shrink-0 mt-0.5" />
                       <span>{branch.address}</span>
