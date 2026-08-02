@@ -189,6 +189,7 @@ export async function resendOtp(req, res, next) {
   }
 }
 
+
 /**
  * POST /api/v1/auth/login (Production Database Authentication)
  */
