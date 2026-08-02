@@ -49,6 +49,16 @@ import {
 } from "../controllers/doctor.controller.js";
 import {
   getAdminExecutiveDashboard,
+  getAdminUsers,
+  getAdminUserById,
+  createAdminUser,
+  updateAdminUser,
+  deleteAdminUser,
+  restoreAdminUser,
+  updateUserRole,
+  updateUserStatus,
+  updateUserBranch,
+  resetUserPassword,
   getAdminBranches,
   createAdminBranch,
   updateAdminBranch,
@@ -101,7 +111,7 @@ router.get("/auth/me", authenticateJWT, getProfile);
 router.post("/auth/forgot-password", forgotPassword);
 router.post("/auth/verify-reset-otp", verifyResetOtp);
 router.post("/auth/reset-password", resetPassword);
-router.post("/auth/create-staff", authenticateJWT, authorizeRoles("admin"), createStaffAccount);
+router.post("/auth/create-staff", authenticateJWT, authorizeRoles("admin", "superadmin"), createStaffAccount);
 
 // Appointment Routes
 router.post("/appointments", createAppointment);
@@ -127,54 +137,72 @@ router.get("/invoices", getInvoices);
 router.post("/invoices", createInvoice);
 
 // Patient API Routes
-router.get("/patient/dashboard", getPatientDashboard);
-router.get("/patient/profile", getPatientProfile);
-router.put("/patient/profile", updatePatientProfile);
-router.get("/patient/appointments", getPatientAppointments);
-router.get("/patient/prescriptions", getPatientPrescriptions);
-router.get("/patient/invoices", getPatientInvoices);
-router.get("/patient/notifications", getPatientNotifications);
-router.get("/patient/medical-records", getPatientMedicalRecords);
-router.get("/patient/timeline", getPatientTimeline);
-router.patch("/patient/settings", updatePatientSettings);
+router.get("/patient/dashboard", authenticateJWT, getPatientDashboard);
+router.get("/patient/profile", authenticateJWT, getPatientProfile);
+router.put("/patient/profile", authenticateJWT, updatePatientProfile);
+router.get("/patient/appointments", authenticateJWT, getPatientAppointments);
+router.get("/patient/prescriptions", authenticateJWT, getPatientPrescriptions);
+router.get("/patient/invoices", authenticateJWT, getPatientInvoices);
+router.get("/patient/notifications", authenticateJWT, getPatientNotifications);
+router.get("/patient/medical-records", authenticateJWT, getPatientMedicalRecords);
+router.get("/patient/timeline", authenticateJWT, getPatientTimeline);
+router.patch("/patient/settings", authenticateJWT, updatePatientSettings);
 
 // Doctor API Routes
-router.get("/doctor/dashboard", getDoctorDashboard);
-router.get("/doctor/appointments", getDoctorAppointments);
-router.get("/doctor/patients", getDoctorPatients);
-router.get("/doctor/patient/:id", getDoctorPatientById);
-router.get("/doctor/prescriptions", getDoctorPrescriptions);
-router.post("/doctor/prescriptions", createDoctorPrescription);
-router.post("/doctor/consultation-notes", createConsultationNote);
-router.post("/doctor/follow-ups", createFollowUp);
-router.get("/doctor/schedule", getDoctorSchedule);
-router.put("/doctor/schedule", updateDoctorSchedule);
-router.get("/doctor/notifications", getDoctorNotifications);
-router.get("/doctor/profile", getDoctorProfile);
-router.put("/doctor/profile", updateDoctorProfile);
-router.patch("/doctor/settings", updateDoctorSettings);
+router.get("/doctor/dashboard", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), getDoctorDashboard);
+router.get("/doctor/appointments", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), getDoctorAppointments);
+router.get("/doctor/patients", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), getDoctorPatients);
+router.get("/doctor/patient/:id", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), getDoctorPatientById);
+router.get("/doctor/prescriptions", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), getDoctorPrescriptions);
+router.post("/doctor/prescriptions", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), createDoctorPrescription);
+router.post("/doctor/consultation-notes", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), createConsultationNote);
+router.post("/doctor/follow-ups", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), createFollowUp);
+router.get("/doctor/schedule", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), getDoctorSchedule);
+router.put("/doctor/schedule", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), updateDoctorSchedule);
+router.get("/doctor/notifications", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), getDoctorNotifications);
+router.get("/doctor/profile", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), getDoctorProfile);
+router.put("/doctor/profile", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), updateDoctorProfile);
+router.patch("/doctor/settings", authenticateJWT, authorizeRoles("doctor", "admin", "superadmin"), updateDoctorSettings);
 
-// Admin API Routes
-router.get("/admin/dashboard", getAdminExecutiveDashboard);
-router.get("/admin/branches", getAdminBranches);
-router.post("/admin/branches", createAdminBranch);
-router.put("/admin/branches/:id", updateAdminBranch);
-router.delete("/admin/branches/:id", deleteAdminBranch);
+// Admin Executive & User Management API Routes
+router.get("/admin/dashboard", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminExecutiveDashboard);
 
-router.get("/admin/doctors", getAdminDoctors);
-router.post("/admin/doctors", createAdminDoctor);
-router.put("/admin/doctors/:id", updateAdminDoctor);
-router.delete("/admin/doctors/:id", deleteAdminDoctor);
+// Real User & RBAC Endpoints
+router.get("/admin/users", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminUsers);
+router.get("/admin/users/:id", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminUserById);
+router.post("/admin/users", authenticateJWT, authorizeRoles("admin", "superadmin"), createAdminUser);
+router.put("/admin/users/:id", authenticateJWT, authorizeRoles("admin", "superadmin"), updateAdminUser);
+router.delete("/admin/users/:id", authenticateJWT, authorizeRoles("admin", "superadmin"), deleteAdminUser);
+router.patch("/admin/users/:id/restore", authenticateJWT, authorizeRoles("admin", "superadmin"), restoreAdminUser);
+router.patch("/admin/users/:id/role", authenticateJWT, authorizeRoles("admin", "superadmin"), updateUserRole);
+router.patch("/admin/users/:id/status", authenticateJWT, authorizeRoles("admin", "superadmin"), updateUserStatus);
+router.patch("/admin/users/:id/branch", authenticateJWT, authorizeRoles("admin", "superadmin"), updateUserBranch);
+router.post("/admin/users/:id/reset-password", authenticateJWT, authorizeRoles("admin", "superadmin"), resetUserPassword);
 
-router.get("/admin/receptionists", getAdminReceptionists);
-router.post("/admin/receptionists", createAdminReceptionist);
+// Real Audit Logs Endpoints
+router.get("/admin/logs", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminAuditLogs);
+router.get("/admin/audit-logs", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminAuditLogs);
 
-router.get("/admin/patients", getAdminPatients);
-router.get("/admin/invoices", getInvoices);
-router.get("/admin/reports", getAdminExecutiveReports);
-router.get("/admin/settings", getAdminSystemSettings);
-router.put("/admin/settings", updateAdminSystemSettings);
-router.get("/admin/logs", getAdminAuditLogs);
-router.get("/admin/analytics", getAdminAnalytics);
+// Branch Management
+router.get("/admin/branches", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminBranches);
+router.post("/admin/branches", authenticateJWT, authorizeRoles("admin", "superadmin"), createAdminBranch);
+router.put("/admin/branches/:id", authenticateJWT, authorizeRoles("admin", "superadmin"), updateAdminBranch);
+router.delete("/admin/branches/:id", authenticateJWT, authorizeRoles("admin", "superadmin"), deleteAdminBranch);
+
+// Doctor & Staff Management
+router.get("/admin/doctors", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminDoctors);
+router.post("/admin/doctors", authenticateJWT, authorizeRoles("admin", "superadmin"), createAdminDoctor);
+router.put("/admin/doctors/:id", authenticateJWT, authorizeRoles("admin", "superadmin"), updateAdminDoctor);
+router.delete("/admin/doctors/:id", authenticateJWT, authorizeRoles("admin", "superadmin"), deleteAdminDoctor);
+
+router.get("/admin/receptionists", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminReceptionists);
+router.post("/admin/receptionists", authenticateJWT, authorizeRoles("admin", "superadmin"), createAdminReceptionist);
+
+router.get("/admin/patients", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminPatients);
+router.get("/admin/invoices", authenticateJWT, authorizeRoles("admin", "superadmin"), getInvoices);
+router.get("/admin/reports", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminExecutiveReports);
+router.get("/admin/settings", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminSystemSettings);
+router.put("/admin/settings", authenticateJWT, authorizeRoles("admin", "superadmin"), updateAdminSystemSettings);
+router.get("/admin/analytics", authenticateJWT, authorizeRoles("admin", "superadmin"), getAdminAnalytics);
 
 export default router;
