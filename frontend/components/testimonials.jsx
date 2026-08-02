@@ -63,74 +63,13 @@ export function Testimonials() {
   // Quadruple reviews array for 100% seamless bi-directional infinite scrolling
   const displayReviews = [...reviews, ...reviews, ...reviews, ...reviews];
 
-  // Real Verified Canadian Insurance & Licensing Brand Partners
-  const brandLogos = [
-    {
-      name: "Sun Life",
-      fullName: "Sun Life Financial",
-      type: "Direct Billing Partner",
-      logo: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=160&q=80",
-      badgeBg: "bg-amber-50 text-amber-900 border-amber-200",
-      accentColor: "#D97706",
-    },
-    {
-      name: "Manulife",
-      fullName: "Manulife Financial",
-      type: "Electronic Claims Partner",
-      logo: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=160&q=80",
-      badgeBg: "bg-emerald-50 text-emerald-900 border-emerald-200",
-      accentColor: "#059669",
-    },
-    {
-      name: "Canada Life",
-      fullName: "Canada Life Assurance",
-      type: "Direct Billing Partner",
-      logo: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=160&q=80",
-      badgeBg: "bg-rose-50 text-rose-900 border-rose-200",
-      accentColor: "#DC2626",
-    },
-    {
-      name: "Desjardins",
-      fullName: "Desjardins Insurance",
-      type: "Provincial Claims Sync",
-      logo: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=160&q=80",
-      badgeBg: "bg-teal-50 text-teal-900 border-teal-200",
-      accentColor: "#0D9488",
-    },
-    {
-      name: "Blue Cross",
-      fullName: "Pacific & Medavie Blue Cross",
-      type: "Health Benefits Partner",
-      logo: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=160&q=80",
-      badgeBg: "bg-sky-50 text-sky-900 border-sky-200",
-      accentColor: "#0284C7",
-    },
-    {
-      name: "RCDSO",
-      fullName: "Dental Surgeons College",
-      type: "Licensing Board Accredited",
-      logo: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=160&q=80",
-      badgeBg: "bg-slate-100 text-slate-900 border-slate-300",
-      accentColor: "#1E293B",
-    },
-    {
-      name: "ODA Guide",
-      fullName: "Ontario Dental Fee Guide",
-      type: "Standard Fee Compliant",
-      logo: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=160&q=80",
-      badgeBg: "bg-teal-50 text-teal-900 border-teal-200",
-      accentColor: "#0F766E",
-    },
-  ];
-
   // Mouse Move Handler: Position relative to container center
   const handleMouseMove = (e) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    const normalized = (x / rect.width) * 2 - 1; // -1 (left edge) to +1 (right edge)
+    const normalized = (x / rect.width) * 2 - 1;
 
-    // Dead zone in middle (-0.15 to +0.15) to pause, active speed on sides
     if (Math.abs(normalized) > 0.15) {
       mouseSpeedRef.current = normalized * 7;
     } else {
@@ -151,11 +90,9 @@ export function Testimonials() {
             scrollRef.current.scrollLeft += mouseSpeedRef.current;
           }
         } else {
-          // Auto scroll marquee when mouse is away
           scrollRef.current.scrollLeft += 1.2;
         }
 
-        // Bi-Directional Infinite Wraparound Math
         if (scrollRef.current.scrollLeft >= halfWidth) {
           scrollRef.current.scrollLeft -= halfWidth / 2;
         } else if (scrollRef.current.scrollLeft <= 10) {
@@ -247,36 +184,6 @@ export function Testimonials() {
                     <p className="font-poppins text-xs font-semibold text-[#1B5C63] truncate">{rev.role}</p>
                     <p className="font-poppins text-[10px] text-slate-500 font-medium uppercase tracking-wider truncate">{rev.treatment}</p>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Verified Canadian Insurance & Accreditation Partner Real Logo Cards */}
-        <div className="mt-14 pt-10 border-t border-slate-100">
-          <p className="text-center font-poppins text-xs font-bold text-slate-500 uppercase tracking-widest mb-6">
-            DIRECT ELECTRONIC BILLING & ACCREDITED CANADIAN PARTNERS
-          </p>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3.5 sm:gap-4">
-            {brandLogos.map((brand, idx) => (
-              <div
-                key={idx}
-                className="bg-white border border-slate-200/80 p-3.5 rounded-2xl text-center space-y-2 hover:shadow-md hover:border-[#1B5C63]/30 transition-all group"
-              >
-                {/* Brand Logo Avatar / Emblem Frame */}
-                <div className="relative h-10 w-full flex items-center justify-center">
-                  <div className={`px-2.5 py-1 rounded-xl text-xs font-bold font-mono tracking-wider border shadow-2xs ${brand.badgeBg}`}>
-                    {brand.name}
-                  </div>
-                </div>
-
-                <div>
-                  <span className="font-serif text-xs font-bold text-slate-900 block truncate group-hover:text-[#1B5C63] transition-colors">
-                    {brand.fullName}
-                  </span>
-                  <span className="font-poppins text-[10px] text-slate-500 block truncate">{brand.type}</span>
                 </div>
               </div>
             ))}
