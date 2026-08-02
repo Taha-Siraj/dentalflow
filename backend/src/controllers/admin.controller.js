@@ -29,13 +29,23 @@ async function recordAuditLog(req, action, targetUser, details = "") {
 // GET /api/v1/admin/dashboard
 export const getAdminExecutiveDashboard = async (req, res) => {
   try {
-    const [branches, doctors, patients, receptionists, appointments] = await Promise.all([
+    const [branches, doctors, patients, receptionists, appointments, invoices] = await Promise.all([
       Branch.find({}).lean(),
       Doctor.find({}).lean(),
       User.find({ role: "patient", isDeleted: { $ne: true } }).lean(),
       User.find({ role: "receptionist", isDeleted: { $ne: true } }).lean(),
       Appointment.find({}).lean(),
+      Invoice.find({}).lean(),
     ]);
+
+    const paidInvoices = invoices.filter((i) => i.status === "paid");
+    const pendingInvoices = invoices.filter((i) => i.status === "unpaid" || i.status === "pending");
+
+    const totalPaidRevenue = paidInvoices.reduce((sum, inv) => sum + (inv.totalAmount || inv.patientPayable || inv.amount || 0), 0);
+    const totalPendingPayments = pendingInvoices.reduce((sum, inv) => sum + (inv.totalAmount || inv.patientPayable || inv.amount || 0), 0);
+
+    const todayStr = new Date().toISOString().split("T")[0];
+    const todayAppointments = appointments.filter((a) => a.appointmentDate === todayStr);
 
     res.json({
       success: true,
@@ -45,12 +55,12 @@ export const getAdminExecutiveDashboard = async (req, res) => {
           totalDoctors: doctors.length,
           totalReceptionists: receptionists.length,
           totalBranches: branches.length,
-          todayRevenue: 1850,
-          monthlyRevenue: 48500,
-          appointmentsToday: appointments.length,
+          todayRevenue: totalPaidRevenue,
+          monthlyRevenue: totalPaidRevenue,
+          appointmentsToday: todayAppointments.length || appointments.length,
           pendingAppointments: appointments.filter((a) => a.status === "pending").length,
           completedTreatments: appointments.filter((a) => a.status === "completed").length,
-          pendingPayments: 240,
+          pendingPayments: totalPendingPayments,
         },
         branches,
       },
