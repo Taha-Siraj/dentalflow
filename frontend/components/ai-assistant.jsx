@@ -65,14 +65,12 @@ export function AIAssistant() {
     setInput("");
     setIsLoading(true);
 
-    // Format conversation history turns for multi-turn context memory
     const historyPayload = newMessages.map((m) => ({
       role: m.sender === "user" ? "user" : "model",
       parts: [{ text: m.text }],
     }));
 
     try {
-      // Connect to Enterprise AI Agent backend REST API endpoint POST /api/v1/ai/chat
       const response = await fetch("/api/v1/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -88,7 +86,6 @@ export function AIAssistant() {
         }
       }
 
-      // Fallback endpoint if relative path fails in dev standalone mode
       if (!aiReplyText) {
         const fallbackRes = await fetch("http://localhost:5000/api/v1/ai/chat", {
           method: "POST",
@@ -104,7 +101,6 @@ export function AIAssistant() {
         }
       }
 
-      // Local fallback reply if API offline
       if (!aiReplyText) {
         toast("Server notice: Agent is operating in instant offline clinical mode.", {
           icon: "ℹ️",
@@ -120,11 +116,11 @@ export function AIAssistant() {
 
         const lower = userText.toLowerCase();
         if (lower.includes("book") || lower.includes("appointment")) {
-          aiReplyText = "You can book an appointment online in under 60 seconds! Click 'Portal Login' or the 'Book Online Appointment' button on our homepage to select your branch and specialist.";
+          aiReplyText = "You can book an appointment online in under 60 seconds! Click 'Patient Login' or the 'Book Online Appointment' button on our homepage to select your branch and specialist.";
         } else if (lower.includes("insurance") || lower.includes("billing")) {
           aiReplyText = "We offer 100% direct electronic insurance billing to Sun Life, Manulife, Canada Life, Desjardins, and Blue Cross. Claims are processed on the spot before you leave!";
         } else {
-          aiReplyText = "SmileCare Dental Practice Network operates 6 centralized clinics (Toronto, Vancouver, Calgary, Ottawa, Mississauga, and Montreal). All treatments strictly adhere to provincial fee guides!";
+          aiReplyText = "SmileCare Dental Practice Network operates 5 centralized clinics (Toronto, Vancouver, Calgary, Ottawa, and Mississauga). All treatments strictly adhere to provincial fee guides!";
         }
       }
 
@@ -215,7 +211,7 @@ export function AIAssistant() {
                   <div className="flex items-center space-x-1.5 mt-0.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                     <span className="font-mono text-[10px] text-teal-200 uppercase tracking-wider">
-                      ONLINE • 6 BRANCH CLINICS
+                      ONLINE • 5 BRANCH CLINICS
                     </span>
                   </div>
                 </div>
@@ -239,7 +235,7 @@ export function AIAssistant() {
               </div>
             </div>
 
-            {/* Mandatory Healthcare Medical Disclaimer Banner */}
+            {/* Healthcare Medical Disclaimer Banner */}
             <div className="bg-amber-50 border-b border-amber-200 px-3.5 py-2 flex items-start space-x-2 text-[11px] text-amber-900 leading-tight">
               <AlertCircle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
               <span>
@@ -249,8 +245,6 @@ export function AIAssistant() {
 
             {/* Messages Container */}
             <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50">
-              
-              {/* Suggested Quick Actions (BUG 10: Only show on initial load, hide after 1st user message) */}
               {messages.length <= 1 && (
                 <div className="space-y-2 mb-4">
                   <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest text-center">
@@ -270,7 +264,6 @@ export function AIAssistant() {
                 </div>
               )}
 
-              {/* Chat Message History */}
               {messages.map((msg, idx) => (
                 <div
                   key={idx}
@@ -301,7 +294,6 @@ export function AIAssistant() {
                 </div>
               ))}
 
-              {/* Typing Indicator (BUG 6: "DentalFlow AI is typing...") */}
               {isLoading && (
                 <div className="flex items-start space-x-2 justify-start">
                   <div className="h-7 w-7 rounded-full bg-teal-100 flex items-center justify-center text-[#1B5C63] shrink-0 mt-1">

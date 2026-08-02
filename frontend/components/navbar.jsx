@@ -2,54 +2,44 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu, X, UserCheck, ChevronRight } from "lucide-react";
 import { Logo } from "@/components/logo";
 
 export function Navbar() {
-  const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
-  // Handle scroll header background & active section highlight with 60fps GPU throttling
+  // Handle scroll header background & active section highlight (ScrollSpy)
   useEffect(() => {
-    let ticking = false;
-
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          setIsScrolled(scrollY > 20);
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
 
-          // ScrollSpy logic for section highlighting
-          const sections = ["about", "services", "transformations", "doctors", "branches", "testimonials", "faq", "contact"];
-          const scrollPosition = scrollY + 120;
+      // ScrollSpy logic for section highlighting
+      const sections = ["services", "transformations", "doctors", "branches", "testimonials", "faq"];
+      const scrollPosition = window.scrollY + 100;
 
-          for (const section of sections) {
-            const el = document.getElementById(section);
-            if (el) {
-              const top = el.offsetTop;
-              const height = el.offsetHeight;
-              if (scrollPosition >= top && scrollPosition < top + height) {
-                setActiveSection(section);
-                ticking = false;
-                return;
-              }
-            }
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(section);
+            return;
           }
-
-          if (scrollY < 300) {
-            setActiveSection("");
-          }
-          ticking = false;
-        });
-
-        ticking = true;
+        }
+      }
+      if (window.scrollY < 300) {
+        setActiveSection("");
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -75,7 +65,7 @@ export function Navbar() {
   }, [isMobileOpen]);
 
   const navLinks = [
-    { name: "Home", href: "/", id: "home" },
+    { name: "Home", href: "/" },
     { name: "About", href: "/#about", id: "about" },
     { name: "Services", href: "/#services", id: "services" },
     { name: "Transformations", href: "/#transformations", id: "transformations" },
@@ -108,16 +98,7 @@ export function Navbar() {
             className="hidden xl:flex items-center space-x-3.5 xl:space-x-5 2xl:space-x-6 font-poppins text-xs font-semibold"
           >
             {navLinks.map((link, idx) => {
-              const isSectionActive = link.id && activeSection === link.id;
-              const isPathActive =
-                (pathname === "/contact" && link.id === "contact") ||
-                (pathname === "/about" && link.id === "about") ||
-                (pathname === "/branches" && link.id === "branches") ||
-                (pathname === "/doctors" && link.id === "doctors") ||
-                (pathname === "/services" && link.id === "services");
-
-              const isActive = isSectionActive || isPathActive;
-
+              const isActive = link.id && activeSection === link.id;
               return (
                 <Link
                   key={idx}
@@ -136,8 +117,10 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Single Right CTA: Portal Login & Hamburger trigger */}
+          {/* Single Right CTA: Patient Login & Hamburger trigger */}
           <div className="flex items-center space-x-3 shrink-0">
+            
+            {/* Single CTA: Patient Login Button */}
             <Link
               href="/login"
               className={`rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 border transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1B5C63] focus:ring-offset-2 ${
@@ -147,9 +130,10 @@ export function Navbar() {
               }`}
             >
               <UserCheck className="h-4 w-4 text-teal-400 shrink-0" />
-              <span>Portal Login</span>
+              <span>Patient Login</span>
             </Link>
 
+            {/* Hamburger Button */}
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
               aria-expanded={isMobileOpen}
@@ -160,6 +144,7 @@ export function Navbar() {
             >
               {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
+
           </div>
 
         </div>
@@ -201,6 +186,7 @@ export function Navbar() {
               </nav>
             </div>
 
+            {/* Mobile Drawer Single CTA Button */}
             <div className="pt-6 border-t border-slate-100">
               <Link
                 href="/login"
@@ -208,7 +194,7 @@ export function Navbar() {
                 className="w-full bg-[#1B5C63] hover:bg-[#15494F] text-white rounded-xl py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow-md transition-all cursor-pointer"
               >
                 <UserCheck className="h-4 w-4" />
-                <span>Portal Login</span>
+                <span>Patient Login</span>
               </Link>
             </div>
           </div>

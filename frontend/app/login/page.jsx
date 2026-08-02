@@ -59,12 +59,12 @@ export default function LoginPage() {
         <div className="text-center space-y-3 flex flex-col items-center justify-center">
           <Logo iconSize={42} textSize="text-2xl" />
           <h1 className="font-serif text-lg font-bold text-slate-900 pt-1">
-            {showOtpScreen ? "Email OTP Verification" : "Portal Sign In"}
+            {showOtpScreen ? "Email OTP Verification" : "Patient Login"}
           </h1>
           <p className="text-xs text-slate-500 font-normal">
             {showOtpScreen
               ? `Enter the 6-digit verification code sent to ${email}`
-              : "Enter your registered clinic credentials to access the portal"}
+              : "Enter your registered credentials to access EMR & appointments"}
           </p>
         </div>
 
@@ -108,7 +108,7 @@ export default function LoginPage() {
               disabled={isSubmitting}
               className="w-full py-3 bg-[#0F766E] hover:bg-[#0D9488] text-white font-semibold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center space-x-2 mt-2 focus:outline-none disabled:opacity-50 cursor-pointer shadow-md hover:shadow-lg"
             >
-              <span>{isSubmitting ? "Authenticating..." : "Sign In to Portal"}</span>
+              <span>{isSubmitting ? "Authenticating..." : "Patient Sign In"}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
