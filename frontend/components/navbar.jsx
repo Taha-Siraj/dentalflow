@@ -87,14 +87,14 @@ export function Navbar() {
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           
           {/* Executive Brand Logo */}
-          <div className="shrink-0 max-w-[65%] sm:max-w-none">
+          <div className="shrink-0">
             <Logo isWhiteText={!isScrolled} />
           </div>
 
-          {/* Desktop Navigation Links (Only renders when 100% space is guaranteed to prevent clipping) */}
+          {/* Desktop Navigation Links */}
           <nav
             aria-label="Public Navigation Menu"
-            className="hidden 2xl:flex items-center space-x-4 font-poppins text-xs font-semibold"
+            className="hidden xl:flex items-center space-x-2.5 xl:space-x-3.5 2xl:space-x-5 font-poppins text-xs font-semibold"
           >
             {navLinks.map((link, idx) => {
               const isActive = link.id && activeSection === link.id;
@@ -102,7 +102,7 @@ export function Navbar() {
                 <Link
                   key={idx}
                   href={link.href}
-                  className={`transition-colors whitespace-nowrap focus:outline-none rounded-md px-1.5 py-0.5 ${
+                  className={`transition-colors whitespace-nowrap focus:outline-none rounded-md px-1 py-0.5 ${
                     isActive
                       ? "text-[#1B5C63] font-bold border-b-2 border-[#1B5C63]"
                       : isScrolled
@@ -119,25 +119,26 @@ export function Navbar() {
           {/* Single Right CTA: Patient Login & Hamburger trigger */}
           <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
             
-            {/* Single CTA: Patient Login Button */}
+            {/* Responsive Patient Login Button: Collapses to Icon-Only on smaller viewports to prevent overflow */}
             <Link
               href="/login"
-              className={`rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 sm:space-x-2 border transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1B5C63] focus:ring-offset-2 ${
+              title="Patient Login"
+              className={`rounded-full p-2.5 xl:px-5 xl:py-2.5 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 border transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#1B5C63] focus:ring-offset-2 ${
                 isScrolled
                   ? "bg-teal-50/90 border-teal-200 text-[#1B5C63] hover:bg-teal-100 shadow-xs"
                   : "bg-white/10 border-white/30 text-white hover:bg-white/20 shadow-xs"
               }`}
             >
-              <UserCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-teal-400 shrink-0" />
-              <span>Patient Login</span>
+              <UserCheck className="h-4 w-4 text-teal-400 shrink-0" />
+              <span className="hidden xl:inline">Patient Login</span>
             </Link>
 
-            {/* Hamburger Button (Triggers drawer on screens < 1536px to guarantee zero overflow) */}
+            {/* Hamburger Button */}
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
               aria-expanded={isMobileOpen}
               aria-label="Toggle Navigation Drawer"
-              className={`2xl:hidden p-1.5 sm:p-2 rounded-xl focus:outline-none transition-colors cursor-pointer ${
+              className={`xl:hidden p-2 rounded-xl focus:outline-none transition-colors cursor-pointer ${
                 isScrolled ? "text-slate-800 hover:bg-slate-100" : "text-white hover:bg-white/10"
               }`}
             >
@@ -151,7 +152,7 @@ export function Navbar() {
 
       {/* Slide-Out Drawer Overlay */}
       {isMobileOpen && (
-        <div className="2xl:hidden fixed inset-0 z-50 flex justify-end">
+        <div className="xl:hidden fixed inset-0 z-50 flex justify-end">
           <div
             className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300"
             onClick={() => setIsMobileOpen(false)}
