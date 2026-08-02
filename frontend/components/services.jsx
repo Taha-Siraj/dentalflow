@@ -46,11 +46,11 @@ export function Services({ onOpenBooking }) {
   ];
 
   return (
-    <section id="services" className="relative bg-slate-50 py-16 sm:py-20 overflow-hidden">
+    <section id="services" className="relative bg-slate-50 py-10 sm:py-14 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Balanced Consistent Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 space-y-3">
           <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1B5C63] tracking-tight">
             Comprehensive Dental Services
           </h2>

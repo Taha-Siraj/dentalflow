@@ -7,11 +7,23 @@ import { getApiBaseUrl } from "@/lib/api-client";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  // Initialize user from cached profile if present for instant rendering on F5 refresh
+  const [user, setUser] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("dentalflow_user_profile");
+        return cached ? JSON.parse(cached) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  });
+
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Verify HTTP-Only Cookie Session on mount
+  // Verify HTTP-Only Cookie Session on mount & restore user profile
   useEffect(() => {
     let isMounted = true;
 
@@ -28,15 +40,20 @@ export function AuthProvider({ children }) {
           if (isMounted) {
             if (data && data.success && data.user) {
               setUser(data.user);
+              localStorage.setItem("dentalflow_user_profile", JSON.stringify(data.user));
             } else {
               setUser(null);
+              localStorage.removeItem("dentalflow_user_profile");
             }
           }
-        } else if (isMounted) {
+        } else if (res.status === 401 && isMounted) {
+          // If server explicitly returns 401 (unauthorized / expired cookie), clear session
           setUser(null);
+          localStorage.removeItem("dentalflow_user_profile");
         }
       } catch (err) {
-        if (isMounted) setUser(null);
+        // Network error - keep cached user profile if present to avoid logging user out on minor glitch
+        console.warn("Auth session check warning:", err.message);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -73,6 +90,7 @@ export function AuthProvider({ children }) {
         }
 
         setUser(data.user);
+        localStorage.setItem("dentalflow_user_profile", JSON.stringify(data.user));
 
         if (data.user.role === "admin") router.push("/dashboard/admin");
         else if (data.user.role === "doctor") router.push("/dashboard/doctor");
@@ -131,6 +149,7 @@ export function AuthProvider({ children }) {
         }
 
         setUser(data.user);
+        localStorage.setItem("dentalflow_user_profile", JSON.stringify(data.user));
 
         if (data.user.role === "admin") router.push("/dashboard/admin");
         else if (data.user.role === "doctor") router.push("/dashboard/doctor");
@@ -177,6 +196,7 @@ export function AuthProvider({ children }) {
     } catch (e) {}
 
     setUser(null);
+    localStorage.removeItem("dentalflow_user_profile");
     router.push("/login");
   }, [router]);
 

@@ -149,7 +149,7 @@ export default function DashboardLayout({ children }) {
     return allowed.some((route) => pathname === route || pathname.startsWith(route + "/"));
   };
 
-  if (loading) {
+  if (loading && !user) {
     return (
       <div className="min-h-screen w-screen flex items-center justify-center bg-[#F8FAFC] text-slate-800 font-poppins">
         <div className="text-center space-y-2">

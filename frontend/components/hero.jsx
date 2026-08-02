@@ -43,7 +43,7 @@ export function Hero({ onOpenBooking }) {
   };
 
   return (
-    <section className="relative min-h-[680px] sm:min-h-[760px] pt-32 sm:pt-40 pb-24 sm:pb-32 overflow-hidden flex items-center justify-center bg-slate-950">
+    <section className="relative min-h-[600px] sm:min-h-[680px] pt-28 sm:pt-36 pb-16 sm:pb-20 overflow-hidden flex items-center justify-center bg-slate-950">
       
       {/* FULL-BLEED LOCAL HD DENTAL CLINIC BACKGROUND VIDEO */}
       <video

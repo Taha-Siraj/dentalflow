@@ -66,7 +66,7 @@ export function HeroMarquee() {
   const displayItems = [...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems];
 
   return (
-    <div className="bg-[#F8FAFC] py-4 overflow-hidden relative select-none font-poppins z-20">
+    <div className="bg-[#F8FAFC] py-2 overflow-hidden relative select-none font-poppins z-20">
       {/* Edge Blur Fades */}
       <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
@@ -77,7 +77,7 @@ export function HeroMarquee() {
           return (
             <div
               key={idx}
-              className="inline-flex items-center space-x-3.5 bg-slate-50 px-4 py-2.5 rounded-2xl transition-all group shrink-0"
+              className="inline-flex items-center space-x-3.5 bg-white px-4 py-2.5 rounded-2xl shadow-sm hover:shadow-md transition-all group shrink-0"
             >
               {/* Image Badge */}
               <div className="relative h-10 w-10 rounded-xl overflow-hidden shrink-0">

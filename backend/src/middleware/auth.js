@@ -4,12 +4,17 @@ import { ENV } from "../config/env.js";
 export function authenticateJWT(req, res, next) {
   let token = null;
 
-  // 1. Check HTTP-Only Cookie first
-  if (req.cookies && req.cookies.df_access_token) {
-    token = req.cookies.df_access_token;
-  } 
+  // 1. Check HTTP-Only Cookie first (df_access_token or token)
+  if (req.cookies) {
+    if (req.cookies.df_access_token) {
+      token = req.cookies.df_access_token;
+    } else if (req.cookies.token) {
+      token = req.cookies.token;
+    }
+  }
+
   // 2. Check Authorization Bearer Header fallback
-  else if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+  if (!token && req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
     token = req.headers.authorization.split(" ")[1];
   }
 

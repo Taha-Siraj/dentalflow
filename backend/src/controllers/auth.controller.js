@@ -14,7 +14,7 @@ function generateOtp() {
 }
 
 /**
- * Helper to issue JWT tokens in HTTP-Only cookies
+ * Helper to issue JWT tokens in HTTP-Only cookies with explicit path: "/" for global persistence
  */
 function sendTokenCookieResponse(user, statusCode, res, message = "Authentication successful") {
   const tokenPayload = {
@@ -34,9 +34,11 @@ function sendTokenCookieResponse(user, statusCode, res, message = "Authenticatio
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: "/", // Explicit path for global persistence across all endpoints
   };
 
   res.cookie("df_access_token", accessToken, cookieOptions);
+  res.cookie("token", accessToken, cookieOptions); // Fallback cookie name
   res.cookie("df_refresh_token", refreshToken, { ...cookieOptions, maxAge: 30 * 24 * 60 * 60 * 1000 });
 
   return res.status(statusCode).json({
@@ -51,13 +53,13 @@ function sendTokenCookieResponse(user, statusCode, res, message = "Authenticatio
       phone: user.phone || "",
       emailVerified: user.emailVerified,
       branch: user.branch || "",
+      department: user.department || "",
     },
   });
 }
 
 /**
  * POST /api/v1/auth/register (Patient Self-Registration)
- * Role parameter from frontend is strictly overridden. Role is ALWAYS 'patient'.
  */
 export async function register(req, res, next) {
   try {
@@ -188,7 +190,6 @@ export async function resendOtp(req, res, next) {
     next(error);
   }
 }
-
 
 /**
  * POST /api/v1/auth/login (Production Database Authentication)
@@ -397,9 +398,11 @@ export async function logout(req, res) {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",
+    path: "/",
   };
 
   res.clearCookie("df_access_token", cookieOptions);
+  res.clearCookie("token", cookieOptions);
   res.clearCookie("df_refresh_token", cookieOptions);
 
   return res.json({ success: true, message: "Logged out successfully" });
@@ -414,7 +417,19 @@ export async function getProfile(req, res, next) {
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
-    return res.json({ success: true, user });
+    return res.json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone || "",
+        emailVerified: user.emailVerified,
+        branch: user.branch || "",
+        department: user.department || "",
+      },
+    });
   } catch (error) {
     next(error);
   }
