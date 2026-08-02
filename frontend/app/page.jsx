@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { AboutSection } from "@/components/about-section";
@@ -15,20 +16,26 @@ import { FAQ } from "@/components/faq";
 import { ContactSection } from "@/components/contact-section";
 import { CTABanner } from "@/components/cta-banner";
 import { Footer } from "@/components/footer";
-import { BookingModal } from "@/components/booking-modal";
-import { AIAssistant } from "@/components/ai-assistant";
 import { SectionDivider } from "@/components/section-divider";
+
+// Dynamic Imports for Floating Tools & Modals to optimize initial JS Bundle Size
+const BookingModal = dynamic(() => import("@/components/booking-modal").then((m) => m.BookingModal), {
+  ssr: false,
+});
+const AIAssistant = dynamic(() => import("@/components/ai-assistant").then((m) => m.AIAssistant), {
+  ssr: false,
+});
 
 export default function Home() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
-  const handleOpenBooking = () => {
+  const handleOpenBooking = useCallback(() => {
     setIsBookingOpen(true);
-  };
+  }, []);
 
-  const handleCloseBooking = () => {
+  const handleCloseBooking = useCallback(() => {
     setIsBookingOpen(false);
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] font-poppins overflow-x-hidden selection:bg-teal-700 selection:text-white">
@@ -48,7 +55,7 @@ export default function Home() {
         {/* 2. About */}
         <AboutSection />
 
-        {/* 3. Services (No Wave) */}
+        {/* 3. Services */}
         <Services onOpenBooking={handleOpenBooking} />
 
         {/* 4. Smile Transformations */}
@@ -60,7 +67,7 @@ export default function Home() {
         {/* 5. Why DentalFlow */}
         <WhyChooseUs />
 
-        {/* 6. Doctors (No Wave) */}
+        {/* 6. Doctors */}
         <Dentists onOpenBooking={handleOpenBooking} />
 
         {/* 7. Patient Journey */}
@@ -72,10 +79,10 @@ export default function Home() {
         {/* 8. Branch Locations */}
         <Locations onOpenBooking={handleOpenBooking} />
 
-        {/* 9. Testimonials (No Wave) */}
+        {/* 9. Testimonials */}
         <Testimonials />
 
-        {/* 10. FAQ (No Wave) */}
+        {/* 10. FAQ */}
         <FAQ />
 
         {/* 11. Contact */}
@@ -88,7 +95,7 @@ export default function Home() {
       {/* 13. Shared Footer */}
       <Footer />
 
-      {/* Modals & Floating Tools */}
+      {/* Dynamic Modals & Floating Tools */}
       <BookingModal isOpen={isBookingOpen} onClose={handleCloseBooking} />
       <AIAssistant />
     </div>

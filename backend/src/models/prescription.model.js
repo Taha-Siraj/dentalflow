@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 
 const prescriptionSchema = new mongoose.Schema(
   {
+    patientId: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
+    patientEmail: { type: String, lowercase: true, index: true },
     patientName: { type: String, required: true },
+    doctorId: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
     doctorName: { type: String, required: true },
     medications: [
       {

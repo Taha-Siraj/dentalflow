@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api-client";
 
@@ -13,6 +13,8 @@ export function AuthProvider({ children }) {
 
   // Verify HTTP-Only Cookie Session on mount
   useEffect(() => {
+    let isMounted = true;
+
     async function checkAuthSession() {
       try {
         const baseUrl = getApiBaseUrl();
@@ -23,64 +25,72 @@ export function AuthProvider({ children }) {
 
         if (res.ok) {
           const data = await res.json();
-          if (data && data.success && data.user) {
-            setUser(data.user);
-          } else {
-            setUser(null);
+          if (isMounted) {
+            if (data && data.success && data.user) {
+              setUser(data.user);
+            } else {
+              setUser(null);
+            }
           }
-        } else {
+        } else if (isMounted) {
           setUser(null);
         }
       } catch (err) {
-        setUser(null);
+        if (isMounted) setUser(null);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
 
     checkAuthSession();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   /**
    * Real Production Login against MongoDB Atlas
    */
-  const login = async (email, password) => {
-    const baseUrl = getApiBaseUrl();
-    try {
-      const res = await fetch(`${baseUrl}/auth/login`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+  const login = useCallback(
+    async (email, password) => {
+      const baseUrl = getApiBaseUrl();
+      try {
+        const res = await fetch(`${baseUrl}/auth/login`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
 
-      const data = await res.json();
+        const data = await res.json();
 
-      if (!res.ok || !data.success) {
-        if (data.requiresOtp) {
-          return { success: false, requiresOtp: true, email: data.email, message: data.message };
+        if (!res.ok || !data.success) {
+          if (data.requiresOtp) {
+            return { success: false, requiresOtp: true, email: data.email, message: data.message };
+          }
+          return { success: false, message: data.message || "Invalid email address or password." };
         }
-        return { success: false, message: data.message || "Invalid email address or password." };
+
+        setUser(data.user);
+
+        if (data.user.role === "admin") router.push("/dashboard/admin");
+        else if (data.user.role === "doctor") router.push("/dashboard/doctor");
+        else if (data.user.role === "receptionist") router.push("/dashboard/reception");
+        else router.push("/dashboard/patient");
+
+        return { success: true, user: data.user };
+      } catch (err) {
+        return { success: false, message: err.message || "Server connection error" };
       }
-
-      setUser(data.user);
-
-      // Redirect strictly based on Database-Assigned Role
-      if (data.user.role === "admin") router.push("/dashboard/admin");
-      else if (data.user.role === "doctor") router.push("/dashboard/doctor");
-      else if (data.user.role === "receptionist") router.push("/dashboard/reception");
-      else router.push("/dashboard/patient");
-
-      return { success: true, user: data.user };
-    } catch (err) {
-      return { success: false, message: err.message || "Server connection error" };
-    }
-  };
+    },
+    [router]
+  );
 
   /**
-   * Real Patient Registration (Sends Real OTP Email)
+   * Real Patient Registration
    */
-  const register = async (userData) => {
+  const register = useCallback(async (userData) => {
     const baseUrl = getApiBaseUrl();
     try {
       const res = await fetch(`${baseUrl}/auth/register`, {
@@ -95,47 +105,50 @@ export function AuthProvider({ children }) {
         return { success: false, message: data.message || "Registration failed" };
       }
 
-      return { success: true, requiresOtp: true, email: data.email, message: data.message };
+      return { success: true, requiresOtp: true, email: data.email, message: data.message, devOtp: data.devOtp };
     } catch (err) {
       return { success: false, message: err.message || "Server connection error" };
     }
-  };
+  }, []);
 
   /**
    * Real Email OTP Verification
    */
-  const verifyOtp = async (email, otp) => {
-    const baseUrl = getApiBaseUrl();
-    try {
-      const res = await fetch(`${baseUrl}/auth/verify-otp`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
-      });
+  const verifyOtp = useCallback(
+    async (email, otp) => {
+      const baseUrl = getApiBaseUrl();
+      try {
+        const res = await fetch(`${baseUrl}/auth/verify-otp`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, otp }),
+        });
 
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        return { success: false, message: data.message || "Invalid verification code" };
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          return { success: false, message: data.message || "Invalid verification code" };
+        }
+
+        setUser(data.user);
+
+        if (data.user.role === "admin") router.push("/dashboard/admin");
+        else if (data.user.role === "doctor") router.push("/dashboard/doctor");
+        else if (data.user.role === "receptionist") router.push("/dashboard/reception");
+        else router.push("/dashboard/patient");
+
+        return { success: true, user: data.user };
+      } catch (err) {
+        return { success: false, message: err.message || "Server connection error" };
       }
-
-      setUser(data.user);
-
-      if (data.user.role === "admin") router.push("/dashboard/admin");
-      else if (data.user.role === "doctor") router.push("/dashboard/doctor");
-      else if (data.user.role === "receptionist") router.push("/dashboard/reception");
-      else router.push("/dashboard/patient");
-
-      return { success: true, user: data.user };
-    } catch (err) {
-      return { success: false, message: err.message || "Server connection error" };
-    }
-  };
+    },
+    [router]
+  );
 
   /**
    * Resend OTP Code
    */
-  const resendOtp = async (email) => {
+  const resendOtp = useCallback(async (email) => {
     const baseUrl = getApiBaseUrl();
     try {
       const res = await fetch(`${baseUrl}/auth/resend-otp`, {
@@ -149,12 +162,12 @@ export function AuthProvider({ children }) {
     } catch (err) {
       return { success: false, message: err.message };
     }
-  };
+  }, []);
 
   /**
-   * Real Logout (Clears HTTP-Only Cookie)
+   * Real Logout
    */
-  const logout = async () => {
+  const logout = useCallback(async () => {
     const baseUrl = getApiBaseUrl();
     try {
       await fetch(`${baseUrl}/auth/logout`, {
@@ -165,13 +178,14 @@ export function AuthProvider({ children }) {
 
     setUser(null);
     router.push("/login");
-  };
+  }, [router]);
 
-  return (
-    <AuthContext.Provider value={{ user, loading, login, register, verifyOtp, resendOtp, logout }}>
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({ user, loading, login, register, verifyOtp, resendOtp, logout }),
+    [user, loading, login, register, verifyOtp, resendOtp, logout]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
