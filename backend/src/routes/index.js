@@ -165,7 +165,7 @@ router.patch("/patient/settings", authenticateJWT, updatePatientSettings);
 // Receptionist API Routes
 router.get("/reception/dashboard", authenticateJWT, authorizeRoles("receptionist", "admin"), getReceptionQueue);
 router.get("/reception/queue", authenticateJWT, authorizeRoles("receptionist", "admin"), getReceptionQueue);
-router.patch("/reception/appointments/:id/status", authenticateJWT, authorizeRoles("receptionist", "admin"), updateReceptionAppointmentStatus);
+router.patch("/reception/appointments/:id/status", authenticateJWT, authorizeRoles("receptionist", "doctor", "admin"), updateReceptionAppointmentStatus);
 router.post("/reception/walkin", authenticateJWT, authorizeRoles("receptionist", "admin"), createWalkInPatient);
 router.post("/reception/invoices", authenticateJWT, authorizeRoles("receptionist", "admin"), generateCounterInvoice);
 router.post("/reception/invoices/:id/pay", authenticateJWT, authorizeRoles("receptionist", "admin"), recordCounterPayment);
