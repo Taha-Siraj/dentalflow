@@ -181,9 +181,29 @@ export async function generateCounterInvoice(req, res) {
     const { patientId, patientEmail, patientName, items, totalAmount, branchName, treatment } = req.body;
 
     let targetPatientId = patientId;
-    if (!targetPatientId && patientEmail) {
-      const patient = await User.findOne({ email: patientEmail.toLowerCase().trim() });
-      if (patient) targetPatientId = patient._id;
+    let targetEmail = (patientEmail || "").toLowerCase().trim();
+
+    if (!targetPatientId || !targetEmail) {
+      if (targetEmail) {
+        const patient = await User.findOne({ email: targetEmail });
+        if (patient) {
+          targetPatientId = patient._id;
+          targetEmail = patient.email;
+        }
+      } else if (patientName) {
+        const patient = await User.findOne({
+          role: "patient",
+          $or: [
+            { name: new RegExp(patientName.trim(), "i") },
+            { name: new RegExp(patientName.trim().split(" ")[0], "i") },
+            { email: new RegExp(patientName.trim(), "i") },
+          ],
+        });
+        if (patient) {
+          targetPatientId = patient._id;
+          targetEmail = patient.email;
+        }
+      }
     }
 
     const invoiceNumber = `INV-${Date.now().toString().substring(5)}`;
@@ -192,7 +212,7 @@ export async function generateCounterInvoice(req, res) {
       invoiceNumber,
       patientId: targetPatientId || undefined,
       patientName: patientName || "Patient",
-      patientEmail: (patientEmail || "").toLowerCase().trim(),
+      patientEmail: targetEmail || "",
       branchName: branchName || req.user?.branch || "SmileCare Toronto Central",
       treatment: treatment || "Dental Service",
       items: items || [{ description: treatment || "Dental Service", amount: totalAmount || 150 }],

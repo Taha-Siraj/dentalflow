@@ -131,9 +131,16 @@ export const getPatientInvoices = async (req, res) => {
     const userId = req.user?.id || req.user?._id;
     const userEmail = req.user?.email?.toLowerCase();
 
-    const filter = userId
-      ? { $or: [{ patientId: userId }, { patientEmail: userEmail }] }
-      : { patientEmail: userEmail };
+    const userName = req.user?.name || "";
+    const firstName = userName.split(" ")[0] || "";
+
+    const filterConditions = [];
+    if (userId) filterConditions.push({ patientId: userId });
+    if (userEmail) filterConditions.push({ patientEmail: userEmail });
+    if (userName) filterConditions.push({ patientName: new RegExp("^" + userName.trim(), "i") });
+    if (firstName && firstName.length > 1) filterConditions.push({ patientName: new RegExp("^" + firstName.trim(), "i") });
+
+    const filter = filterConditions.length > 0 ? { $or: filterConditions } : {};
 
     const invoices = await Invoice.find(filter).sort({ createdAt: -1 }).lean();
     res.json({
