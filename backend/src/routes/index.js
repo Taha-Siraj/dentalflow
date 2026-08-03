@@ -27,6 +27,9 @@ import {
   getPatientPrescriptions,
   getPatientInvoices,
   getPatientNotifications,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+  deleteNotification,
   getPatientMedicalRecords,
   getPatientTimeline,
   updatePatientSettings,
@@ -152,6 +155,9 @@ router.get("/patient/appointments", authenticateJWT, getPatientAppointments);
 router.get("/patient/prescriptions", authenticateJWT, getPatientPrescriptions);
 router.get("/patient/invoices", authenticateJWT, getPatientInvoices);
 router.get("/patient/notifications", authenticateJWT, getPatientNotifications);
+router.patch("/notifications/:id/read", authenticateJWT, markNotificationAsRead);
+router.patch("/notifications/read-all", authenticateJWT, markAllNotificationsAsRead);
+router.delete("/notifications/:id", authenticateJWT, deleteNotification);
 router.get("/patient/medical-records", authenticateJWT, getPatientMedicalRecords);
 router.get("/patient/timeline", authenticateJWT, getPatientTimeline);
 router.patch("/patient/settings", authenticateJWT, updatePatientSettings);

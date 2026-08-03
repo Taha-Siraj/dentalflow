@@ -201,7 +201,7 @@ export default function PatientDashboardOverview() {
                 <span>Loading appointments...</span>
               </div>
             ) : upcomingApt ? (
-              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <Link href="/dashboard/patient/appointments" className="block p-4 rounded-xl border border-slate-200 bg-slate-50 hover:border-[#0F766E] transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer">
                 <div>
                   <span className="text-[11px] font-mono font-semibold text-[#0F766E] bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200">
                     {upcomingApt.appointmentDate || upcomingApt.date} • {upcomingApt.appointmentTime || upcomingApt.time}
@@ -213,11 +213,11 @@ export default function PatientDashboardOverview() {
                 <span className="text-[10px] px-3 py-1 rounded-full uppercase border font-bold bg-emerald-50 text-emerald-800 border-emerald-300">
                   {upcomingApt.status || "CONFIRMED"}
                 </span>
-              </div>
+              </Link>
             ) : (
-              <div className="p-8 text-center text-xs text-slate-400 font-normal">
-                No upcoming appointments scheduled for your account.
-              </div>
+              <Link href="/dashboard/patient/appointments" className="block p-8 text-center text-xs text-slate-400 hover:text-[#0F766E] transition-colors font-normal cursor-pointer">
+                No upcoming appointments scheduled for your account. Click to book an appointment.
+              </Link>
             )}
           </div>
 

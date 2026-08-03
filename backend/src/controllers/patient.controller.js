@@ -14,12 +14,12 @@ export const getPatientDashboard = async (req, res) => {
     const userEmail = req.user?.email?.toLowerCase();
 
     const filter = userId
-      ? { $or: [{ patientId: userId }, { patientEmail: userEmail }, { user: userId }] }
-      : { patientEmail: userEmail };
+      ? { $or: [{ patientId: userId }, { recipientEmail: userEmail }, { userId }] }
+      : { recipientEmail: userEmail };
 
     const [appointments, notifications, invoices, prescriptions] = await Promise.all([
       Appointment.find(filter).sort({ createdAt: -1 }).limit(10).lean(),
-      Notification.find(filter).sort({ createdAt: -1 }).limit(5).lean(),
+      Notification.find(filter).sort({ createdAt: -1 }).limit(10).lean(),
       Invoice.find(filter).sort({ createdAt: -1 }).lean(),
       Prescription.find(filter).sort({ createdAt: -1 }).lean(),
     ]);
@@ -67,8 +67,15 @@ export const getPatientProfile = async (req, res) => {
 export const updatePatientProfile = async (req, res) => {
   try {
     const userId = req.user?.id || req.user?._id;
-    const updated = await User.findByIdAndUpdate(userId, req.body, { new: true }).select("-password -otpHash").lean();
-    res.json({ success: true, profile: updated });
+    const { name, phone, emergencyContact, address, allergies, medicalHistory } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { name, phone, emergencyContact, address, allergies, medicalHistory },
+      { new: true }
+    ).select("-password -otpHash");
+
+    res.json({ success: true, message: "Patient profile updated successfully", profile: user });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -86,7 +93,7 @@ export const getPatientAppointments = async (req, res) => {
       ? { $or: [{ patientId: userId }, { patientEmail: userEmail }] }
       : { patientEmail: userEmail };
 
-    const appointments = await Appointment.find(filter).sort({ createdAt: -1 }).lean();
+    const appointments = await Appointment.find(filter).sort({ appointmentDate: 1, appointmentTime: 1 }).lean();
     res.json({ success: true, appointments });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -106,7 +113,11 @@ export const getPatientPrescriptions = async (req, res) => {
       : { patientEmail: userEmail };
 
     const prescriptions = await Prescription.find(filter).sort({ createdAt: -1 }).lean();
-    res.json({ success: true, prescriptions, data: prescriptions });
+    res.json({
+      success: true,
+      prescriptions,
+      data: prescriptions,
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -125,7 +136,6 @@ export const getPatientInvoices = async (req, res) => {
       : { patientEmail: userEmail };
 
     const invoices = await Invoice.find(filter).sort({ createdAt: -1 }).lean();
-
     res.json({
       success: true,
       invoices,
@@ -143,13 +153,65 @@ export const getPatientNotifications = async (req, res) => {
   try {
     const userId = req.user?.id || req.user?._id;
     const userEmail = req.user?.email?.toLowerCase();
+    const role = req.user?.role || "patient";
 
-    const filter = userId
-      ? { $or: [{ recipientId: userId }, { recipientEmail: userEmail }, { patientId: userId }] }
-      : { recipientEmail: userEmail };
+    const filter = {
+      $or: [
+        { userId },
+        { patientId: userId },
+        { recipientEmail: userEmail },
+        { role },
+        { role: "all" },
+      ],
+    };
 
-    const notifications = await Notification.find(filter).sort({ createdAt: -1 }).lean();
+    const notifications = await Notification.find(filter).sort({ createdAt: -1 }).limit(30).lean();
     res.json({ success: true, notifications });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * PATCH /api/v1/notifications/:id/read
+ */
+export const markNotificationAsRead = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const notification = await Notification.findByIdAndUpdate(id, { isRead: true }, { new: true });
+    res.json({ success: true, message: "Notification marked as read", notification });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * PATCH /api/v1/notifications/read-all
+ */
+export const markAllNotificationsAsRead = async (req, res) => {
+  try {
+    const userId = req.user?.id || req.user?._id;
+    const userEmail = req.user?.email?.toLowerCase();
+
+    await Notification.updateMany(
+      { $or: [{ userId }, { patientId: userId }, { recipientEmail: userEmail }] },
+      { isRead: true }
+    );
+
+    res.json({ success: true, message: "All notifications marked as read" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+/**
+ * DELETE /api/v1/notifications/:id
+ */
+export const deleteNotification = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Notification.findByIdAndDelete(id);
+    res.json({ success: true, message: "Notification deleted" });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

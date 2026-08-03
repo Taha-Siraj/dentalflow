@@ -168,41 +168,41 @@ export default function ReceptionDashboardOverview() {
 
       {/* Summary Statistics Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+        <Link href="/dashboard/reception/queue" className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1 block cursor-pointer">
           <span className="text-[9px] uppercase font-bold tracking-wider text-[#0F766E]">Checked In</span>
           <p className="text-lg font-bold text-slate-900 font-mono">{checkedInCount}</p>
           <p className="text-[9px] text-slate-500">In Waiting Room</p>
-        </div>
+        </Link>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+        <Link href="/dashboard/reception/queue" className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1 block cursor-pointer">
           <span className="text-[9px] uppercase font-bold tracking-wider text-amber-600">Pending Arrivals</span>
           <p className="text-lg font-bold text-slate-900 font-mono">{pendingCount}</p>
           <p className="text-[9px] text-slate-500">Awaiting Check-In</p>
-        </div>
+        </Link>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+        <Link href="/dashboard/reception/appointments" className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1 block cursor-pointer">
           <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Total Today</span>
           <p className="text-lg font-bold text-slate-900 font-mono">{queue.length}</p>
           <p className="text-[9px] text-slate-500">Appointments</p>
-        </div>
+        </Link>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+        <Link href="/dashboard/reception/reports" className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1 block cursor-pointer">
           <span className="text-[9px] uppercase font-bold tracking-wider text-emerald-600">Completed</span>
           <p className="text-lg font-bold text-emerald-600 font-mono">{completedCount}</p>
           <p className="text-[9px] text-slate-500">Treatments Done</p>
-        </div>
+        </Link>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+        <Link href="/dashboard/reception/billing" className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1 block cursor-pointer">
           <span className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Invoices Issued</span>
           <p className="text-lg font-bold text-slate-900 font-mono">{invoices.length}</p>
           <p className="text-[9px] text-slate-500">Counter Bills</p>
-        </div>
+        </Link>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1">
+        <Link href="/dashboard/reception/calendar" className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1 block cursor-pointer">
           <span className="text-[9px] uppercase font-bold tracking-wider text-[#0F766E]">Active Branch</span>
           <p className="text-xs font-bold text-slate-900 truncate mt-1">Toronto Central</p>
           <p className="text-[9px] text-slate-500">Main Clinic</p>
-        </div>
+        </Link>
       </div>
 
       {/* Main Grid */}
