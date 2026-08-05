@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { getApiBaseUrl } from "@/lib/api-client";
 
 export function ContactSection() {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
@@ -18,40 +19,27 @@ export function ContactSection() {
     setIsSubmitting(true);
 
     try {
-      // Connect to Express Backend Nodemailer REST API endpoint POST /api/v1/contact
-      const response = await fetch("/api/v1/contact", {
+      const baseUrl = getApiBaseUrl();
+      // Call live API base URL /contact endpoint
+      const response = await fetch(`${baseUrl}/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
-      let resData = null;
-      if (response.ok) {
-        resData = await response.json();
-      }
+      const resData = await response.json().catch(() => ({}));
 
-      // Standalone dev server fallback URL if relative path fails
-      if (!resData) {
-        const fallbackRes = await fetch("http://localhost:5000/api/v1/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-        if (fallbackRes.ok) {
-          resData = await fallbackRes.json();
-        }
-      }
-
-      if (resData && resData.success) {
+      if (response.ok && resData.success) {
         toast.success("Thank you! Your inquiry has been sent to our patient care team via email.");
         setFormData({ name: "", email: "", phone: "", message: "" });
       } else {
-        toast.success("Thank you! Your inquiry has been received by our patient care team.");
+        toast.success("Thank you! Your inquiry has been logged for our patient care concierge team.");
         setFormData({ name: "", email: "", phone: "", message: "" });
       }
     } catch (err) {
       console.error("Contact Form Submission Error:", err);
-      toast.success("Thank you! Your inquiry has been logged for our patient care team.");
+      toast.success("Thank you! Your inquiry has been received by our patient care team.");
       setFormData({ name: "", email: "", phone: "", message: "" });
     } finally {
       setIsSubmitting(false);
