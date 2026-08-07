@@ -189,7 +189,7 @@ export default function DashboardLayout({ children }) {
   const navItems = ROLE_NAV_ITEMS[roleKey] || ROLE_NAV_ITEMS.patient;
 
   return (
-    <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#F8FAFC] font-poppins text-slate-800">
+    <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#F8FAFC] font-poppins text-slate-800 overflow-x-hidden">
       {/* Mobile Top Navigation */}
       <div className="md:hidden h-14 bg-white text-slate-900 px-4 flex items-center justify-between border-b border-slate-200 shrink-0 z-30 shadow-xs">
         <Logo iconSize={28} textSize="text-base" />
@@ -201,33 +201,33 @@ export default function DashboardLayout({ children }) {
         </button>
       </div>
 
-      {/* Sidebar */}
+      {/* Sidebar Layout */}
       <aside
-        className={`fixed md:sticky top-0 inset-y-0 left-0 z-40 w-64 h-screen bg-white text-slate-700 flex flex-col justify-between border-r border-slate-200 transition-transform duration-200 ease-in-out md:translate-x-0 shrink-0 ${
+        className={`fixed md:sticky top-0 inset-y-0 left-0 z-40 w-64 h-screen bg-white text-slate-700 flex flex-col justify-between border-r border-slate-200 transition-transform duration-200 ease-in-out md:translate-x-0 shrink-0 overflow-x-hidden ${
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex-1 overflow-y-auto">
-          {/* Logo Header */}
-          <div className="p-5 border-b border-slate-200 hidden md:flex items-center justify-between">
-            <Logo iconSize={36} textSize="text-xl" />
-          </div>
+        {/* FIXED: Logo Header */}
+        <div className="p-5 border-b border-slate-200 hidden md:flex items-center justify-between shrink-0 bg-white">
+          <Logo iconSize={36} textSize="text-xl" />
+        </div>
 
-          {/* User Status Card */}
-          <div className="p-4 border-b border-slate-200 bg-slate-50/70">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-full bg-[#0F766E] text-white flex items-center justify-center font-bold text-xs uppercase shadow-xs">
-                {user.name ? user.name.substring(0, 2) : "US"}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold text-slate-900 truncate">{user.name}</p>
-                <p className="text-[10px] text-[#0F766E] capitalize font-semibold">{user.role} Access</p>
-              </div>
+        {/* FIXED: User Status Card */}
+        <div className="p-4 border-b border-slate-200 bg-slate-50/70 shrink-0">
+          <div className="flex items-center space-x-3 min-w-0">
+            <div className="w-8 h-8 rounded-full bg-[#0F766E] text-white flex items-center justify-center font-bold text-xs uppercase shadow-xs shrink-0">
+              {user.name ? user.name.substring(0, 2) : "US"}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-slate-900 truncate">{user.name}</p>
+              <p className="text-[10px] text-[#0F766E] capitalize font-semibold truncate">{user.role} Access</p>
             </div>
           </div>
+        </div>
 
-          {/* Role Navigation Items */}
-          <nav className="p-3 space-y-1.5">
+        {/* SCROLLABLE: Role Navigation Items ONLY */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth py-3 px-3 min-h-0">
+          <nav className="space-y-1.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -236,13 +236,13 @@ export default function DashboardLayout({ children }) {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileSidebarOpen(false)}
-                  className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all min-w-0 ${
                     isActive
                       ? "bg-teal-50 text-[#0F766E] font-bold border-r-2 border-[#0F766E] shadow-2xs"
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? "text-[#0F766E]" : "text-slate-400"}`} />
+                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-[#0F766E]" : "text-slate-400"}`} />
                   <span className="truncate">{item.label}</span>
                 </Link>
               );
@@ -250,30 +250,30 @@ export default function DashboardLayout({ children }) {
           </nav>
         </div>
 
-        {/* Sidebar Footer / Logout */}
+        {/* FIXED: Sidebar Footer / Logout */}
         <div className="p-4 border-t border-slate-200 shrink-0 bg-white">
           <button
             onClick={logout}
             className="w-full flex items-center space-x-2 text-xs font-semibold text-slate-500 hover:text-red-600 transition-colors p-2 rounded-xl hover:bg-red-50 focus:outline-none cursor-pointer"
           >
-            <LogOut className="w-4 h-4" />
-            <span>Sign Out</span>
+            <LogOut className="w-4 h-4 shrink-0" />
+            <span className="truncate">Sign Out</span>
           </button>
         </div>
       </aside>
 
-      {/* Main Right Body */}
-      <div className="flex-1 flex flex-col min-h-screen min-w-0">
+      {/* Main Right Body Container */}
+      <div className="flex-1 flex flex-col min-h-screen min-w-0 overflow-x-hidden">
         {/* Top Header Bar */}
         <header className="h-14 bg-white border-b border-slate-200 px-4 md:px-6 flex items-center justify-between shrink-0 z-20 sticky top-0 shadow-2xs">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-teal-50 text-[#0F766E] border border-teal-200">
-              <span className="w-2 h-2 rounded-full bg-[#0F766E]"></span>
-              SmileCare Dental Practice Network (Canada)
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-teal-50 text-[#0F766E] border border-teal-200 truncate">
+              <span className="w-2 h-2 rounded-full bg-[#0F766E] shrink-0"></span>
+              <span className="truncate">SmileCare Dental Practice Network (Canada)</span>
             </span>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 shrink-0">
             <NotificationBell />
 
             <button onClick={logout} className="text-xs text-slate-500 hover:text-slate-900 font-semibold focus:outline-none cursor-pointer">
@@ -282,13 +282,12 @@ export default function DashboardLayout({ children }) {
 
             <div className="h-5 w-px bg-slate-200"></div>
 
-
             <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#0F766E] text-white flex items-center justify-center font-bold text-xs uppercase shadow-xs">
+              <div className="w-8 h-8 rounded-full bg-[#0F766E] text-white flex items-center justify-center font-bold text-xs uppercase shadow-xs shrink-0">
                 {user.name ? user.name.substring(0, 2) : "US"}
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-xs font-semibold text-slate-900">{user.name}</p>
+                <p className="text-xs font-semibold text-slate-900 truncate">{user.name}</p>
                 <p className="text-[10px] text-slate-500 capitalize">{user.role}</p>
               </div>
             </div>
@@ -296,7 +295,8 @@ export default function DashboardLayout({ children }) {
         </header>
 
         {/* Dynamic Content Body */}
-        <main className="flex-1 p-4 md:p-8 bg-[#F8FAFC] overflow-y-auto">
+        <main className="flex-1 p-4 md:p-8 bg-[#F8FAFC] overflow-y-auto overflow-x-hidden max-w-full">
+
           {isAccessAllowed() ? (
             children
           ) : (
