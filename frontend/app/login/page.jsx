@@ -1,22 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { Lock, Mail, ArrowRight, KeyRound } from "lucide-react";
+import { Lock, Mail, ArrowRight, KeyRound, ArrowLeft, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Logo } from "@/components/logo";
-
 import { getApiBaseUrl } from "@/lib/api-client";
-import { ShieldCheck, AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
   const { login, verifyOtp } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showOtpScreen, setShowOtpScreen] = useState(false);
   const [otp, setOtp] = useState("");
@@ -35,7 +33,6 @@ export default function LoginPage() {
     }
     checkBootstrap();
   }, []);
-
 
   const handleLogin = async (e) => {
     if (e) e.preventDefault();
@@ -72,14 +69,26 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4 font-poppins text-slate-800 selection:bg-teal-700 selection:text-white">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-4 font-poppins text-slate-800 selection:bg-teal-700 selection:text-white">
+      {/* Escape Path to Main Website */}
+      <div className="w-full max-w-md mb-3 flex items-center justify-between">
+        <Link
+          href="/"
+          className="inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-600 hover:text-[#0F766E] transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Public Website</span>
+        </Link>
+      </div>
+
       <div className="max-w-md w-full bg-white border border-slate-200 rounded-2xl p-8 shadow-xl shadow-slate-200/60 space-y-6">
-        
         {/* Executive Header Logo */}
         <div className="text-center space-y-3 flex flex-col items-center justify-center">
-          <Logo iconSize={42} textSize="text-2xl" />
+          <Link href="/">
+            <Logo iconSize={42} textSize="text-2xl" />
+          </Link>
           <h1 className="font-serif text-lg font-bold text-slate-900 pt-1">
-            {showOtpScreen ? "Email OTP Verification" : "Patient Login"}
+            {showOtpScreen ? "Email OTP Verification" : "Portal Access Login"}
           </h1>
           <p className="text-xs text-slate-500 font-normal">
             {showOtpScreen
@@ -108,12 +117,11 @@ export default function LoginPage() {
           </div>
         )}
 
-
         {/* Form */}
         {!showOtpScreen ? (
           <form onSubmit={handleLogin} className="space-y-4 text-xs font-poppins">
             <div className="space-y-1">
-              <label className="font-semibold text-slate-700">Email Address</label>
+              <label className="font-semibold text-slate-700">Email Address *</label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                 <input
@@ -129,18 +137,25 @@ export default function LoginPage() {
 
             <div className="space-y-1">
               <div className="flex justify-between">
-                <label className="font-semibold text-slate-700">Password</label>
+                <label className="font-semibold text-slate-700">Password *</label>
               </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-[#0F766E] focus:bg-white transition-all"
+                  className="w-full pl-9 pr-10 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-[#0F766E] focus:bg-white transition-all"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
@@ -149,7 +164,7 @@ export default function LoginPage() {
               disabled={isSubmitting}
               className="w-full py-3 bg-[#0F766E] hover:bg-[#0D9488] text-white font-semibold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center space-x-2 mt-2 focus:outline-none disabled:opacity-50 cursor-pointer shadow-md hover:shadow-lg"
             >
-              <span>{isSubmitting ? "Authenticating..." : "Patient Sign In"}</span>
+              <span>{isSubmitting ? "Authenticating..." : "Portal Sign In"}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
@@ -161,12 +176,12 @@ export default function LoginPage() {
                 <KeyRound className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                 <input
                   type="text"
-                  required
                   maxLength={6}
+                  required
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                   placeholder="123456"
-                  className="w-full pl-9 pr-4 py-3 rounded-xl bg-slate-50 border border-teal-300 font-mono text-center text-lg font-bold tracking-widest text-[#0F766E] focus:outline-none focus:border-[#0F766E] focus:bg-white transition-all"
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:border-[#0F766E] focus:bg-white transition-all font-mono tracking-widest text-center"
                 />
               </div>
             </div>
@@ -174,26 +189,18 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 bg-[#0F766E] hover:bg-[#0D9488] text-white font-semibold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center space-x-2 mt-2 focus:outline-none disabled:opacity-50 cursor-pointer shadow-md hover:shadow-lg"
+              className="w-full py-3 bg-[#0F766E] hover:bg-[#0D9488] text-white font-semibold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center space-x-2 mt-2 focus:outline-none disabled:opacity-50 cursor-pointer shadow-md"
             >
-              <span>{isSubmitting ? "Verifying OTP..." : "Verify OTP & Continue"}</span>
+              <span>{isSubmitting ? "Verifying..." : "Verify OTP & Continue"}</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setShowOtpScreen(false)}
-              className="w-full text-slate-500 hover:text-slate-800 text-xs text-center font-medium pt-2 block"
-            >
-              ← Return to Login Form
             </button>
           </form>
         )}
 
         <div className="border-t border-slate-100 pt-4 text-center text-xs text-slate-500">
-          New Patient?{" "}
+          Don't have a patient account?{" "}
           <Link href="/register" className="text-[#0F766E] font-semibold hover:underline">
-            Register Account Here
+            Register as Patient
           </Link>
         </div>
       </div>
