@@ -422,10 +422,23 @@ export async function logout(req, res) {
  */
 export async function getProfile(req, res, next) {
   try {
-    const user = await User.findById(req.user.id).select("-password -otpHash");
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+    const userId = req.user?.id || req.user?._id;
+    const user = await User.findById(userId).select("-password -otpHash");
+
+    if (!user || user.isDeleted) {
+      const isProduction = process.env.NODE_ENV === "production";
+      const cookieOptions = {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
+        path: "/",
+      };
+      res.clearCookie("df_access_token", cookieOptions);
+      res.clearCookie("token", cookieOptions);
+      res.clearCookie("df_refresh_token", cookieOptions);
+      return res.status(401).json({ success: false, message: "User account no longer exists in database." });
     }
+
     return res.json({
       success: true,
       user: {
@@ -443,3 +456,4 @@ export async function getProfile(req, res, next) {
     next(error);
   }
 }
+

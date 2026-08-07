@@ -11,7 +11,6 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Verify HTTP-Only Cookie Session on mount via GET /auth/me (Strict Zero LocalStorage Auth Architecture)
   useEffect(() => {
     let isMounted = true;
 
@@ -30,14 +29,27 @@ export function AuthProvider({ children }) {
               setUser(data.user);
             } else {
               setUser(null);
+              if (window.location.pathname.startsWith("/dashboard")) {
+                router.replace("/login");
+              }
             }
           }
-        } else if (isMounted) {
-          setUser(null);
+        } else {
+          if (isMounted) {
+            setUser(null);
+            if (window.location.pathname.startsWith("/dashboard")) {
+              router.replace("/login");
+            }
+          }
         }
       } catch (err) {
         console.warn("Auth session check warning:", err.message);
-        if (isMounted) setUser(null);
+        if (isMounted) {
+          setUser(null);
+          if (window.location.pathname.startsWith("/dashboard")) {
+            router.replace("/login");
+          }
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -48,7 +60,8 @@ export function AuthProvider({ children }) {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [router]);
+
 
   /**
    * Real Production Login against MongoDB Atlas

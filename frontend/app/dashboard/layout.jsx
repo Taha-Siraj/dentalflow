@@ -145,7 +145,10 @@ export default function DashboardLayout({ children }) {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (!loading && !user) {
+      router.replace("/login");
+    }
+  }, [loading, user, router]);
 
   const isAccessAllowed = () => {
     if (!user) return false;
@@ -160,7 +163,17 @@ export default function DashboardLayout({ children }) {
     return allowed.some((route) => pathname === route || pathname.startsWith(route + "/"));
   };
 
-  if (!mounted || (loading && !user)) {
+  useEffect(() => {
+    if (mounted && !loading && user && !isAccessAllowed()) {
+      const roleKey = (user.role || "").toLowerCase();
+      if (roleKey === "admin") router.replace("/dashboard/admin");
+      else if (roleKey === "doctor") router.replace("/dashboard/doctor");
+      else if (roleKey === "receptionist") router.replace("/dashboard/reception");
+      else router.replace("/dashboard/patient");
+    }
+  }, [mounted, loading, user, pathname]);
+
+  if (!mounted || loading || !user) {
     return (
       <div className="min-h-screen w-screen flex items-center justify-center bg-[#F8FAFC] text-slate-800 font-poppins">
         <div className="text-center space-y-2">
@@ -171,27 +184,6 @@ export default function DashboardLayout({ children }) {
     );
   }
 
-  if (!user) {
-    return (
-      <div className="min-h-screen w-screen flex items-center justify-center bg-[#F8FAFC] text-slate-800 p-4 font-poppins">
-        <div className="max-w-md w-full bg-white border border-slate-200 p-8 rounded-2xl text-center space-y-4 shadow-xl shadow-slate-200/60">
-          <div className="w-12 h-12 bg-teal-50 text-[#0F766E] rounded-xl flex items-center justify-center mx-auto border border-teal-200">
-            <Lock className="w-6 h-6" />
-          </div>
-          <h2 className="text-xl font-bold font-serif text-slate-900">Authentication Required</h2>
-          <p className="text-xs text-slate-500">Please sign in with your clinic credentials to access the portal.</p>
-          <div className="pt-2 flex gap-3">
-            <Link href="/login" className="w-full py-2.5 bg-[#0F766E] hover:bg-[#0D9488] text-white text-xs font-semibold rounded-xl transition-colors shadow-sm">
-              Sign In
-            </Link>
-            <Link href="/" className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors">
-              Return Home
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const roleKey = (user.role || "").toLowerCase();
   const navItems = ROLE_NAV_ITEMS[roleKey] || ROLE_NAV_ITEMS.patient;
