@@ -7,6 +7,7 @@ import { getApiBaseUrl } from "@/lib/api-client";
 
 export default function ReceptionAppointmentsPage() {
   const [appointments, setAppointments] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newApt, setNewApt] = useState({
     patientName: "",
@@ -14,9 +15,9 @@ export default function ReceptionAppointmentsPage() {
     patientPhone: "",
     appointmentDate: new Date().toISOString().split("T")[0],
     appointmentTime: "10:30 AM",
-    treatment: "3D Guided Implant Consultation",
-    doctorName: "Dr. Sarah Jenkins",
-    branchName: "SmileCare Toronto Central",
+    treatment: "General Dental Examination & Cleaning",
+    doctorName: "",
+    branchName: "Toronto Central Branch",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,13 +25,25 @@ export default function ReceptionAppointmentsPage() {
     try {
       setLoading(true);
       const baseUrl = getApiBaseUrl();
-      const res = await fetch(`${baseUrl}/appointments`, { credentials: "include" });
-      const json = await res.json().catch(() => ({}));
+      const [aptRes, docRes] = await Promise.all([
+        fetch(`${baseUrl}/appointments`, { credentials: "include" }),
+        fetch(`${baseUrl}/doctors`, { credentials: "include" }),
+      ]);
+
+      const json = await aptRes.json().catch(() => ({}));
+      const docJson = await docRes.json().catch(() => ({}));
 
       if (json.success && Array.isArray(json.appointments)) {
         setAppointments(json.appointments);
       } else {
         setAppointments([]);
+      }
+
+      if (docJson.success && Array.isArray(docJson.doctors)) {
+        setDoctors(docJson.doctors);
+        if (docJson.doctors.length > 0 && !newApt.doctorName) {
+          setNewApt((f) => ({ ...f, doctorName: docJson.doctors[0].name }));
+        }
       }
     } catch (err) {
       console.log("Fetch error:", err);
@@ -42,7 +55,10 @@ export default function ReceptionAppointmentsPage() {
 
   useEffect(() => {
     fetchAppointments();
+    const interval = setInterval(fetchAppointments, 5000);
+    return () => clearInterval(interval);
   }, []);
+
 
   const handleSchedule = async (e) => {
     e.preventDefault();
@@ -72,9 +88,10 @@ export default function ReceptionAppointmentsPage() {
           appointmentDate: new Date().toISOString().split("T")[0],
           appointmentTime: "10:30 AM",
           treatment: "3D Guided Implant Consultation",
-          doctorName: "Dr. Sarah Jenkins",
-          branchName: "SmileCare Toronto Central",
+          doctorName: doctors[0]?.name || "",
+          branchName: "Toronto Central Branch",
         });
+
         fetchAppointments(); // Immediately re-fetch from MongoDB Atlas
       } else {
         toast.error(data.message || "Failed to schedule appointment");
@@ -146,10 +163,17 @@ export default function ReceptionAppointmentsPage() {
                 onChange={(e) => setNewApt({ ...newApt, doctorName: e.target.value })}
                 className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none cursor-pointer"
               >
-                <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins (Periodontics)</option>
-                <option value="Dr. Michael Chen">Dr. Michael Chen (Orthodontics)</option>
-                <option value="Dr. Elena Rostova">Dr. Elena Rostova (Endodontics)</option>
+                {doctors.length > 0 ? (
+                  doctors.map((d) => (
+                    <option key={d._id} value={d.name}>
+                      {d.name} ({d.specialization || "DDS Specialist"})
+                    </option>
+                  ))
+                ) : (
+                  <option value="Assigned DDS Specialist">Assigned DDS Specialist</option>
+                )}
               </select>
+
             </div>
 
             <div>

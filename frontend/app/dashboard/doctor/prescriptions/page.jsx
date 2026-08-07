@@ -6,12 +6,15 @@ import { toast } from "react-hot-toast";
 import { generateRxPDF } from "@/utils/pdf-generator";
 import { getApiBaseUrl } from "@/lib/api-client";
 
+import { useAuth } from "@/context/AuthContext";
+
 export default function DoctorPrescriptionsPage() {
+  const { user } = useAuth();
   const [prescriptions, setPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [patientName, setPatientName] = useState("Taha Siraj");
-  const [patientEmail, setPatientEmail] = useState("taha@smilecare.ca");
-  const [meds, setMeds] = useState([{ name: "Amoxicillin", dosage: "500mg", frequency: "3x Daily for 7 Days" }]);
+  const [patientName, setPatientName] = useState("");
+  const [patientEmail, setPatientEmail] = useState("");
+  const [meds, setMeds] = useState([]);
   const [newMed, setNewMed] = useState({ name: "", dosage: "500mg", frequency: "3x Daily" });
   const [submitting, setSubmitting] = useState(false);
 
@@ -37,7 +40,10 @@ export default function DoctorPrescriptionsPage() {
 
   useEffect(() => {
     fetchPrescriptions();
+    const interval = setInterval(fetchPrescriptions, 6000);
+    return () => clearInterval(interval);
   }, []);
+
 
   const handleAddMed = () => {
     if (!newMed.name) return;
@@ -76,10 +82,11 @@ export default function DoctorPrescriptionsPage() {
         toast.success(`Digital Rx issued to ${patientName}!`);
         generateRxPDF({
           patientName,
-          doctorName: "Dr. Sarah Jenkins, DDS",
+          doctorName: user?.name ? `Dr. ${user.name}` : "Doctor Specialist",
           medications: meds,
           notes: "Take after food as directed.",
         });
+
         fetchPrescriptions(); // Refresh list from MongoDB
       } else {
         toast.error(data.message || "Failed to issue prescription");
@@ -212,7 +219,8 @@ export default function DoctorPrescriptionsPage() {
                         {new Date(rx.createdAt || Date.now()).toLocaleDateString("en-US")}
                       </span>
                     </div>
-                    <p className="text-xs text-[#0F766E] font-semibold">Doctor: {rx.doctorName || "Dr. Sarah Jenkins"}</p>
+                    <p className="text-xs text-[#0F766E] font-semibold">Doctor: {rx.doctorName || "DDS Specialist"}</p>
+
                     <p className="text-xs text-slate-500 font-mono">
                       {Array.isArray(rx.medications)
                         ? rx.medications.map((m) => `${m.name} (${m.dosage})`).join(", ")

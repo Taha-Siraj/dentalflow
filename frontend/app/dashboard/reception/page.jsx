@@ -21,6 +21,8 @@ import { toast } from "react-hot-toast";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
 import { getApiBaseUrl } from "@/lib/api-client";
 
+import { PriorityAlertBanner } from "@/components/priority-alert-banner";
+
 const getStatusBadgeClass = (status) => {
   const s = (status || "").toLowerCase();
   if (s === "pending" || s === "scheduled" || s === "queued") {
@@ -79,7 +81,10 @@ export default function ReceptionDashboardOverview() {
 
   useEffect(() => {
     fetchReceptionData();
+    const interval = setInterval(fetchReceptionData, 5000);
+    return () => clearInterval(interval);
   }, []);
+
 
   const handleCheckIn = async (appointmentId, patientName) => {
     try {
@@ -240,7 +245,7 @@ export default function ReceptionDashboardOverview() {
                       </div>
                       <h3 className="font-semibold text-xs text-slate-900 pt-1">{item.patientName || "Valued Patient"}</h3>
                       <p className="text-[11px] text-slate-500 font-normal">{item.treatment || "General Consultation"} • {item.patientPhone || "(416) 555-0199"}</p>
-                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">Doctor: {item.doctorName || "Dr. Sarah Jenkins"}</p>
+                      <p className="text-[10px] text-slate-400 font-mono">Doctor: {item.doctorName || "On-Duty Dentist"}</p>
                     </div>
 
                     <div className="flex items-center gap-2">

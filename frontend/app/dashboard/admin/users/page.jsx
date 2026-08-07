@@ -52,7 +52,10 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     fetchUsers();
+    const interval = setInterval(fetchUsers, 6000);
+    return () => clearInterval(interval);
   }, [roleFilter, statusFilter]);
+
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();

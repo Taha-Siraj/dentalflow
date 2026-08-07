@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CalendarCheck, Send } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { getApiBaseUrl } from "@/lib/api-client";
 
 export default function DoctorFollowupsPage() {
+  const [patients, setPatients] = useState([]);
   const [form, setForm] = useState({
-    patientName: "Taha Siraj",
-    patientEmail: "taha@smilecare.ca",
+    patientName: "",
+    patientEmail: "",
     followUpDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
     timeSlot: "10:30 AM",
     treatment: "Post-Operative Hygiene & Healing Check",
@@ -16,10 +17,47 @@ export default function DoctorFollowupsPage() {
   });
   const [submitting, setSubmitting] = useState(false);
 
+  useEffect(() => {
+    async function fetchPatients() {
+      try {
+        const baseUrl = getApiBaseUrl();
+        const res = await fetch(`${baseUrl}/doctor/patients`, { credentials: "include" });
+        const data = await res.json().catch(() => ({}));
+        if (data.success && Array.isArray(data.patients)) {
+          setPatients(data.patients);
+          if (data.patients.length > 0) {
+            setForm((f) => ({
+              ...f,
+              patientName: data.patients[0].name || "",
+              patientEmail: data.patients[0].email || "",
+            }));
+          }
+        }
+      } catch (err) {
+        console.error("Fetch doctor patients error:", err);
+      }
+    }
+    fetchPatients();
+  }, []);
+
+  const handleSelectPatient = (e) => {
+    const selectedName = e.target.value;
+    const found = patients.find((p) => p.name === selectedName);
+    if (found) {
+      setForm((f) => ({
+        ...f,
+        patientName: found.name || "",
+        patientEmail: found.email || "",
+      }));
+    } else {
+      setForm((f) => ({ ...f, patientName: selectedName }));
+    }
+  };
+
   const handleCreateFollowUp = async (e) => {
     e.preventDefault();
-    if (!form.patientName) {
-      toast.error("Please fill in patient name.");
+    if (!form.patientName.trim()) {
+      toast.error("Please fill in or select a patient.");
       return;
     }
 
@@ -38,8 +76,8 @@ export default function DoctorFollowupsPage() {
       if (data.success) {
         toast.success(`Follow-up appointment created in MongoDB for ${form.patientName} on ${form.followUpDate}!`);
         setForm({
-          patientName: "",
-          patientEmail: "",
+          patientName: patients[0]?.name || "",
+          patientEmail: patients[0]?.email || "",
           followUpDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
           timeSlot: "10:30 AM",
           treatment: "Post-Operative Hygiene & Healing Check",
@@ -68,20 +106,36 @@ export default function DoctorFollowupsPage() {
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
         <form onSubmit={handleCreateFollowUp} className="space-y-3.5 text-xs font-poppins">
           <div>
-            <label className="font-bold text-slate-700 block mb-1">Patient Full Name</label>
-            <input
-              type="text"
-              required
-              value={form.patientName}
-              onChange={(e) => setForm({ ...form, patientName: e.target.value })}
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0F766E]"
-            />
+            <label className="font-bold text-slate-700 block mb-1">Select Patient *</label>
+            {patients.length > 0 ? (
+              <select
+                value={form.patientName}
+                onChange={handleSelectPatient}
+                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0F766E] cursor-pointer"
+              >
+                {patients.map((p) => (
+                  <option key={p._id || p.id} value={p.name}>
+                    {p.name} ({p.email})
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type="text"
+                required
+                placeholder="Patient Full Name"
+                value={form.patientName}
+                onChange={(e) => setForm({ ...form, patientName: e.target.value })}
+                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0F766E]"
+              />
+            )}
           </div>
 
           <div>
             <label className="font-bold text-slate-700 block mb-1">Patient Email Address</label>
             <input
               type="email"
+              placeholder="patient@domain.ca"
               value={form.patientEmail}
               onChange={(e) => setForm({ ...form, patientEmail: e.target.value })}
               className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#0F766E]"
@@ -109,14 +163,15 @@ export default function DoctorFollowupsPage() {
               >
                 <option value="09:00 AM">09:00 AM</option>
                 <option value="10:30 AM">10:30 AM</option>
-                <option value="01:00 PM">01:00 PM</option>
-                <option value="02:30 PM">02:30 PM</option>
+                <option value="01:30 PM">01:30 PM</option>
+                <option value="03:00 PM">03:00 PM</option>
+                <option value="04:30 PM">04:30 PM</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="font-bold text-slate-700 block mb-1">Treatment Description</label>
+            <label className="font-bold text-slate-700 block mb-1">Follow-Up Treatment Objective</label>
             <input
               type="text"
               required
@@ -129,9 +184,9 @@ export default function DoctorFollowupsPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-[#0F766E] hover:bg-[#0D9488] text-white py-3 rounded-xl font-bold uppercase tracking-wider text-xs shadow-xs cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 transition-all"
+            className="w-full bg-[#0F766E] hover:bg-[#0D9488] disabled:opacity-60 text-white py-3 rounded-xl font-bold uppercase tracking-wider text-xs shadow-xs cursor-pointer flex items-center justify-center gap-2 transition-all"
           >
-            <Send className="h-4 w-4" /> {submitting ? "Scheduling..." : "Create Follow-Up Appointment"}
+            <CalendarCheck className="h-4 w-4" /> {submitting ? "Reserving Follow-Up..." : "Reserve & Schedule Follow-Up"}
           </button>
         </form>
       </div>

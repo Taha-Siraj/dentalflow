@@ -46,7 +46,10 @@ export default function PatientAppointmentsPage() {
 
   useEffect(() => {
     fetchAppointments();
+    const interval = setInterval(fetchAppointments, 5000);
+    return () => clearInterval(interval);
   }, []);
+
 
   const filteredAppointments = appointments.filter((apt) => {
     const matchesSearch =
@@ -157,12 +160,13 @@ export default function PatientAppointmentsPage() {
                 </div>
                 <div>
                   <span className="text-[10px] text-slate-400 block font-medium">Assigned Doctor</span>
-                  <span className="font-semibold text-slate-800">{apt.doctorName || "Dr. Sarah Jenkins"}</span>
+                  <span className="font-semibold text-slate-800">{apt.doctorName || "Assigned DDS Specialist"}</span>
                 </div>
                 <div className="col-span-2">
                   <span className="text-[10px] text-slate-400 block font-medium">Clinic Branch</span>
-                  <span className="font-semibold text-slate-800">{apt.branchName || "SmileCare Toronto Central"}</span>
+                  <span className="font-semibold text-slate-800">{apt.branchName || "SmileCare Clinic Branch"}</span>
                 </div>
+
               </div>
 
               {apt.notes && (

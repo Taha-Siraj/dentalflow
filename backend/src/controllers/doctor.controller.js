@@ -7,7 +7,7 @@ import AuditLog from "../models/auditLog.model.js";
 // GET /api/v1/doctors & POST /api/v1/doctors
 export const getDoctors = async (req, res) => {
   try {
-    const doctors = await User.find({ role: "doctor" }).select("-password");
+    const doctors = await User.find({ role: "doctor", isDeleted: { $ne: true } }).select("-password");
     res.json({ success: true, doctors });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -25,18 +25,22 @@ export const createDoctor = async (req, res) => {
 // GET /api/v1/doctor/dashboard
 export const getDoctorDashboard = async (req, res) => {
   try {
-    const doctorName = req.user?.name || "Dr. Sarah Jenkins";
+    const doctorName = req.user?.name || "";
     const doctorId = req.user?.id || req.user?._id;
+    const role = req.user?.role || "doctor";
 
-    const query = {
-      $or: [
-        { doctorId },
-        { doctorName: new RegExp(doctorName, "i") },
-      ],
-    };
+    const query = role === "admin"
+      ? {}
+      : {
+          $or: [
+            { doctorId },
+            ...(doctorName ? [{ doctorName: new RegExp(doctorName, "i") }] : []),
+          ],
+        };
 
     const appointments = await Appointment.find(query).sort({ createdAt: -1 }).lean();
-    const prescriptions = await Prescription.find({ doctorName: new RegExp(doctorName, "i") }).lean();
+    const rxQuery = role === "admin" ? {} : doctorName ? { doctorName: new RegExp(doctorName, "i") } : { doctorId };
+    const prescriptions = await Prescription.find(rxQuery).lean();
 
     res.json({
       success: true,
@@ -59,15 +63,18 @@ export const getDoctorDashboard = async (req, res) => {
 // GET /api/v1/doctor/appointments
 export const getDoctorAppointments = async (req, res) => {
   try {
-    const doctorName = req.user?.name || "Dr. Sarah Jenkins";
+    const doctorName = req.user?.name || "";
     const doctorId = req.user?.id || req.user?._id;
+    const role = req.user?.role || "doctor";
 
-    const query = {
-      $or: [
-        { doctorId },
-        { doctorName: new RegExp(doctorName, "i") },
-      ],
-    };
+    const query = role === "admin"
+      ? {}
+      : {
+          $or: [
+            { doctorId },
+            ...(doctorName ? [{ doctorName: new RegExp(doctorName, "i") }] : []),
+          ],
+        };
 
     const appointments = await Appointment.find(query).sort({ appointmentDate: 1, appointmentTime: 1 }).lean();
     res.json({ success: true, appointments });
@@ -117,10 +124,20 @@ export const getDoctorPatientById = async (req, res) => {
 // GET /api/v1/doctor/prescriptions & POST /api/v1/doctor/prescriptions
 export const getDoctorPrescriptions = async (req, res) => {
   try {
-    const doctorName = req.user?.name || "Dr. Sarah Jenkins";
-    const prescriptions = await Prescription.find({
-      $or: [{ doctorName: new RegExp(doctorName, "i") }, { doctorId: req.user?.id }],
-    }).sort({ createdAt: -1 }).lean();
+    const doctorName = req.user?.name || "";
+    const doctorId = req.user?.id || req.user?._id;
+    const role = req.user?.role || "doctor";
+
+    const query = role === "admin"
+      ? {}
+      : {
+          $or: [
+            { doctorId },
+            ...(doctorName ? [{ doctorName: new RegExp(doctorName, "i") }] : []),
+          ],
+        };
+
+    const prescriptions = await Prescription.find(query).sort({ createdAt: -1 }).lean();
 
     res.json({
       success: true,
@@ -148,11 +165,11 @@ export const createDoctorPrescription = async (req, res) => {
       patientId: targetPatientId || undefined,
       patientName: patientName || "Patient",
       patientEmail: targetEmail ? targetEmail.toLowerCase().trim() : "",
-      doctorName: req.user?.name || "Dr. Sarah Jenkins",
+      doctorName: req.user?.name || "Doctor Specialist",
       doctorId: req.user?.id || req.user?._id,
-      medications: medications || [{ name: "Amoxicillin", dosage: "500mg", frequency: "3x Daily" }],
-      instructions: instructions || notes || "Take after meals.",
-      diagnosis: diagnosis || "Dental Procedure Care",
+      medications: medications || [],
+      instructions: instructions || notes || "As directed by attending dentist",
+      diagnosis: diagnosis || "Clinical Care",
     });
 
     if (targetPatientId || targetEmail) {
@@ -160,7 +177,7 @@ export const createDoctorPrescription = async (req, res) => {
         patientId: targetPatientId || undefined,
         recipientEmail: targetEmail,
         title: "Digital Prescription Issued",
-        message: `Dr. ${req.user?.name || "Sarah Jenkins"} issued a new prescription for you.`,
+        message: `${req.user?.name ? `Dr. ${req.user.name}` : "Attending Dentist"} issued a new digital prescription for you.`,
         type: "prescription",
       }).catch(() => {});
     }
@@ -190,7 +207,7 @@ export const createConsultationNote = async (req, res) => {
     if (appointmentId) {
       await Appointment.findByIdAndUpdate(appointmentId, {
         status: "completed",
-        notes: `Diagnosis: ${diagnosis || "Standard"}. Notes: ${notes || ""}. Plan: ${treatmentPlan || ""}`,
+        notes: `Diagnosis: ${diagnosis || "Standard Care"}. Notes: ${notes || ""}. Plan: ${treatmentPlan || ""}`,
       });
     }
 
@@ -210,7 +227,7 @@ export const createConsultationNote = async (req, res) => {
       action: "ADD_CONSULTATION_NOTE",
       targetUserId: patientId || undefined,
       targetUserName: patientName,
-      details: `Added consultation note for ${patientName}: ${diagnosis || "General care"}`,
+      details: `Added consultation note for ${patientName}: ${diagnosis || "General Care"}`,
       ipAddress: req.ip || "127.0.0.1",
     }).catch(() => {});
 
@@ -234,8 +251,8 @@ export const createFollowUp = async (req, res) => {
       treatment: treatment || "Follow-up Hygiene & Healing Check",
       appointmentDate: todayStr,
       appointmentTime: timeSlot || "10:30 AM",
-      branchName: req.user?.branch || "SmileCare Toronto Central",
-      doctorName: req.user?.name || "Dr. Sarah Jenkins",
+      branchName: req.user?.branch || "SmileCare Clinic Branch",
+      doctorName: req.user?.name || "Doctor Specialist",
       doctorId: req.user?.id || req.user?._id,
       status: "confirmed",
       notes: notes || "Doctor Requested Follow-up",
@@ -271,18 +288,26 @@ export const createFollowUp = async (req, res) => {
 // GET & PUT /api/v1/doctor/schedule
 export const getDoctorSchedule = async (req, res) => {
   try {
-    const doctorName = req.user?.name || "Dr. Sarah Jenkins";
+    const doctorName = req.user?.name || "";
     const doctorId = req.user?.id || req.user?._id;
+    const role = req.user?.role || "doctor";
 
-    const appointments = await Appointment.find({
-      $or: [{ doctorId }, { doctorName: new RegExp(doctorName, "i") }],
-    }).sort({ appointmentDate: 1, appointmentTime: 1 }).lean();
+    const query = role === "admin"
+      ? {}
+      : {
+          $or: [
+            { doctorId },
+            ...(doctorName ? [{ doctorName: new RegExp(doctorName, "i") }] : []),
+          ],
+        };
+
+    const appointments = await Appointment.find(query).sort({ appointmentDate: 1, appointmentTime: 1 }).lean();
 
     res.json({
       success: true,
       schedule: {
         workingHours: "08:00 AM - 05:00 PM",
-        branch: req.user?.branch || "SmileCare Toronto Central",
+        branch: req.user?.branch || "SmileCare Clinic Branch",
         availableDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
         appointments,
       },
@@ -321,12 +346,7 @@ export const getDoctorProfile = async (req, res) => {
     const user = await User.findById(req.user?.id || req.user?._id).select("-password").lean();
     res.json({
       success: true,
-      profile: user || {
-        name: req.user?.name || "Dr. Sarah Jenkins",
-        email: req.user?.email || "jenkins@smilecare.ca",
-        phone: "(416) 555-0100",
-        department: "Periodontics & Implant Surgery",
-      },
+      profile: user || null,
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

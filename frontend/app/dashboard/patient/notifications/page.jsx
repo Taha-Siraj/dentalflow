@@ -31,7 +31,10 @@ export default function PatientNotificationsPage() {
 
   useEffect(() => {
     fetchNotifications();
+    const interval = setInterval(fetchNotifications, 6000);
+    return () => clearInterval(interval);
   }, []);
+
 
   const handleMarkAsRead = async (id) => {
     try {

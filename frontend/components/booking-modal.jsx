@@ -29,6 +29,9 @@ export function BookingModal({ isOpen, onClose }) {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
 
+  const [doctorsList, setDoctorsList] = useState([]);
+  const [branchesList, setBranchesList] = useState([]);
+
   const { createAppointment } = useAppointments();
   const { user } = useAuth();
 
@@ -42,18 +45,54 @@ export function BookingModal({ isOpen, onClose }) {
   } = useForm({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
-      branch: "Smile Dental Clinic - Toronto Central",
+      branch: "Toronto Central Branch",
       service: "Preventative & General Dentistry",
-      doctor: "Dr. Sarah Jenkins",
+      doctor: "",
       patientName: "",
       email: "",
       phone: "",
-      insurance: "Sun Life Financial",
+      insurance: "",
       notes: "",
     },
   });
 
   const selectedDoctor = watch("doctor");
+
+  // Fetch doctors and branches dynamically from MongoDB Atlas
+  useEffect(() => {
+    async function fetchOptions() {
+      try {
+        const baseUrl = getApiBaseUrl();
+        const [docRes, branchRes] = await Promise.all([
+          fetch(`${baseUrl}/doctors`),
+          fetch(`${baseUrl}/branches`),
+        ]);
+
+        const docJson = await docRes.json().catch(() => ({}));
+        const branchJson = await branchRes.json().catch(() => ({}));
+
+        if (docJson.success && Array.isArray(docJson.doctors)) {
+          setDoctorsList(docJson.doctors);
+          if (docJson.doctors.length > 0 && !selectedDoctor) {
+            setValue("doctor", docJson.doctors[0].name);
+          }
+        }
+
+        if (branchJson.success && Array.isArray(branchJson.branches)) {
+          setBranchesList(branchJson.branches);
+          if (branchJson.branches.length > 0) {
+            setValue("branch", branchJson.branches[0].name);
+          }
+        }
+      } catch (err) {
+        console.error("Booking modal fetch options error:", err);
+      }
+    }
+
+    if (isOpen) {
+      fetchOptions();
+    }
+  }, [isOpen, setValue, selectedDoctor]);
 
   // Auto-fill logged-in patient attributes
   useEffect(() => {
@@ -72,7 +111,7 @@ export function BookingModal({ isOpen, onClose }) {
       const baseUrl = getApiBaseUrl();
       const params = new URLSearchParams({
         date: selectedDate,
-        doctorName: selectedDoctor || "Dr. Sarah Jenkins",
+        doctorName: selectedDoctor || "",
       });
 
       const res = await fetch(`${baseUrl}/appointments/available-slots?${params.toString()}`);
@@ -152,7 +191,7 @@ export function BookingModal({ isOpen, onClose }) {
               {step === 3 ? "Appointment Confirmation" : "Online Dental Booking"}
             </DialogTitle>
             <DialogDescription className="font-sans text-xs text-slate-500">
-              Smile Dental Clinic Network • Real-time MongoDB Atlas Schedule Integration
+              SmileCare Practice Network • Real-time MongoDB Atlas Schedule Integration
             </DialogDescription>
           </DialogHeader>
 
@@ -187,11 +226,19 @@ export function BookingModal({ isOpen, onClose }) {
                     {...register("branch")}
                     className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all cursor-pointer"
                   >
-                    <option value="Smile Dental Clinic - Toronto Central">Toronto Central</option>
-                    <option value="Smile Dental Clinic - Vancouver West">Vancouver West</option>
-                    <option value="Smile Dental Clinic - Calgary Downtown">Calgary Downtown</option>
-                    <option value="Smile Dental Clinic - Ottawa Parliament">Ottawa Parliament</option>
-                    <option value="Smile Dental Clinic - Mississauga Medical">Mississauga Medical</option>
+                    {branchesList.length > 0 ? (
+                      branchesList.map((b) => (
+                        <option key={b._id || b.name} value={b.name}>
+                          {b.name}
+                        </option>
+                      ))
+                    ) : (
+                      <>
+                        <option value="Toronto Central Branch">Toronto Central Branch</option>
+                        <option value="Vancouver West Branch">Vancouver West Branch</option>
+                        <option value="Calgary Downtown Branch">Calgary Downtown Branch</option>
+                      </>
+                    )}
                   </select>
                 </div>
 
@@ -222,10 +269,15 @@ export function BookingModal({ isOpen, onClose }) {
                     {...register("doctor")}
                     className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all cursor-pointer"
                   >
-                    <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins (Lead DDS)</option>
-                    <option value="Dr. Michael Chen">Dr. Michael Chen (Orthodontist)</option>
-                    <option value="Dr. Elena Rostova">Dr. Elena Rostova (Implantologist)</option>
-                    <option value="Dr. David Vance">Dr. David Vance (Endodontist)</option>
+                    {doctorsList.length > 0 ? (
+                      doctorsList.map((d) => (
+                        <option key={d._id} value={d.name}>
+                          {d.name} ({d.specialization || "Specialist"})
+                        </option>
+                      ))
+                    ) : (
+                      <option value="Assigned DDS Specialist">Assigned DDS Specialist</option>
+                    )}
                   </select>
                 </div>
 
@@ -243,7 +295,7 @@ export function BookingModal({ isOpen, onClose }) {
                 </div>
               </div>
 
-              {/* Time Slots Selector (Disabled booked slots) */}
+              {/* Time Slots Selector */}
               <div>
                 <label className="font-poppins text-xs font-semibold text-[#1B5C63] flex items-center justify-between mb-1.5">
                   <span>Available Time Slots ({selectedDate})</span>
@@ -258,11 +310,11 @@ export function BookingModal({ isOpen, onClose }) {
                       disabled={!slot.available}
                       onClick={() => setSelectedTimeSlot(slot.time)}
                       className={`py-2 px-2 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
-                        !slot.available
-                          ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed line-through"
-                          : selectedTimeSlot === slot.time
+                        selectedTimeSlot === slot.time
                           ? "bg-[#1B5C63] text-white border-[#1B5C63] shadow-xs"
-                          : "bg-[#F8FAFC] text-[#1B5C63] border-slate-200 hover:border-[#1B5C63]"
+                          : slot.available
+                          ? "bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200"
+                          : "bg-slate-100 text-slate-400 border-slate-100 cursor-not-allowed line-through"
                       }`}
                     >
                       {slot.time}
@@ -272,92 +324,74 @@ export function BookingModal({ isOpen, onClose }) {
               </div>
 
               {/* Patient Attributes */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="space-y-3 pt-2">
                 <div>
-                  <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1.5">
-                    Patient Name
+                  <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1">
+                    Patient Full Name *
                   </label>
                   <input
+                    type="text"
+                    placeholder="Legal Full Name"
                     {...register("patientName")}
-                    placeholder="Full Name"
-                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all"
+                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-2.5 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:outline-none"
                   />
                   {errors.patientName && (
-                    <span className="font-poppins text-[10px] text-red-600 mt-0.5 block font-bold">
-                      {errors.patientName.message}
-                    </span>
+                    <p className="text-[11px] text-rose-500 mt-1 font-sans">{errors.patientName.message}</p>
                   )}
                 </div>
 
-                <div>
-                  <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1.5">
-                    Email Address
-                  </label>
-                  <input
-                    {...register("email")}
-                    placeholder="name@domain.ca"
-                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all"
-                  />
-                  {errors.email && (
-                    <span className="font-poppins text-[10px] text-red-600 mt-0.5 block font-bold">
-                      {errors.email.message}
-                    </span>
-                  )}
-                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="patient@domain.com"
+                      {...register("email")}
+                      className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-2.5 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:outline-none"
+                    />
+                    {errors.email && (
+                      <p className="text-[11px] text-rose-500 mt-1 font-sans">{errors.email.message}</p>
+                    )}
+                  </div>
 
-                <div>
-                  <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1.5">
-                    Phone Number
-                  </label>
-                  <input
-                    {...register("phone")}
-                    placeholder="(416) 000-0000"
-                    className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all"
-                  />
-                  {errors.phone && (
-                    <span className="font-poppins text-[10px] text-red-600 mt-0.5 block font-bold">
-                      {errors.phone.message}
-                    </span>
-                  )}
+                  <div>
+                    <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="(416) 555-0100"
+                      {...register("phone")}
+                      className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-2.5 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:outline-none"
+                    />
+                    {errors.phone && (
+                      <p className="text-[11px] text-rose-500 mt-1 font-sans">{errors.phone.message}</p>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label className="font-poppins text-xs font-semibold text-[#1B5C63] block mb-1.5">
-                  Direct Insurance Provider
-                </label>
-                <select
-                  {...register("insurance")}
-                  className="w-full bg-[#F8FAFC] border border-slate-200 rounded-xl p-3 font-poppins text-xs font-medium text-[#1B5C63] focus:bg-white focus:border-[#1B5C63] focus:ring-1 focus:ring-[#1B5C63] focus:outline-none transition-all cursor-pointer"
-                >
-                  <option value="Sun Life Financial">Sun Life Financial</option>
-                  <option value="Manulife">Manulife</option>
-                  <option value="Canada Life">Canada Life</option>
-                  <option value="Desjardins Insurance">Desjardins Insurance</option>
-                  <option value="Pacific Blue Cross">Pacific Blue Cross</option>
-                  <option value="Other / Self-Pay">Other / Self-Pay</option>
-                </select>
-              </div>
-
-              <div className="pt-4 border-t border-slate-100 flex justify-end items-center space-x-3">
+              {/* Form Actions */}
+              <div className="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={handleResetAndClose}
-                  className="px-5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-poppins text-xs font-bold uppercase transition-all cursor-pointer"
+                  className="px-5 py-2.5 text-xs font-bold text-slate-500 hover:text-slate-800 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-[#0F766E] hover:bg-[#0D9488] text-white rounded-xl px-6 py-2.5 font-poppins text-xs font-bold uppercase tracking-wider shadow-sm transition-all cursor-pointer"
+                  className="bg-[#0F766E] hover:bg-[#0D9488] disabled:opacity-50 text-white px-6 py-2.5 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md transition-all cursor-pointer flex items-center space-x-2"
                 >
-                  {isSubmitting ? "Processing..." : "Confirm Appointment"}
+                  {isSubmitting ? "Syncing MongoDB..." : "Confirm Booking"}
                 </button>
               </div>
             </form>
           )}
-
         </div>
       </DialogContent>
     </Dialog>

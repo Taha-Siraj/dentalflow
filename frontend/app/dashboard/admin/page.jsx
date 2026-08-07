@@ -5,6 +5,8 @@ import Link from "next/link";
 import { BarChart3, Building2, DollarSign, Users, TrendingUp, RefreshCw, Stethoscope, UserCheck, Calendar, CreditCard } from "lucide-react";
 import { getApiBaseUrl } from "@/lib/api-client";
 
+import { PriorityAlertBanner } from "@/components/priority-alert-banner";
+
 const getStatusBadgeClass = (status) => {
   const s = (status || "").toLowerCase();
   if (s === "pending" || s === "scheduled" || s === "queued" || s === "in-progress") {
@@ -67,10 +69,16 @@ export default function AdminOverviewPage() {
 
   useEffect(() => {
     fetchAdminData();
+    // Vercel-compatible intelligent background revalidation polling every 6 seconds
+    const interval = setInterval(fetchAdminData, 6000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="space-y-6 font-poppins text-slate-800">
+      {/* Critical Priority Alert Banners */}
+      <PriorityAlertBanner />
+
       
       {/* Header Card */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">

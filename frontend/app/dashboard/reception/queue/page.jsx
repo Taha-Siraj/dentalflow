@@ -31,7 +31,10 @@ export default function ReceptionQueuePage() {
 
   useEffect(() => {
     fetchQueue();
+    const interval = setInterval(fetchQueue, 5000);
+    return () => clearInterval(interval);
   }, []);
+
 
   const handleStatusChange = async (id, newStatus, patientName) => {
     try {
@@ -99,7 +102,8 @@ export default function ReceptionQueuePage() {
                     </span>
                   </div>
                   <h3 className="font-bold text-sm text-slate-900">{item.patientName || "Valued Patient"}</h3>
-                  <p className="text-xs text-slate-500">{item.treatment} • Assigned Dentist: {item.doctorName || "Dr. Sarah Jenkins"}</p>
+                  <p className="text-xs text-slate-500">{item.treatment} • Assigned Dentist: {item.doctorName || "On-Duty Dentist"}</p>
+
                 </div>
 
                 <div className="flex items-center space-x-2">

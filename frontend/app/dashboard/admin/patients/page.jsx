@@ -32,7 +32,10 @@ export default function AdminPatientsPage() {
 
   useEffect(() => {
     fetchPatients();
+    const interval = setInterval(fetchPatients, 6000);
+    return () => clearInterval(interval);
   }, []);
+
 
   const filteredPatients = patients.filter((p) => {
     const q = searchQuery.toLowerCase();

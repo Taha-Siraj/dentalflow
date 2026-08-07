@@ -6,6 +6,9 @@ import { Stethoscope, Clock, Plus, FileText, Send, RefreshCw, CalendarX, Users, 
 import { toast } from "react-hot-toast";
 import { getApiBaseUrl } from "@/lib/api-client";
 
+import { PriorityAlertBanner } from "@/components/priority-alert-banner";
+import { useAuth } from "@/context/AuthContext";
+
 const getStatusBadgeClass = (status) => {
   const s = (status || "").toLowerCase();
   if (s === "pending" || s === "scheduled" || s === "queued" || s === "in-progress") {
@@ -21,6 +24,7 @@ const getStatusBadgeClass = (status) => {
 };
 
 export default function DoctorDashboardOverview() {
+  const { user } = useAuth();
   const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPatient, setSelectedPatient] = useState("");
@@ -37,30 +41,15 @@ export default function DoctorDashboardOverview() {
       const json = await res.json().catch(() => ({}));
       if (json.success && json.data && Array.isArray(json.data.appointments)) {
         setSchedule(json.data.appointments);
-        if (json.data.appointments.length > 0) {
-          setSelectedPatient(json.data.appointments[0].patientName);
+        if (json.data.appointments.length > 0 && !selectedPatient) {
+          setSelectedPatient(json.data.appointments[0].patientName || "");
         }
       } else {
-        setSchedule([
-          {
-            _id: "apt_1",
-            patientName: "Taha Siraj",
-            appointmentTime: "10:30 AM",
-            treatment: "3D Guided Implant Consultation",
-            status: "CONFIRMED",
-          },
-          {
-            _id: "apt_2",
-            patientName: "Sarah Jenkins",
-            appointmentTime: "11:15 AM",
-            treatment: "Routine Scaling & Cleaning",
-            status: "COMPLETED",
-          },
-        ]);
-        setSelectedPatient("Taha Siraj");
+        setSchedule([]);
       }
     } catch (err) {
       console.log("Fetch error:", err);
+      setSchedule([]);
     } finally {
       setLoading(false);
     }
@@ -68,6 +57,8 @@ export default function DoctorDashboardOverview() {
 
   useEffect(() => {
     fetchSchedule();
+    const interval = setInterval(fetchSchedule, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleAddMedicine = () => {
@@ -91,7 +82,7 @@ export default function DoctorDashboardOverview() {
         credentials: "include",
         body: JSON.stringify({
           patientName: selectedPatient,
-          doctorName: "Dr. Sarah Jenkins",
+          doctorName: user?.name || "Doctor Specialist",
           medications: rxList,
           notes: consultationNotes,
         }),
@@ -100,9 +91,7 @@ export default function DoctorDashboardOverview() {
       setRxList([]);
       setConsultationNotes("");
     } catch (err) {
-      toast.success(`Prescription issued for ${selectedPatient}!`);
-      setRxList([]);
-      setConsultationNotes("");
+      toast.error("Failed to issue prescription");
     } finally {
       setIsSaving(false);
     }
@@ -110,16 +99,19 @@ export default function DoctorDashboardOverview() {
 
   return (
     <div className="space-y-6 font-poppins text-slate-800">
-      
+      {/* Priority System Alert Banners */}
+      <PriorityAlertBanner />
+
       {/* Header Card */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <span className="text-[11px] font-semibold px-3 py-1 bg-teal-50 text-[#0F766E] rounded-full border border-teal-200 inline-block mb-1 font-mono uppercase tracking-wider">
             Clinical EMR Portal
           </span>
-          <h1 className="font-serif text-xl font-bold text-slate-900">Dr. Sarah Jenkins, DDS</h1>
-          <p className="text-xs text-slate-500 font-normal">Lead Orthodontist & Surgical Specialist • Toronto Central Branch</p>
+          <h1 className="font-serif text-xl font-bold text-slate-900">{user?.name || "Doctor Specialist"}, DDS</h1>
+          <p className="text-xs text-slate-500 font-normal">Lead Clinical Dental Specialist • MongoDB Sourced EMR</p>
         </div>
+
 
         <div className="flex items-center gap-3">
           <button

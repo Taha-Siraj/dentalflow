@@ -43,6 +43,7 @@ export default function PatientBillingPage() {
   // Handle Stripe Payment Redirect Verification
   useEffect(() => {
     fetchInvoices();
+    const interval = setInterval(fetchInvoices, 6000);
 
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -78,7 +79,10 @@ export default function PatientBillingPage() {
         toast.error("Stripe payment was cancelled.");
       }
     }
+
+    return () => clearInterval(interval);
   }, []);
+
 
   // Strict Real Stripe Checkout Redirect Handler
   const handlePayNowStripe = async (inv) => {

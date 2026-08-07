@@ -19,19 +19,14 @@ export default function PatientPrescriptionsPage() {
 
       if (json.success && Array.isArray(json.data)) {
         setPrescriptions(json.data);
+      } else if (json.success && Array.isArray(json.prescriptions)) {
+        setPrescriptions(json.prescriptions);
       } else {
-        setPrescriptions([
-          {
-            _id: "rx_1",
-            doctorName: "Dr. Sarah Jenkins, DDS",
-            medications: [{ name: "Amoxicillin", dosage: "500mg", frequency: "3x Daily for 7 Days" }],
-            notes: "Take after meals. Complete full antibiotic course.",
-            createdAt: "2026-07-20",
-          },
-        ]);
+        setPrescriptions([]);
       }
     } catch (err) {
       console.log("Rx fetch error:", err);
+      setPrescriptions([]);
     } finally {
       setLoading(false);
     }
@@ -39,7 +34,10 @@ export default function PatientPrescriptionsPage() {
 
   useEffect(() => {
     fetchPrescriptions();
+    const interval = setInterval(fetchPrescriptions, 6000);
+    return () => clearInterval(interval);
   }, []);
+
 
   return (
     <div className="space-y-6 font-poppins text-slate-800">

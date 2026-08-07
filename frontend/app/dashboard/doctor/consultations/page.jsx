@@ -6,14 +6,15 @@ import { toast } from "react-hot-toast";
 import { getApiBaseUrl } from "@/lib/api-client";
 
 export default function DoctorConsultationsPage() {
-  const [patientName, setPatientName] = useState("Taha Siraj");
-  const [patientEmail, setPatientEmail] = useState("taha@smilecare.ca");
-  const [diagnosis, setDiagnosis] = useState("Local Gingivitis & Mild Plaque Accumulation");
-  const [treatmentPlan, setTreatmentPlan] = useState("Prophylactic scaling, root planing, and oral hygiene instruction.");
+  const [patientName, setPatientName] = useState("");
+  const [patientEmail, setPatientEmail] = useState("");
+  const [diagnosis, setDiagnosis] = useState("");
+  const [treatmentPlan, setTreatmentPlan] = useState("");
   const [notes, setNotes] = useState("");
   const [appointments, setAppointments] = useState([]);
   const [selectedAptId, setSelectedAptId] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
 
   useEffect(() => {
     async function fetchAssignedAppointments() {

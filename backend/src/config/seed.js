@@ -1,66 +1,20 @@
 import User from "../models/user.model.js";
 
 /**
- * Seeds initial production users into MongoDB Atlas if they do not exist.
- * Migrates any legacy superadmin roles directly to "admin".
+ * Manual production migration script.
+ * Only executes when explicitly run by a developer via CLI or script.
+ * Never called automatically during server startup or Vercel execution.
  */
 export async function seedInitialUsers() {
   try {
-    // Migration: Update any existing superadmin roles or Super Administrator names to Admin
+    // Migration: Normalize legacy roles
     await User.updateMany(
       { $or: [{ role: "superadmin" }, { name: "Super Administrator" }] },
       { $set: { role: "admin", name: "Executive Admin" } }
     ).catch(() => {});
-
-    const defaultUsers = [
-      {
-        name: "Executive Admin",
-        email: "admin@smilecare.ca",
-        password: "admin123",
-        role: "admin",
-        phone: "(416) 555-0100",
-        emailVerified: true,
-      },
-      {
-        name: "Dr. Sarah Jenkins",
-        email: "doctor@smilecare.ca",
-        password: "doctor123",
-        role: "doctor",
-        phone: "(416) 555-0101",
-        emailVerified: true,
-        department: "Periodontics & Implant Surgery",
-      },
-      {
-        name: "Toronto Desk Receptionist",
-        email: "reception@smilecare.ca",
-        password: "recep123",
-        role: "receptionist",
-        phone: "(416) 555-0102",
-        emailVerified: true,
-        branch: "Toronto Central Branch",
-      },
-      {
-        name: "Taha Siraj",
-        email: "patient@smilecare.ca",
-        password: "patient123",
-        role: "patient",
-        phone: "(416) 555-0199",
-        emailVerified: true,
-      },
-    ];
-
-    for (const u of defaultUsers) {
-      const exists = await User.findOne({ email: u.email });
-      if (!exists) {
-        await User.create(u);
-        console.log(`✅ Seeded DB user: ${u.email} (${u.role.toUpperCase()})`);
-      } else if (exists.name === "Super Administrator" || exists.role === "superadmin") {
-        exists.name = "Executive Admin";
-        exists.role = "admin";
-        await exists.save();
-      }
-    }
+    
+    console.log("Database user roles normalized successfully.");
   } catch (err) {
-    console.error("Database seed notice:", err.message);
+    console.error("Database migration notice:", err.message);
   }
 }

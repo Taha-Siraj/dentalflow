@@ -35,6 +35,14 @@ import {
   updatePatientSettings,
 } from "../controllers/patient.controller.js";
 import {
+  getUserNotifications,
+  markNotificationRead,
+  markAllNotificationsRead,
+  removeNotification,
+  getUserAlerts,
+} from "../controllers/notification.controller.js";
+
+import {
   getDoctorDashboard,
   getDoctorAppointments,
   getDoctorPatients,
@@ -79,11 +87,17 @@ import {
   deleteAdminDoctor,
   getAdminReceptionists,
   createAdminReceptionist,
+  deleteAdminReceptionist,
   getAdminPatients,
   getAdminExecutiveReports,
+  getAdminLiveAnalytics,
   getAdminSystemSettings,
   updateAdminSystemSettings,
   getAdminAuditLogs,
+  getAdminNotifications,
+  markAdminNotificationRead,
+  markAllAdminNotificationsRead,
+  deleteAdminNotification,
 } from "../controllers/admin.controller.js";
 import { authenticateJWT, authorizeRoles } from "../middleware/auth.js";
 
@@ -154,10 +168,15 @@ router.put("/patient/profile", authenticateJWT, updatePatientProfile);
 router.get("/patient/appointments", authenticateJWT, getPatientAppointments);
 router.get("/patient/prescriptions", authenticateJWT, getPatientPrescriptions);
 router.get("/patient/invoices", authenticateJWT, getPatientInvoices);
-router.get("/patient/notifications", authenticateJWT, getPatientNotifications);
-router.patch("/notifications/:id/read", authenticateJWT, markNotificationAsRead);
-router.patch("/notifications/read-all", authenticateJWT, markAllNotificationsAsRead);
-router.delete("/notifications/:id", authenticateJWT, deleteNotification);
+// Universal Notifications & Alerts Routes (All Roles)
+router.get("/notifications", authenticateJWT, getUserNotifications);
+router.patch("/notifications/:id/read", authenticateJWT, markNotificationRead);
+router.patch("/notifications/read-all", authenticateJWT, markAllNotificationsRead);
+router.delete("/notifications/:id", authenticateJWT, removeNotification);
+router.get("/alerts", authenticateJWT, getUserAlerts);
+
+router.get("/patient/notifications", authenticateJWT, getUserNotifications);
+
 router.get("/patient/medical-records", authenticateJWT, getPatientMedicalRecords);
 router.get("/patient/timeline", authenticateJWT, getPatientTimeline);
 router.patch("/patient/settings", authenticateJWT, updatePatientSettings);
@@ -211,20 +230,35 @@ router.post("/admin/branches", authenticateJWT, authorizeRoles("admin"), createA
 router.put("/admin/branches/:id", authenticateJWT, authorizeRoles("admin"), updateAdminBranch);
 router.delete("/admin/branches/:id", authenticateJWT, authorizeRoles("admin"), deleteAdminBranch);
 
-// Doctor & Staff Management
+// Doctor Staff Management
 router.get("/admin/doctors", authenticateJWT, authorizeRoles("admin"), getAdminDoctors);
 router.post("/admin/doctors", authenticateJWT, authorizeRoles("admin"), createAdminDoctor);
 router.put("/admin/doctors/:id", authenticateJWT, authorizeRoles("admin"), updateAdminDoctor);
 router.delete("/admin/doctors/:id", authenticateJWT, authorizeRoles("admin"), deleteAdminDoctor);
 
+// Receptionist Staff Management
 router.get("/admin/receptionists", authenticateJWT, authorizeRoles("admin"), getAdminReceptionists);
 router.post("/admin/receptionists", authenticateJWT, authorizeRoles("admin"), createAdminReceptionist);
+router.delete("/admin/receptionists/:id", authenticateJWT, authorizeRoles("admin"), deleteAdminReceptionist);
 
+// Patient Directory
 router.get("/admin/patients", authenticateJWT, authorizeRoles("admin"), getAdminPatients);
+
+// Billing & Invoices
 router.get("/admin/invoices", authenticateJWT, authorizeRoles("admin"), getInvoices);
+
+// Reports & Analytics — real aggregation endpoints
 router.get("/admin/reports", authenticateJWT, authorizeRoles("admin"), getAdminExecutiveReports);
+router.get("/admin/analytics", authenticateJWT, authorizeRoles("admin"), getAdminLiveAnalytics);
+
+// System Settings
 router.get("/admin/settings", authenticateJWT, authorizeRoles("admin"), getAdminSystemSettings);
 router.put("/admin/settings", authenticateJWT, authorizeRoles("admin"), updateAdminSystemSettings);
-router.get("/admin/analytics", authenticateJWT, authorizeRoles("admin"), getAdminAnalytics);
+
+// Admin Notifications
+router.get("/admin/notifications", authenticateJWT, authorizeRoles("admin"), getAdminNotifications);
+router.patch("/admin/notifications/read-all", authenticateJWT, authorizeRoles("admin"), markAllAdminNotificationsRead);
+router.patch("/admin/notifications/:id/read", authenticateJWT, authorizeRoles("admin"), markAdminNotificationRead);
+router.delete("/admin/notifications/:id", authenticateJWT, authorizeRoles("admin"), deleteAdminNotification);
 
 export default router;

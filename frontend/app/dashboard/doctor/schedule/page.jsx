@@ -33,7 +33,10 @@ export default function DoctorSchedulePage() {
 
   useEffect(() => {
     fetchSchedule();
+    const interval = setInterval(fetchSchedule, 5000);
+    return () => clearInterval(interval);
   }, []);
+
 
   const handleStartConsultation = async (appointmentId, patientName) => {
     try {

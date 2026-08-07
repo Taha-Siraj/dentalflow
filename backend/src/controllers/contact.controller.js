@@ -1,7 +1,9 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import User from "../models/user.model.js";
 import Notification from "../models/notification.model.js";
 import AuditLog from "../models/auditLog.model.js";
+
 
 dotenv.config();
 
@@ -22,24 +24,19 @@ export async function sendContactEmail(req, res) {
 
     const cleanEmail = email.toLowerCase().trim();
 
-    // 1. Always Save Inquiry in MongoDB Atlas Notification & Audit System
-    await Notification.create({
-      recipientEmail: "admin@smilecare.ca",
-      role: "admin",
-      title: `New Website Inquiry: ${name}`,
-      message: `Inquiry from ${name} (${cleanEmail}, Phone: ${phone || "N/A"}): "${message}"`,
-      type: "system",
-      priority: "high",
-    }).catch(() => {});
-
-    await Notification.create({
-      recipientEmail: "reception@smilecare.ca",
-      role: "receptionist",
-      title: `New Website Inquiry: ${name}`,
-      message: `Inquiry from ${name} (${cleanEmail}, Phone: ${phone || "N/A"}): "${message}"`,
-      type: "system",
-      priority: "high",
-    }).catch(() => {});
+    // 1. Save Inquiry in MongoDB Atlas Notification System for real Admin and Receptionist users
+    const staffUsers = await User.find({ role: { $in: ["admin", "receptionist"] }, isDeleted: { $ne: true } }).select("email role _id");
+    for (const staff of staffUsers) {
+      await Notification.create({
+        patientId: staff._id,
+        recipientEmail: staff.email,
+        role: staff.role,
+        title: `New Website Inquiry: ${name}`,
+        message: `Inquiry from ${name} (${cleanEmail}, Phone: ${phone || "N/A"}): "${message}"`,
+        type: "system",
+        priority: "high",
+      }).catch(() => {});
+    }
 
     await AuditLog.create({
       performerName: name,
@@ -49,6 +46,7 @@ export async function sendContactEmail(req, res) {
       details: `Submitted website inquiry: "${message.substring(0, 100)}..."`,
       ipAddress: req.ip || "127.0.0.1",
     }).catch(() => {});
+
 
     // 2. SMTP Nodemailer Delivery
     const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || "pikachugaming899@gmail.com";

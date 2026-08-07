@@ -34,6 +34,8 @@ import {
   Settings as SettingsIcon,
 } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { NotificationBell } from "@/components/notification-bell";
+
 
 const ROLE_NAV_ITEMS = {
   patient: [
@@ -279,12 +281,15 @@ export default function DashboardLayout({ children }) {
             </span>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
+            <NotificationBell />
+
             <button onClick={logout} className="text-xs text-slate-500 hover:text-slate-900 font-semibold focus:outline-none cursor-pointer">
               Sign Out
             </button>
 
             <div className="h-5 w-px bg-slate-200"></div>
+
 
             <div className="flex items-center space-x-2.5">
               <div className="w-8 h-8 rounded-full bg-[#0F766E] text-white flex items-center justify-center font-bold text-xs uppercase shadow-xs">

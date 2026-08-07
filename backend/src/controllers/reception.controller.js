@@ -130,7 +130,7 @@ export async function createWalkInPatient(req, res) {
         password: tempPassword,
         role: "patient",
         emailVerified: true,
-        branch: branchName || req.user?.branch || "SmileCare Toronto Central",
+        branch: branchName || req.user?.branch || "Main Clinic Branch",
       });
     }
 
@@ -144,8 +144,8 @@ export async function createWalkInPatient(req, res) {
       treatment,
       appointmentDate: todayStr,
       appointmentTime: appointmentTime || "Immediate Walk-In",
-      branchName: branchName || req.user?.branch || "SmileCare Toronto Central",
-      doctorName: doctorName || "Dr. Sarah Jenkins",
+      branchName: branchName || req.user?.branch || "Main Clinic Branch",
+      doctorName: doctorName || "Assigned DDS Specialist",
       status: "checked-in", // Express walk-in checked in immediately
       notes: notes || "Express Walk-In Intake",
     });
@@ -213,11 +213,12 @@ export async function generateCounterInvoice(req, res) {
       patientId: targetPatientId || undefined,
       patientName: patientName || "Patient",
       patientEmail: targetEmail || "",
-      branchName: branchName || req.user?.branch || "SmileCare Toronto Central",
+      branchName: branchName || req.user?.branch || "Main Clinic Branch",
       treatment: treatment || "Dental Service",
       items: items || [{ description: treatment || "Dental Service", amount: totalAmount || 150 }],
       totalAmount: totalAmount || 150,
       amount: totalAmount || 150,
+
       patientPayable: totalAmount || 150,
       status: "unpaid",
       dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),

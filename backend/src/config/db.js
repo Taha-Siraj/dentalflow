@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { ENV } from "./env.js";
-import { seedInitialUsers } from "./seed.js";
 
 let isConnected = false;
 
@@ -16,7 +15,6 @@ export async function connectDB() {
     const db = await mongoose.connect(ENV.MONGODB_URI, { serverSelectionTimeoutMS: 2500 });
     isConnected = db.connections[0]?.readyState === 1;
     console.log("MongoDB Atlas Connected Successfully");
-    await seedInitialUsers();
   } catch (error) {
     console.warn(`MongoDB Connection Warning: ${error.message}`);
   }

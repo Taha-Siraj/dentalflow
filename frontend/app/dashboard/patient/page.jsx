@@ -19,6 +19,8 @@ import { toast } from "react-hot-toast";
 import { generateRxPDF, generateInvoicePDF } from "@/utils/pdf-generator";
 import { getApiBaseUrl } from "@/lib/api-client";
 
+import { PriorityAlertBanner } from "@/components/priority-alert-banner";
+
 export default function PatientDashboardOverview() {
   const { user } = useAuth();
   const [appointments, setAppointments] = useState([]);
@@ -61,7 +63,7 @@ export default function PatientDashboardOverview() {
       if (invJson.success && Array.isArray(invJson.invoices)) {
         setInvoices(invJson.invoices);
       } else if (invJson.success && Array.isArray(invJson.data)) {
-        setInvoices(json.data);
+        setInvoices(invJson.data);
       } else {
         setInvoices([]);
       }
@@ -84,6 +86,8 @@ export default function PatientDashboardOverview() {
 
   useEffect(() => {
     fetchPatientOverview();
+    const interval = setInterval(fetchPatientOverview, 6000);
+    return () => clearInterval(interval);
   }, []);
 
   const upcomingApt = appointments.find(
@@ -97,6 +101,9 @@ export default function PatientDashboardOverview() {
 
   return (
     <div className="space-y-6 font-poppins text-slate-800">
+      {/* Priority System Alert Banners */}
+      <PriorityAlertBanner />
+
       
       {/* 1. Welcome Section */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
