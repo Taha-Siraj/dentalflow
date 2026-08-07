@@ -44,7 +44,7 @@ export const getAdminExecutiveDashboard = async (req, res) => {
   try {
     const [branches, doctors, patients, receptionists, appointments, invoices] = await Promise.all([
       Branch.find({}).lean(),
-      Doctor.find({}).lean(),
+      User.find({ role: "doctor", isDeleted: { $ne: true } }).lean(),
       User.find({ role: "patient", isDeleted: { $ne: true } }).lean(),
       User.find({ role: "receptionist", isDeleted: { $ne: true } }).lean(),
       Appointment.find({}).lean(),
@@ -88,7 +88,7 @@ export const getAdminExecutiveDashboard = async (req, res) => {
           todayRevenue,
           monthlyRevenue,
           totalRevenue: totalPaidRevenue,
-          appointmentsToday: todayAppointments.length || appointments.length,
+          appointmentsToday: todayAppointments.length,
           pendingAppointments: appointments.filter((a) => a.status === "pending").length,
           completedTreatments: appointments.filter((a) => a.status === "completed").length,
           cancelledAppointments: appointments.filter((a) => a.status === "cancelled").length,
@@ -98,6 +98,7 @@ export const getAdminExecutiveDashboard = async (req, res) => {
           unpaidInvoices: pendingInvoices.length,
           pendingPayments: totalPendingPayments,
         },
+
         branches,
       },
     });

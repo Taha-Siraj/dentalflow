@@ -15,13 +15,15 @@ export async function getReceptionQueue(req, res) {
     const appointments = await Appointment.find(query).sort({ appointmentDate: 1, appointmentTime: 1 }).lean();
     const todayStr = new Date().toISOString().split("T")[0];
 
-    const todayAppointments = appointments.filter((a) => a.appointmentDate === todayStr || !a.appointmentDate);
+    const todayAppointments = appointments.filter((a) => a.appointmentDate === todayStr);
+
 
     res.json({
       success: true,
       stats: {
-        totalToday: todayAppointments.length || appointments.length,
+        totalToday: todayAppointments.length,
         checkedIn: appointments.filter((a) => a.status === "checked-in").length,
+
         inProgress: appointments.filter((a) => a.status === "in-progress").length,
         completed: appointments.filter((a) => a.status === "completed").length,
         pending: appointments.filter((a) => a.status === "pending").length,
