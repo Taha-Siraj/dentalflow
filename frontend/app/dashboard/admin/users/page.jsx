@@ -104,21 +104,75 @@ export default function AdminUsersPage() {
     }
   };
 
-  const handleResetPassword = async (userId, email) => {
+  const [resetPasswordModal, setResetPasswordModal] = useState({
+    isOpen: false,
+    user: null,
+    newPassword: "",
+    confirmPassword: "",
+    isSubmitting: false,
+    errorMsg: "",
+  });
+
+
+  const openResetPasswordModal = (targetUser) => {
+    setResetPasswordModal({
+      isOpen: true,
+      user: targetUser,
+      newPassword: "",
+      confirmPassword: "",
+      isSubmitting: false,
+      errorMsg: "",
+    });
+  };
+
+  const handleResetPasswordSubmit = async (e) => {
+    e.preventDefault();
+    if (!resetPasswordModal.user) return;
+    const { newPassword, confirmPassword, user } = resetPasswordModal;
+
+    if (!newPassword || !confirmPassword) {
+      setResetPasswordModal((prev) => ({ ...prev, errorMsg: "New Password and Confirm Password are required." }));
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setResetPasswordModal((prev) => ({ ...prev, errorMsg: "New Password and Confirm Password do not match." }));
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setResetPasswordModal((prev) => ({ ...prev, errorMsg: "Password must be at least 6 characters long." }));
+      return;
+    }
+
     try {
-      const res = await fetchWithAuth(`/admin/users/${userId}/reset-password`, {
-        method: "POST",
+      setResetPasswordModal((prev) => ({ ...prev, isSubmitting: true, errorMsg: "" }));
+      const res = await fetchWithAuth(`/admin/users/${user._id || user.id}/reset-password`, {
+        method: "PATCH",
+        body: JSON.stringify({ newPassword, confirmPassword }),
       });
-      const data = await res.json();
-      if (data.success) {
-        toast.success(`Password reset link dispatched to ${email}`);
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.success) {
+        toast.success(data.message || `Password for ${user.name} updated successfully!`);
+        setResetPasswordModal({ isOpen: false, user: null, newPassword: "", confirmPassword: "", isSubmitting: false, errorMsg: "" });
+        fetchUsers();
       } else {
-        toast.error(data.message || "Failed to send reset link");
+        setResetPasswordModal((prev) => ({
+          ...prev,
+          isSubmitting: false,
+          errorMsg: data.message || "Failed to reset password.",
+        }));
       }
     } catch (err) {
-      toast.error(err.message);
+      setResetPasswordModal((prev) => ({
+        ...prev,
+        isSubmitting: false,
+        errorMsg: err.message || "Network error.",
+      }));
     }
   };
+
 
   const openDeleteModal = (targetUser) => {
     setConfirmModal({
@@ -343,12 +397,13 @@ export default function AdminUsersPage() {
 
                   {/* Reset Password */}
                   <button
-                    onClick={() => handleResetPassword(u._id || u.id, u.name)}
-                    title="Reset Password"
-                    className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition-colors cursor-pointer"
+                    onClick={() => openResetPasswordModal(u)}
+                    title="Reset User Password"
+                    className="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-xl transition-colors cursor-pointer border border-amber-200"
                   >
                     <Key className="w-4 h-4" />
                   </button>
+
 
                   {/* Soft Delete */}
                   <button
@@ -486,7 +541,86 @@ export default function AdminUsersPage() {
         isProcessing={confirmModal.isProcessing}
         errorMessage={confirmModal.errorMessage}
       />
+
+      {/* Enterprise Reset Password Modal */}
+      {resetPasswordModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs font-poppins text-slate-800 animate-in fade-in duration-150">
+          <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-2xl p-6 space-y-5 animate-in zoom-in-95 duration-150">
+            <div className="flex items-center space-x-3 border-b border-slate-100 pb-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center shrink-0">
+                <Key className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">RBAC Security Admin</span>
+                <h3 className="text-sm font-serif font-bold text-slate-900 leading-tight">
+                  Reset Password for {resetPasswordModal.user?.name}
+                </h3>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-600">
+              Set a new secure password for <strong className="text-slate-800">{resetPasswordModal.user?.email}</strong>. This change will take effect immediately in MongoDB Atlas.
+            </p>
+
+            {resetPasswordModal.errorMsg && (
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs font-medium">
+                {resetPasswordModal.errorMsg}
+              </div>
+            )}
+
+            <form onSubmit={handleResetPasswordSubmit} className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">New Password *</label>
+                <input
+                  type="password"
+                  required
+                  placeholder="Min 6 characters"
+                  value={resetPasswordModal.newPassword}
+                  onChange={(e) => setResetPasswordModal({ ...resetPasswordModal, newPassword: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#0F766E]"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Confirm New Password *</label>
+                <input
+                  type="password"
+                  required
+                  placeholder="Re-enter new password"
+                  value={resetPasswordModal.confirmPassword}
+                  onChange={(e) => setResetPasswordModal({ ...resetPasswordModal, confirmPassword: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#0F766E]"
+                />
+              </div>
+
+              <div className="pt-2 flex justify-end space-x-2.5">
+                <button
+                  type="button"
+                  onClick={() => setResetPasswordModal({ isOpen: false, user: null, newPassword: "", confirmPassword: "", isSubmitting: false, errorMsg: "" })}
+                  disabled={resetPasswordModal.isSubmitting}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-all text-xs cursor-pointer"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={resetPasswordModal.isSubmitting}
+                  className="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-xs transition-all text-xs flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  {resetPasswordModal.isSubmitting ? (
+                    <span>Saving to MongoDB...</span>
+                  ) : (
+                    <span>Update Password</span>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
 
