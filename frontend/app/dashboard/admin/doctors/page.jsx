@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Stethoscope, Plus, Trash2, RefreshCw, AlertCircle, Mail, Phone, Building2, CalendarDays } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
-
+import { ConfirmationModal } from "@/components/confirmation-modal";
 
 const SPECIALIZATIONS = [
   "General Dentistry",
@@ -22,8 +22,13 @@ export default function AdminDoctorsPage() {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [deletingId, setDeletingId] = useState(null);
   const [formError, setFormError] = useState("");
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    doctor: null,
+    isProcessing: false,
+    errorMessage: "",
+  });
   const [newDoctor, setNewDoctor] = useState({
     name: "",
     specialization: SPECIALIZATIONS[0],
@@ -87,25 +92,44 @@ export default function AdminDoctorsPage() {
     }
   };
 
-  const handleDelete = async (id, name) => {
-    if (!window.confirm(`Remove ${name} from the doctor directory? Their login account will be deactivated.`)) return;
+  const openDeleteModal = (doctor) => {
+    setConfirmModal({
+      isOpen: true,
+      doctor,
+      isProcessing: false,
+      errorMessage: "",
+    });
+  };
+
+  const confirmDeleteDoctor = async () => {
+    if (!confirmModal.doctor) return;
+    const { _id, name } = confirmModal.doctor;
+
     try {
-      setDeletingId(id);
-      const res = await fetch(`${getApiBaseUrl()}/admin/doctors/${id}`, {
+      setConfirmModal((prev) => ({ ...prev, isProcessing: true, errorMessage: "" }));
+      const res = await fetchWithAuth(`/admin/doctors/${_id}`, {
         method: "DELETE",
-        credentials: "include",
       });
+
       const json = await res.json().catch(() => ({}));
+
       if (json.success) {
         toast.success(json.message || `${name} removed successfully.`);
+        setConfirmModal({ isOpen: false, doctor: null, isProcessing: false, errorMessage: "" });
         fetchDoctors();
       } else {
-        toast.error(json.message || "Failed to remove doctor.");
+        setConfirmModal((prev) => ({
+          ...prev,
+          isProcessing: false,
+          errorMessage: json.message || "Failed to remove doctor from directory.",
+        }));
       }
     } catch (err) {
-      toast.error("Network error. Please try again.");
-    } finally {
-      setDeletingId(null);
+      setConfirmModal((prev) => ({
+        ...prev,
+        isProcessing: false,
+        errorMessage: err.message || "Network error. Failed to execute request.",
+      }));
     }
   };
 
@@ -113,6 +137,7 @@ export default function AdminDoctorsPage() {
     <div className="space-y-6 font-poppins text-slate-800">
       {/* Header */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+
         <div>
           <span className="text-[11px] font-semibold px-3 py-1 bg-teal-50 text-[#0F766E] rounded-full border border-teal-200 inline-block mb-1 font-mono uppercase tracking-wider">
             Doctor Management Module
@@ -278,16 +303,11 @@ export default function AdminDoctorsPage() {
                   </div>
 
                   <button
-                    onClick={() => handleDelete(d._id, d.name)}
-                    disabled={deletingId === d._id}
-                    className="bg-rose-50 hover:bg-rose-100 disabled:opacity-60 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer border border-rose-200 transition-colors shrink-0"
+                    onClick={() => openDeleteModal(d)}
+                    className="bg-rose-50 hover:bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer border border-rose-200 transition-colors shrink-0"
                   >
-                    {deletingId === d._id ? (
-                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-3.5 w-3.5" />
-                    )}
-                    {deletingId === d._id ? "Removing..." : "Remove"}
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span>Remove</span>
                   </button>
                 </div>
               ))}
@@ -295,6 +315,21 @@ export default function AdminDoctorsPage() {
           )}
         </div>
       </div>
+
+      {/* Enterprise Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ isOpen: false, doctor: null, isProcessing: false, errorMessage: "" })}
+        onConfirm={confirmDeleteDoctor}
+        title="Remove Specialist Account"
+        description={`Are you sure you want to deactivate ${confirmModal.doctor?.name || "this doctor"} from the system directory? This will remove their credentials from MongoDB Atlas.`}
+        variant="danger"
+        confirmText="Deactivate & Delete Account"
+        cancelText="Cancel"
+        isProcessing={confirmModal.isProcessing}
+        errorMessage={confirmModal.errorMessage}
+      />
     </div>
   );
 }
+

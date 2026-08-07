@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Shield, Users, Search, RefreshCw, UserPlus, Key, Trash2, CheckCircle, XCircle, AlertTriangle, Building, Lock } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
+import { ConfirmationModal } from "@/components/confirmation-modal";
 
 
 export default function AdminUsersPage() {
@@ -12,6 +13,12 @@ export default function AdminUsersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    user: null,
+    isProcessing: false,
+    errorMessage: "",
+  });
   
   // Create User Modal State
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -29,7 +36,6 @@ export default function AdminUsersPage() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const baseUrl = getApiBaseUrl();
       const params = new URLSearchParams();
       if (searchQuery) params.append("q", searchQuery);
       if (roleFilter !== "all") params.append("role", roleFilter);
@@ -54,9 +60,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     fetchUsers();
-    const interval = setInterval(fetchUsers, 6000);
-    return () => clearInterval(interval);
-  }, [roleFilter, statusFilter]);
+  }, [searchQuery, roleFilter, statusFilter]);
 
 
   const handleSearchSubmit = (e) => {
@@ -64,39 +68,15 @@ export default function AdminUsersPage() {
     fetchUsers();
   };
 
-  const handleRoleChange = async (userId, newRole) => {
+  const handleToggleStatus = async (userId, currentStatus) => {
     try {
-      const baseUrl = getApiBaseUrl();
-      const res = await fetch(`${baseUrl}/admin/users/${userId}/role`, {
+      const res = await fetchWithAuth(`/admin/users/${userId}/status`, {
         method: "PATCH",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role: newRole }),
+        body: JSON.stringify({ status: currentStatus === "suspended" ? "active" : "suspended" }),
       });
       const data = await res.json();
       if (data.success) {
-        toast.success(`Role updated to ${newRole.toUpperCase()}`);
-        fetchUsers();
-      } else {
-        toast.error(data.message || "Failed to update role");
-      }
-    } catch (err) {
-      toast.error(err.message);
-    }
-  };
-
-  const handleStatusChange = async (userId, newStatus) => {
-    try {
-      const baseUrl = getApiBaseUrl();
-      const res = await fetch(`${baseUrl}/admin/users/${userId}/status`, {
-        method: "PATCH",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        toast.success(`Status updated to ${newStatus.toUpperCase()}`);
+        toast.success(data.message);
         fetchUsers();
       } else {
         toast.error(data.message || "Failed to update status");
@@ -106,45 +86,77 @@ export default function AdminUsersPage() {
     }
   };
 
-  const handleResetPassword = async (userId, userName) => {
-    if (!window.confirm(`Are you sure you want to reset password for ${userName}?`)) return;
+  const handleRoleChange = async (userId, newRole) => {
     try {
-      const baseUrl = getApiBaseUrl();
-      const res = await fetch(`${baseUrl}/admin/users/${userId}/reset-password`, {
-        method: "POST",
-        credentials: "include",
+      const res = await fetchWithAuth(`/admin/users/${userId}/role`, {
+        method: "PATCH",
+        body: JSON.stringify({ role: newRole }),
       });
       const data = await res.json();
       if (data.success) {
-        toast.success(`Password reset token sent to user email.`);
-        if (data.tempPassword) {
-          toast.success(`Dev Temp Password: ${data.tempPassword}`, { duration: 8000 });
-        }
+        toast.success(data.message);
+        fetchUsers();
       } else {
-        toast.error(data.message || "Failed to reset password");
+        toast.error(data.message || "Failed to update role");
       }
     } catch (err) {
       toast.error(err.message);
     }
   };
 
-  const handleDeleteUser = async (userId, userName) => {
-    if (!window.confirm(`Are you sure you want to deactivate account for ${userName}?`)) return;
+  const handleResetPassword = async (userId, email) => {
     try {
-      const baseUrl = getApiBaseUrl();
-      const res = await fetch(`${baseUrl}/admin/users/${userId}`, {
-        method: "DELETE",
-        credentials: "include",
+      const res = await fetchWithAuth(`/admin/users/${userId}/reset-password`, {
+        method: "POST",
       });
       const data = await res.json();
       if (data.success) {
-        toast.success("User account deactivated (soft deleted)");
-        fetchUsers();
+        toast.success(`Password reset link dispatched to ${email}`);
       } else {
-        toast.error(data.message || "Failed to delete user");
+        toast.error(data.message || "Failed to send reset link");
       }
     } catch (err) {
       toast.error(err.message);
+    }
+  };
+
+  const openDeleteModal = (targetUser) => {
+    setConfirmModal({
+      isOpen: true,
+      user: targetUser,
+      isProcessing: false,
+      errorMessage: "",
+    });
+  };
+
+  const confirmDeleteUser = async () => {
+    if (!confirmModal.user) return;
+    const { _id, name } = confirmModal.user;
+
+    try {
+      setConfirmModal((prev) => ({ ...prev, isProcessing: true, errorMessage: "" }));
+      const res = await fetchWithAuth(`/admin/users/${_id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (data.success) {
+        toast.success(data.message || `Account for ${name} deactivated successfully.`);
+        setConfirmModal({ isOpen: false, user: null, isProcessing: false, errorMessage: "" });
+        fetchUsers();
+      } else {
+        setConfirmModal((prev) => ({
+          ...prev,
+          isProcessing: false,
+          errorMessage: data.message || "Failed to deactivate user account.",
+        }));
+      }
+    } catch (err) {
+      setConfirmModal((prev) => ({
+        ...prev,
+        isProcessing: false,
+        errorMessage: err.message || "Network error. Failed to execute request.",
+      }));
     }
   };
 
@@ -340,12 +352,13 @@ export default function AdminUsersPage() {
 
                   {/* Soft Delete */}
                   <button
-                    onClick={() => handleDeleteUser(u._id || u.id, u.name)}
+                    onClick={() => openDeleteModal(u)}
                     title="Deactivate Account"
                     className="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl transition-colors cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
+
                 </div>
 
               </div>
@@ -459,6 +472,21 @@ export default function AdminUsersPage() {
           </div>
         </div>
       )}
+
+      {/* Enterprise Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ isOpen: false, user: null, isProcessing: false, errorMessage: "" })}
+        onConfirm={confirmDeleteUser}
+        title="Deactivate Portal User Account"
+        description={`Are you sure you want to deactivate the user account for ${confirmModal.user?.name || "this user"}? This will soft-delete their credentials in MongoDB Atlas.`}
+        variant="danger"
+        confirmText="Deactivate Account"
+        cancelText="Cancel"
+        isProcessing={confirmModal.isProcessing}
+        errorMessage={confirmModal.errorMessage}
+      />
     </div>
   );
 }
+

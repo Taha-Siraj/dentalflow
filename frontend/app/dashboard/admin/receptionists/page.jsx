@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Users, Plus, Trash2, RefreshCw, UserCheck, AlertCircle, Mail, Building2, Phone, CalendarDays } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
+import { ConfirmationModal } from "@/components/confirmation-modal";
 
 
 const BRANCHES_PRESET = [
@@ -33,9 +34,14 @@ export default function AdminReceptionistsPage() {
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [deletingId, setDeletingId] = useState(null);
   const [form, setForm] = useState({ name: "", email: "", phone: "", branch: "" });
   const [formError, setFormError] = useState("");
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    staff: null,
+    isProcessing: false,
+    errorMessage: "",
+  });
 
   const fetchReceptionists = useCallback(async () => {
     try {
@@ -106,25 +112,43 @@ export default function AdminReceptionistsPage() {
     }
   };
 
-  const handleRemove = async (id, name) => {
-    if (!window.confirm(`Remove ${name} from reception desk staff? Their account will be deactivated.`)) return;
+  const openDeleteModal = (staff) => {
+    setConfirmModal({
+      isOpen: true,
+      staff,
+      isProcessing: false,
+      errorMessage: "",
+    });
+  };
+
+  const confirmDeleteReceptionist = async () => {
+    if (!confirmModal.staff) return;
+    const { _id, name } = confirmModal.staff;
+
     try {
-      setDeletingId(id);
-      const res = await fetch(`${getApiBaseUrl()}/admin/receptionists/${id}`, {
+      setConfirmModal((prev) => ({ ...prev, isProcessing: true, errorMessage: "" }));
+      const res = await fetchWithAuth(`/admin/receptionists/${_id}`, {
         method: "DELETE",
-        credentials: "include",
       });
+
       const json = await res.json().catch(() => ({}));
       if (json.success) {
         toast.success(json.message || `${name} has been removed.`);
+        setConfirmModal({ isOpen: false, staff: null, isProcessing: false, errorMessage: "" });
         fetchReceptionists();
       } else {
-        toast.error(json.message || "Failed to remove receptionist.");
+        setConfirmModal((prev) => ({
+          ...prev,
+          isProcessing: false,
+          errorMessage: json.message || "Failed to remove receptionist.",
+        }));
       }
     } catch (err) {
-      toast.error("Network error. Please try again.");
-    } finally {
-      setDeletingId(null);
+      setConfirmModal((prev) => ({
+        ...prev,
+        isProcessing: false,
+        errorMessage: err.message || "Network error. Failed to execute request.",
+      }));
     }
   };
 
@@ -293,16 +317,11 @@ export default function AdminReceptionistsPage() {
                   </div>
 
                   <button
-                    onClick={() => handleRemove(r._id, r.name)}
-                    disabled={deletingId === r._id}
-                    className="bg-rose-50 hover:bg-rose-100 disabled:opacity-60 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer border border-rose-200 transition-colors shrink-0"
+                    onClick={() => openDeleteModal(r)}
+                    className="bg-rose-50 hover:bg-rose-100 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer border border-rose-200 transition-colors shrink-0"
                   >
-                    {deletingId === r._id ? (
-                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-3.5 w-3.5" />
-                    )}
-                    {deletingId === r._id ? "Removing..." : "Remove"}
+                    <Trash2 className="h-3.5 w-3.5" />
+                    <span>Remove</span>
                   </button>
                 </div>
               ))}
@@ -310,6 +329,21 @@ export default function AdminReceptionistsPage() {
           )}
         </div>
       </div>
+
+      {/* Enterprise Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ isOpen: false, staff: null, isProcessing: false, errorMessage: "" })}
+        onConfirm={confirmDeleteReceptionist}
+        title="Deactivate Receptionist Account"
+        description={`Are you sure you want to remove ${confirmModal.staff?.name || "this receptionist"} from reception staff? Their account credentials will be deactivated in MongoDB Atlas.`}
+        variant="danger"
+        confirmText="Remove Receptionist"
+        cancelText="Cancel"
+        isProcessing={confirmModal.isProcessing}
+        errorMessage={confirmModal.errorMessage}
+      />
     </div>
   );
 }
+
