@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Shield, Users, Search, RefreshCw, UserPlus, Key, Trash2, CheckCircle, XCircle, AlertTriangle, Building, Lock } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { getApiBaseUrl } from "@/lib/api-client";
+import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
+
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState([]);
@@ -34,7 +35,8 @@ export default function AdminUsersPage() {
       if (roleFilter !== "all") params.append("role", roleFilter);
       if (statusFilter !== "all") params.append("status", statusFilter);
 
-      const res = await fetch(`${baseUrl}/admin/users?${params.toString()}`, { credentials: "include" });
+      const res = await fetchWithAuth(`/admin/users?${params.toString()}`);
+
       const data = await res.json().catch(() => ({}));
 
       if (data.success && Array.isArray(data.users)) {

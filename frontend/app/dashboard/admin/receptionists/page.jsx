@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Users, Plus, Trash2, RefreshCw, UserCheck, AlertCircle, Mail, Building2, Phone, CalendarDays } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { getApiBaseUrl } from "@/lib/api-client";
+import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
+
 
 const BRANCHES_PRESET = [
   "Toronto Central Branch",
@@ -39,11 +40,11 @@ export default function AdminReceptionistsPage() {
   const fetchReceptionists = useCallback(async () => {
     try {
       setLoading(true);
-      const baseUrl = getApiBaseUrl();
       const [recRes, branchRes] = await Promise.all([
-        fetch(`${baseUrl}/admin/receptionists`, { credentials: "include" }),
-        fetch(`${baseUrl}/branches`, { credentials: "include" }),
+        fetchWithAuth("/admin/receptionists"),
+        fetchWithAuth("/branches"),
       ]);
+
       const json = await recRes.json().catch(() => ({}));
       const branchJson = await branchRes.json().catch(() => ({}));
 

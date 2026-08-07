@@ -4,10 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Stethoscope, Clock, Plus, FileText, Send, RefreshCw, CalendarX, Users, CheckCircle2, ArrowRight } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { getApiBaseUrl } from "@/lib/api-client";
+import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
 
 import { PriorityAlertBanner } from "@/components/priority-alert-banner";
 import { useAuth } from "@/context/AuthContext";
+
 
 const getStatusBadgeClass = (status) => {
   const s = (status || "").toLowerCase();
@@ -36,8 +37,8 @@ export default function DoctorDashboardOverview() {
   const fetchSchedule = async () => {
     try {
       setLoading(true);
-      const baseUrl = getApiBaseUrl();
-      const res = await fetch(`${baseUrl}/doctor/dashboard`, { credentials: "include" });
+      const res = await fetchWithAuth("/doctor/dashboard");
+
       const json = await res.json().catch(() => ({}));
       if (json.success && json.data && Array.isArray(json.data.appointments)) {
         setSchedule(json.data.appointments);

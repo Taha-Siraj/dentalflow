@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { User, Search, RefreshCw, UserX } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { getApiBaseUrl } from "@/lib/api-client";
+import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
 
 export default function AdminPatientsPage() {
   const [patients, setPatients] = useState([]);
@@ -13,8 +13,8 @@ export default function AdminPatientsPage() {
   const fetchPatients = async () => {
     try {
       setLoading(true);
-      const baseUrl = getApiBaseUrl();
-      const res = await fetch(`${baseUrl}/admin/patients`, { credentials: "include" });
+      const res = await fetchWithAuth("/admin/patients");
+
       const json = await res.json().catch(() => ({}));
 
       if (json.success && Array.isArray(json.patients)) {

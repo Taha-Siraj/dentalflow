@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { generateInvoicePDF } from "@/utils/pdf-generator";
-import { getApiBaseUrl } from "@/lib/api-client";
+import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
 
 import { PriorityAlertBanner } from "@/components/priority-alert-banner";
 
@@ -50,11 +50,11 @@ export default function ReceptionDashboardOverview() {
   const fetchReceptionData = async () => {
     try {
       setLoading(true);
-      const baseUrl = getApiBaseUrl();
       const [aptRes, invRes] = await Promise.all([
-        fetch(`${baseUrl}/reception/queue`, { credentials: "include" }),
-        fetch(`${baseUrl}/invoices`, { credentials: "include" }),
+        fetchWithAuth("/reception/queue"),
+        fetchWithAuth("/invoices"),
       ]);
+
 
       const aptJson = await aptRes.json().catch(() => ({}));
       const invJson = await invRes.json().catch(() => ({}));

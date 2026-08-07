@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { generateRxPDF, generateInvoicePDF } from "@/utils/pdf-generator";
-import { getApiBaseUrl } from "@/lib/api-client";
+import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
 import { PriorityAlertBanner } from "@/components/priority-alert-banner";
 
 export default function PatientDashboardOverview() {
@@ -33,14 +33,14 @@ export default function PatientDashboardOverview() {
   const fetchPatientOverview = async () => {
     try {
       setLoading(true);
-      const baseUrl = getApiBaseUrl();
 
       const [aptRes, rxRes, invRes, notifRes] = await Promise.all([
-        fetch(`${baseUrl}/patient/appointments`, { credentials: "include" }),
-        fetch(`${baseUrl}/patient/prescriptions`, { credentials: "include" }),
-        fetch(`${baseUrl}/patient/invoices`, { credentials: "include" }),
-        fetch(`${baseUrl}/patient/notifications`, { credentials: "include" }),
+        fetchWithAuth("/patient/appointments"),
+        fetchWithAuth("/patient/prescriptions"),
+        fetchWithAuth("/patient/invoices"),
+        fetchWithAuth("/patient/notifications"),
       ]);
+
 
       const aptJson = await aptRes.json().catch(() => ({}));
       const rxJson = await rxRes.json().catch(() => ({}));

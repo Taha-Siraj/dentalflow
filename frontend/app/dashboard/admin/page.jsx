@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { BarChart3, Building2, DollarSign, Users, TrendingUp, RefreshCw, Stethoscope, UserCheck, Calendar, CreditCard } from "lucide-react";
-import { getApiBaseUrl } from "@/lib/api-client";
+import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
 
 import { PriorityAlertBanner } from "@/components/priority-alert-banner";
 
@@ -29,11 +29,11 @@ export default function AdminOverviewPage() {
   const fetchAdminData = async () => {
     try {
       setLoading(true);
-      const baseUrl = getApiBaseUrl();
       const [adminRes, branchRes] = await Promise.all([
-        fetch(`${baseUrl}/admin/dashboard`, { credentials: "include" }),
-        fetch(`${baseUrl}/branches`, { credentials: "include" }),
+        fetchWithAuth("/admin/dashboard"),
+        fetchWithAuth("/branches"),
       ]);
+
 
       const adminJson = await adminRes.json().catch(() => ({}));
       const branchJson = await branchRes.json().catch(() => ({}));

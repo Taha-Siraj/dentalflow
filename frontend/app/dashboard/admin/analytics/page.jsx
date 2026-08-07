@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { BarChart3, TrendingUp, DollarSign, Users, CalendarCheck, CreditCard, RefreshCw, Activity } from "lucide-react";
-import { getApiBaseUrl } from "@/lib/api-client";
+import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
 
 export default function AdminAnalyticsDashboardPage() {
   const [reports, setReports] = useState(null);
@@ -11,8 +11,8 @@ export default function AdminAnalyticsDashboardPage() {
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
-      const baseUrl = getApiBaseUrl();
-      const res = await fetch(`${baseUrl}/admin/analytics`, { credentials: "include" });
+      const res = await fetchWithAuth("/admin/analytics");
+
       const data = await res.json().catch(() => ({}));
       if (data.success && data.reports) {
         setReports(data.reports);

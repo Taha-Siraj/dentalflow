@@ -22,24 +22,32 @@ const limiter = rateLimit({
 });
 app.use("/api/", limiter);
 
-// Explicit CORS Configuration for HTTP-Only Cookie Credentials
+// Explicit CORS Configuration for HTTP-Only Cookie Credentials & Production Vercel Deployment
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5000",
+  "https://dentalflow-47kn.vercel.app",
+  "https://dentalflow-backend.vercel.app",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 const corsOptions = {
   origin: (origin, callback) => {
-    // Return exact requesting origin string to satisfy browser credentials mode requirement
-    if (origin) {
-      callback(null, origin);
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+      callback(null, origin || true);
     } else {
-      callback(null, "http://localhost:3000");
+      callback(null, origin);
     }
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Cache-Control", "Pragma"],
   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
+
 
 app.use(cookieParser());
 app.use(express.json());

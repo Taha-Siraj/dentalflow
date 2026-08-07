@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Stethoscope, Plus, Trash2, RefreshCw, AlertCircle, Mail, Phone, Building2, CalendarDays } from "lucide-react";
 import { toast } from "react-hot-toast";
-import { getApiBaseUrl } from "@/lib/api-client";
+import { getApiBaseUrl, fetchWithAuth } from "@/lib/api-client";
+
 
 const SPECIALIZATIONS = [
   "General Dentistry",
@@ -34,7 +35,8 @@ export default function AdminDoctorsPage() {
   const fetchDoctors = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${getApiBaseUrl()}/admin/doctors`, { credentials: "include" });
+      const res = await fetchWithAuth("/admin/doctors");
+
       const json = await res.json().catch(() => ({}));
       if (json.success && Array.isArray(json.doctors)) {
         setDoctors(json.doctors);
