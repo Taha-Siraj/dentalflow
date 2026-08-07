@@ -7,18 +7,19 @@ import {
   Calendar,
   FileText,
   Download,
-  QrCode,
   RefreshCw,
   CreditCard,
   Bell,
   CheckCircle2,
   ArrowRight,
   Loader2,
+  ShieldCheck,
+  Activity,
+  Clock,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { generateRxPDF, generateInvoicePDF } from "@/utils/pdf-generator";
 import { getApiBaseUrl } from "@/lib/api-client";
-
 import { PriorityAlertBanner } from "@/components/priority-alert-banner";
 
 export default function PatientDashboardOverview() {
@@ -96,7 +97,6 @@ export default function PatientDashboardOverview() {
 
   const latestRx = prescriptions[0];
   const latestInv = invoices[0];
-
   const displayName = user?.name || "Patient";
 
   return (
@@ -104,16 +104,15 @@ export default function PatientDashboardOverview() {
       {/* Priority System Alert Banners */}
       <PriorityAlertBanner />
 
-      
-      {/* 1. Welcome Section */}
+      {/* 1. Welcome Header */}
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <span className="text-[11px] font-semibold px-3 py-1 bg-teal-50 text-[#0F766E] rounded-full border border-teal-200 inline-block mb-1 font-mono uppercase tracking-wider">
-            Authenticated Patient Portal
+            Patient Portal Overview
           </span>
           <h1 className="font-serif text-xl font-bold text-slate-900">Welcome Back, {displayName}</h1>
           <p className="text-xs text-slate-500 font-normal">
-            SmileCare Dental Practice Network • Account Email: {user?.email || "Authenticating..."}
+            SmileCare Practice Network • Account Email: {user?.email || "Authenticating..."}
           </p>
         </div>
 
@@ -134,7 +133,7 @@ export default function PatientDashboardOverview() {
         </div>
       </div>
 
-      {/* 2. Dashboard Statistics Summary */}
+      {/* 2. Key Modules Summary Row */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
         <Link href="/dashboard/patient/appointments" className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs hover:border-[#0F766E] transition-all space-y-1">
           <div className="flex items-center justify-between text-slate-400">
@@ -184,13 +183,13 @@ export default function PatientDashboardOverview() {
         </Link>
       </div>
 
-      {/* Main Overview Grid */}
+      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Left Column: Upcoming Appointment & Previews */}
+        {/* Left Column (2 Cols): Appointments & Summaries */}
         <div className="lg:col-span-2 space-y-6">
           
-          {/* 3. Upcoming Appointment Card */}
+          {/* Upcoming Appointment */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h2 className="font-serif text-sm font-semibold text-slate-900 flex items-center gap-2">
@@ -228,10 +227,10 @@ export default function PatientDashboardOverview() {
             )}
           </div>
 
-          {/* 4. Latest Prescription Preview & 5. Outstanding Invoice Summary */}
+          {/* Rx Preview & Latest Invoice */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             
-            {/* Rx Preview */}
+            {/* Active Rx */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
                 <h3 className="font-serif text-xs font-bold text-slate-900 flex items-center gap-1.5">
@@ -253,21 +252,18 @@ export default function PatientDashboardOverview() {
                       : "Prescribed Medication"}
                   </p>
                   <button
-                    onClick={() => {
-                      toast.success("Downloading Rx PDF...");
-                      generateRxPDF(latestRx);
-                    }}
+                    onClick={() => generateRxPDF(latestRx)}
                     className="w-full bg-[#0F766E] hover:bg-[#0D9488] text-white text-xs font-bold py-2 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Download className="h-3.5 w-3.5" /> Download Rx PDF
                   </button>
                 </div>
               ) : (
-                <p className="text-xs text-slate-400 py-4 text-center">No active prescription found.</p>
+                <p className="text-xs text-slate-400 py-4 text-center font-normal">No active prescription found.</p>
               )}
             </div>
 
-            {/* Outstanding Invoice Summary */}
+            {/* Latest Invoice */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3">
               <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
                 <h3 className="font-serif text-xs font-bold text-slate-900 flex items-center gap-1.5">
@@ -297,32 +293,37 @@ export default function PatientDashboardOverview() {
                   </button>
                 </div>
               ) : (
-                <p className="text-xs text-slate-400 py-4 text-center">No billed invoices found.</p>
+                <p className="text-xs text-slate-400 py-4 text-center font-normal">No billed invoices found.</p>
               )}
             </div>
 
           </div>
         </div>
 
-        {/* Right Column: QR Check-In Pass & Quick Actions */}
+        {/* Right Column: Clean Patient Quick Nav & Portal Status */}
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4 text-center">
-            <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-[#0F766E] bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200 inline-block">
-              SMART CLINIC CHECK-IN PASS
-            </span>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+            <h3 className="font-serif text-sm font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-[#0F766E]" /> Patient Care Navigation
+            </h3>
 
-            <h3 className="font-serif text-base font-semibold text-slate-900">QR Appointment Pass</h3>
-
-            <div className="bg-slate-50 p-4 rounded-xl inline-block border border-slate-200 shadow-2xs">
-              <QrCode className="w-32 h-32 text-slate-900" />
-            </div>
-
-            <p className="text-xs text-slate-500 font-normal">
-              Scan this QR code at any SmileCare branch kiosk upon arrival for zero-wait check-in.
-            </p>
-
-            <div className="pt-2 border-t border-slate-100 text-[11px] font-mono text-[#0F766E]">
-              ACCOUNT ID #{user?.id || user?._id || "DF-2026"}
+            <div className="space-y-2 text-xs">
+              <Link href="/dashboard/patient/timeline" className="p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-teal-50/50 hover:border-teal-200 flex items-center justify-between transition-colors block">
+                <span className="font-semibold text-slate-800">Treatment Timeline</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#0F766E]" />
+              </Link>
+              <Link href="/dashboard/patient/medical-records" className="p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-teal-50/50 hover:border-teal-200 flex items-center justify-between transition-colors block">
+                <span className="font-semibold text-slate-800">Medical Records (EMR)</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#0F766E]" />
+              </Link>
+              <Link href="/dashboard/patient/profile" className="p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-teal-50/50 hover:border-teal-200 flex items-center justify-between transition-colors block">
+                <span className="font-semibold text-slate-800">Insurance & Profile</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#0F766E]" />
+              </Link>
+              <Link href="/dashboard/patient/settings" className="p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-teal-50/50 hover:border-teal-200 flex items-center justify-between transition-colors block">
+                <span className="font-semibold text-slate-800">Security & Settings</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#0F766E]" />
+              </Link>
             </div>
           </div>
         </div>
