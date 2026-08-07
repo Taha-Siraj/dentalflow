@@ -12,7 +12,9 @@ import {
   createStaffAccount,
   getBootstrapStatus,
   setupInitialAdmin,
+  changePassword,
 } from "../controllers/auth.controller.js";
+
 
 import { createAppointment, getAppointments, updateAppointmentStatus, getAvailableSlots } from "../controllers/appointment.controller.js";
 import { getBranches, createBranch } from "../controllers/branch.controller.js";
@@ -80,7 +82,9 @@ import {
   updateUserStatus,
   updateUserBranch,
   resetUserPassword,
+  adminChangeOwnPassword,
   getAdminBranches,
+
   createAdminBranch,
   updateAdminBranch,
   deleteAdminBranch,
@@ -224,7 +228,11 @@ router.patch("/admin/users/:id/restore", authenticateJWT, authorizeRoles("admin"
 router.patch("/admin/users/:id/role", authenticateJWT, authorizeRoles("admin"), updateUserRole);
 router.patch("/admin/users/:id/status", authenticateJWT, authorizeRoles("admin"), updateUserStatus);
 router.patch("/admin/users/:id/branch", authenticateJWT, authorizeRoles("admin"), updateUserBranch);
+router.patch("/auth/change-password", authenticateJWT, changePassword);
+router.patch("/admin/change-password", authenticateJWT, authorizeRoles("admin"), adminChangeOwnPassword);
+router.patch("/admin/users/:id/reset-password", authenticateJWT, authorizeRoles("admin"), resetUserPassword);
 router.post("/admin/users/:id/reset-password", authenticateJWT, authorizeRoles("admin"), resetUserPassword);
+
 
 // Real Audit Logs Endpoints
 router.get("/admin/logs", authenticateJWT, authorizeRoles("admin"), getAdminAuditLogs);

@@ -426,32 +426,122 @@ export const updateUserBranch = async (req, res) => {
 };
 
 /**
- * POST /api/v1/admin/users/:id/reset-password
+ * PATCH /api/v1/admin/users/:id/reset-password
+ * Admin Reset Target User Password System
  */
 export const resetUserPassword = async (req, res) => {
   try {
     const { id } = req.params;
+    const { newPassword, confirmPassword } = req.body;
+
     const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+    if (!user || user.isDeleted) {
+      return res.status(404).json({ success: false, message: "Target user account not found." });
     }
 
-    const tempPassword = `Reset${Math.floor(100000 + Math.random() * 900000)}`;
-    user.password = tempPassword;
+    let targetPassword = newPassword;
+    if (targetPassword) {
+      if (confirmPassword && targetPassword !== confirmPassword) {
+        return res.status(400).json({ success: false, message: "New Password and Confirm Password do not match." });
+      }
+      if (targetPassword.length < 6) {
+        return res.status(400).json({ success: false, message: "Password must be at least 6 characters long." });
+      }
+    } else {
+      targetPassword = `SmileCare${Math.floor(100000 + Math.random() * 900000)}!`;
+    }
+
+    user.password = targetPassword;
     await user.save();
 
-    await sendPasswordResetEmail(user.email, tempPassword, user.name).catch(() => {});
-    await recordAuditLog(req, "RESET_PASSWORD", user, `Reset password for ${user.name} (${user.email})`);
+    await recordAuditLog(req, "ADMIN_RESET_USER_PASSWORD", user, `Administrator reset password for ${user.name} (${user.email})`);
+
+    await createSystemNotification({
+      role: user.role || "patient",
+      title: "Security Alert: Password Reset by Administrator",
+      message: `Your account password was updated by an Administrator. Please sign in using your new password.`,
+      type: "security",
+      link: "/login",
+    });
 
     res.json({
       success: true,
-      message: `Password reset token generated and sent to ${user.email}`,
-      tempPassword: process.env.NODE_ENV !== "production" ? tempPassword : undefined,
+      message: `Password for ${user.name} (${user.email}) has been reset successfully in MongoDB Atlas!`,
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+/**
+ * PATCH /api/v1/admin/change-password
+ * Admin Self Password Change System
+ */
+export const adminChangeOwnPassword = async (req, res, next) => {
+  try {
+    const userId = req.user?.id || req.user?._id;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Current Password, New Password, and Confirm Password are required.",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New Password and Confirm Password do not match.",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "New password must be at least 6 characters long.",
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user || user.isDeleted) {
+      return res.status(404).json({ success: false, message: "Admin account not found." });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect current password. Please enter your valid current password.",
+      });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    await recordAuditLog(req, "ADMIN_SELF_PASSWORD_CHANGE", user, `Administrator ${user.name} updated their account password.`);
+
+    const isProduction = process.env.NODE_ENV === "production";
+    const cookieOptions = {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
+    };
+    res.clearCookie("df_access_token", cookieOptions);
+    res.clearCookie("token", cookieOptions);
+    res.clearCookie("df_refresh_token", cookieOptions);
+
+    return res.json({
+      success: true,
+      forceLogout: true,
+      message: "Your password has been successfully updated! For security compliance, please sign in with your new password.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 /**
  * GET /api/v1/admin/logs (Audit Logs)

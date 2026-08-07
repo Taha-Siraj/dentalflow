@@ -3,7 +3,9 @@ import crypto from "crypto";
 import { User } from "../models/user.model.js";
 import { Appointment } from "../models/appointment.model.js";
 import AuditLog from "../models/auditLog.model.js";
+import Notification from "../models/notification.model.js";
 import { ENV } from "../config/env.js";
+
 
 import { sendOtpEmail, sendPasswordResetEmail, sendStaffInvitationEmail } from "../utils/email.js";
 
@@ -549,5 +551,100 @@ export async function setupInitialAdmin(req, res, next) {
     next(error);
   }
 }
+
+/**
+ * PATCH /api/v1/auth/change-password
+ * Authenticated Self Password Change System
+ */
+export async function changePassword(req, res, next) {
+  try {
+    const userId = req.user?.id || req.user?._id;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Current Password, New Password, and Confirm Password are required.",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New Password and Confirm Password do not match.",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "New password must be at least 6 characters long.",
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user || user.isDeleted) {
+      return res.status(404).json({ success: false, message: "User account not found." });
+    }
+
+    // Verify current password using bcrypt
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect current password. Please enter your valid current password.",
+      });
+    }
+
+    // Update password (pre-save hook hashes with bcrypt)
+    user.password = newPassword;
+    await user.save();
+
+    // Audit Log in MongoDB Atlas
+    await AuditLog.create({
+      performerId: user._id,
+      performerName: user.name,
+      performerRole: user.role,
+      action: "SELF_PASSWORD_CHANGE",
+      targetUserId: user._id,
+      targetUserName: user.name,
+      targetUserEmail: user.email,
+      details: "User successfully updated their account password.",
+      ipAddress: req.ip || req.headers["x-forwarded-for"] || "127.0.0.1",
+      branch: user.branch || "Main Branch",
+    }).catch(() => {});
+
+    // Notification in MongoDB Atlas
+    await Notification.create({
+      userId: user._id,
+      patientId: user.role === "patient" ? user._id : undefined,
+      recipientEmail: user.email,
+      title: "Password Updated Successfully",
+      message: "Your password has been successfully updated.",
+      type: "security",
+    }).catch(() => {});
+
+    // Clear HTTP-only session cookies to force re-login
+    const isProduction = process.env.NODE_ENV === "production";
+    const cookieOptions = {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
+    };
+    res.clearCookie("df_access_token", cookieOptions);
+    res.clearCookie("token", cookieOptions);
+    res.clearCookie("df_refresh_token", cookieOptions);
+
+    return res.json({
+      success: true,
+      forceLogout: true,
+      message: "Your password has been successfully updated! For security compliance, please sign in with your new password.",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 
 
