@@ -19,8 +19,14 @@ export function AuthProvider({ children }) {
         const baseUrl = getApiBaseUrl();
         const res = await fetch(`${baseUrl}/auth/me`, {
           credentials: "include",
-          headers: { "Content-Type": "application/json" },
+          cache: "no-store",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+          },
         });
+
 
         if (res.ok) {
           const data = await res.json();
