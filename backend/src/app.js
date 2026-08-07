@@ -16,15 +16,17 @@ app.set("trust proxy", 1);
 app.use(helmet({ contentSecurityPolicy: false }));
 
 
-// Rate Limiter
+// Rate Limiter safely configured for Vercel Serverless Proxies
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500, // limit each IP to 500 requests per window
+  max: 1000, // limit each IP to 1000 requests per window
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false, default: false },
   message: { success: false, message: "Too many requests from this IP, please try again after 15 minutes" },
 });
 app.use("/api/", limiter);
+
 
 // Explicit CORS Configuration for HTTP-Only Cookie Credentials & Production Vercel Deployment
 const allowedOrigins = [
