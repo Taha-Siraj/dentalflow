@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Lock, Mail, ArrowRight, KeyRound } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Logo } from "@/components/logo";
+
+import { getApiBaseUrl } from "@/lib/api-client";
+import { ShieldCheck, AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
   const { login, verifyOtp } = useAuth();
@@ -16,6 +20,22 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showOtpScreen, setShowOtpScreen] = useState(false);
   const [otp, setOtp] = useState("");
+  const [needsBootstrap, setNeedsBootstrap] = useState(false);
+
+  useEffect(() => {
+    async function checkBootstrap() {
+      try {
+        const baseUrl = getApiBaseUrl();
+        const res = await fetch(`${baseUrl}/auth/bootstrap/status`, { cache: "no-store" });
+        const data = await res.json().catch(() => ({}));
+        if (data.success && data.needsBootstrap) {
+          setNeedsBootstrap(true);
+        }
+      } catch (err) {}
+    }
+    checkBootstrap();
+  }, []);
+
 
   const handleLogin = async (e) => {
     if (e) e.preventDefault();
@@ -67,6 +87,27 @@ export default function LoginPage() {
               : "Enter your registered credentials to access EMR & appointments"}
           </p>
         </div>
+
+        {/* Initial Bootstrap Admin Banner */}
+        {needsBootstrap && (
+          <div className="p-3 bg-[#0F766E]/10 border border-[#0F766E]/30 rounded-xl space-y-1.5 text-xs text-slate-800 animate-in fade-in">
+            <div className="flex items-center space-x-1.5 text-[#0F766E] font-bold">
+              <ShieldCheck className="w-4 h-4 shrink-0" />
+              <span>Initial Admin Bootstrap Required</span>
+            </div>
+            <p className="text-[11px] text-slate-600 leading-snug">
+              MongoDB Atlas contains zero Admin accounts. Initialize the first Executive Admin account.
+            </p>
+            <Link
+              href="/setup"
+              className="inline-flex items-center space-x-1 text-xs font-bold text-[#0F766E] hover:underline pt-0.5"
+            >
+              <span>Run One-Time Admin Setup</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        )}
+
 
         {/* Form */}
         {!showOtpScreen ? (

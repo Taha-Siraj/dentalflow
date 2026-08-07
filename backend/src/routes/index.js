@@ -10,7 +10,10 @@ import {
   verifyResetOtp,
   resetPassword,
   createStaffAccount,
+  getBootstrapStatus,
+  setupInitialAdmin,
 } from "../controllers/auth.controller.js";
+
 import { createAppointment, getAppointments, updateAppointmentStatus, getAvailableSlots } from "../controllers/appointment.controller.js";
 import { getBranches, createBranch } from "../controllers/branch.controller.js";
 import { getDoctors, createDoctor } from "../controllers/doctor.controller.js";
@@ -126,7 +129,10 @@ router.post("/billing/confirm-payment", verifyPaymentSession);
 router.post("/billing/webhook", handleStripeWebhook);
 
 // Authentication Routes
+router.get("/auth/bootstrap/status", getBootstrapStatus);
+router.post("/auth/bootstrap/setup", setupInitialAdmin);
 router.post("/auth/register", register);
+
 router.post("/auth/verify-otp", verifyOtp);
 router.post("/auth/resend-otp", resendOtp);
 router.post("/auth/login", login);

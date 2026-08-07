@@ -2,7 +2,9 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { User } from "../models/user.model.js";
 import { Appointment } from "../models/appointment.model.js";
+import AuditLog from "../models/auditLog.model.js";
 import { ENV } from "../config/env.js";
+
 import { sendOtpEmail, sendPasswordResetEmail, sendStaffInvitationEmail } from "../utils/email.js";
 
 /**
@@ -456,4 +458,96 @@ export async function getProfile(req, res, next) {
     next(error);
   }
 }
+
+/**
+ * GET /api/v1/auth/bootstrap/status
+ * Checks if any active Admin user exists in MongoDB Atlas.
+ */
+export async function getBootstrapStatus(req, res, next) {
+  try {
+    const adminCount = await User.countDocuments({ role: "admin", isDeleted: { $ne: true } });
+    return res.json({
+      success: true,
+      needsBootstrap: adminCount === 0,
+      adminCount,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * POST /api/v1/auth/bootstrap/setup
+ * One-Time Initial Executive Admin Bootstrap Setup.
+ * Permanently locks (HTTP 403) as soon as 1 Admin exists in MongoDB Atlas.
+ */
+export async function setupInitialAdmin(req, res, next) {
+  try {
+    const adminCount = await User.countDocuments({ role: "admin", isDeleted: { $ne: true } });
+    if (adminCount > 0) {
+      return res.status(403).json({
+        success: false,
+        message: "Access forbidden: Initial Admin account already exists. Bootstrap setup is permanently locked.",
+      });
+    }
+
+    const { name, email, password, confirmPassword } = req.body;
+
+    if (!name || !email || !password || !confirmPassword) {
+      return res.status(400).json({ success: false, message: "Please provide Name, Email, Password, and Confirm Password." });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ success: false, message: "Password and Confirm Password do not match." });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, message: "Password must be at least 6 characters long." });
+    }
+
+    const lowercaseEmail = email.toLowerCase().trim();
+    const existingUser = await User.findOne({ email: lowercaseEmail });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: "An account with this email address already exists." });
+    }
+
+    const adminUser = await User.create({
+      name,
+      email: lowercaseEmail,
+      password, // Pre-save hook hashes with bcrypt
+      role: "admin",
+      emailVerified: true,
+      status: "active",
+      branch: "Main Executive Branch",
+      department: "Executive Management",
+    });
+
+    // Record Audit Log in MongoDB Atlas
+    await AuditLog.create({
+      performerId: adminUser._id,
+      performerName: adminUser.name,
+      performerRole: "admin",
+      action: "INITIAL_ADMIN_BOOTSTRAP",
+      targetUserId: adminUser._id,
+      targetUserName: adminUser.name,
+      targetUserEmail: adminUser.email,
+      details: "Initial One-Time Executive Admin account created via bootstrap setup.",
+      ipAddress: req.ip || req.headers["x-forwarded-for"] || "127.0.0.1",
+    }).catch(() => {});
+
+    return res.status(201).json({
+      success: true,
+      message: "Initial Executive Admin account created successfully! You can now sign in to the portal.",
+      user: {
+        id: adminUser._id,
+        name: adminUser.name,
+        email: adminUser.email,
+        role: adminUser.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 
