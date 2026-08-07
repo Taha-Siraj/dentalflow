@@ -72,7 +72,9 @@ import {
 } from "../controllers/reception.controller.js";
 import {
   getAdminExecutiveDashboard,
+  getAdminAnalytics,
   getAdminUsers,
+
   getAdminUserById,
   createAdminUser,
   updateAdminUser,
@@ -217,6 +219,8 @@ router.patch("/doctor/settings", authenticateJWT, authorizeRoles("doctor", "admi
 
 // Admin Executive & User Management API Routes
 router.get("/admin/dashboard", authenticateJWT, authorizeRoles("admin"), getAdminExecutiveDashboard);
+router.get("/admin/analytics", authenticateJWT, authorizeRoles("admin"), getAdminAnalytics);
+
 
 // Real User & RBAC Endpoints
 router.get("/admin/users", authenticateJWT, authorizeRoles("admin"), getAdminUsers);

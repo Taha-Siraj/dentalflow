@@ -98,7 +98,6 @@ export const getAdminExecutiveDashboard = async (req, res) => {
           unpaidInvoices: pendingInvoices.length,
           pendingPayments: totalPendingPayments,
         },
-
         branches,
       },
     });
@@ -106,6 +105,87 @@ export const getAdminExecutiveDashboard = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+/**
+ * GET /api/v1/admin/analytics
+ * Real MongoDB Aggregation Pipelines for Executive Analytics Charts
+ */
+export const getAdminAnalytics = async (req, res) => {
+  try {
+    // 1. MongoDB Aggregation: Monthly Revenue Trend
+    const monthlyRevenueTrend = await Invoice.aggregate([
+      { $match: { status: "paid" } },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          revenue: { $sum: { $ifNull: ["$totalAmount", { $ifNull: ["$patientPayable", "$amount"] }] } },
+          invoicesCount: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    // 2. MongoDB Aggregation: Appointment Status Breakdown
+    const appointmentStatusBreakdown = await Appointment.aggregate([
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // 3. MongoDB Aggregation: Branch Appointment Distribution
+    const branchDistribution = await Appointment.aggregate([
+      {
+        $group: {
+          _id: { $ifNull: ["$branchName", "Main Executive Branch"] },
+          appointmentsCount: { $sum: 1 },
+          completedCount: {
+            $sum: { $cond: [{ $eq: ["$status", "completed"] }, 1, 0] },
+          },
+        },
+      },
+    ]);
+
+    // 4. MongoDB Aggregation: New Patient Registrations per Month
+    const patientGrowth = await User.aggregate([
+      { $match: { role: "patient", isDeleted: { $ne: true } } },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const formattedRevenue = months.map((m, idx) => {
+      const found = monthlyRevenueTrend.find((item) => item._id === idx + 1);
+      return { month: m, revenue: found ? found.revenue : 0, count: found ? found.invoicesCount : 0 };
+    });
+
+    const formattedPatientGrowth = months.map((m, idx) => {
+      const found = patientGrowth.find((item) => item._id === idx + 1);
+      return { month: m, patients: found ? found.count : 0 };
+    });
+
+    res.json({
+      success: true,
+      data: {
+        revenueTrend: formattedRevenue,
+        appointmentBreakdown: appointmentStatusBreakdown.map((item) => ({ name: item._id, value: item.count })),
+        branchDistribution: branchDistribution.map((item) => ({ branch: item._id, total: item.appointmentsCount, completed: item.completedCount })),
+        patientGrowth: formattedPatientGrowth,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 
 // Enterprise User Management APIs (MongoDB Atlas Real Integration)
 
